@@ -36,7 +36,7 @@ class User
             }
             else
             {
-                throw new Exception('The User id must be strictly greater than 0');
+                throw new Exception('The User id must be must be a strictly positive integer value');
             }
         }
         else
@@ -122,6 +122,30 @@ class User
         else
         {
             throw new Exception('The User avatar must be a string value');
+        }
+    }
+    
+    public function isAuthor($isAuthor)
+    {
+        if(is_bool($isAuthor))
+        {
+            $this->_isAuthor = $isAuthor;
+        }
+        else
+        {
+            throw new Exception('The User author status must be a boolean value');
+        }
+    }
+    
+    public function isAdmin($isAdmin)
+    {
+        if(is_bool($isAdmin))
+        {
+            $this->_isAdmin = $isAdmin;
+        }
+        else
+        {
+            throw new Exception('The User admin status must be a boolean value');
         }
     }
     
