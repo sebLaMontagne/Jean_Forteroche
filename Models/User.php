@@ -124,31 +124,7 @@ class User
             throw new Exception('The User avatar must be a string value');
         }
     }
-    
-    public function isAuthor($isAuthor)
-    {
-        if(is_bool($isAuthor))
-        {
-            $this->_isAuthor = $isAuthor;
-        }
-        else
-        {
-            throw new Exception('The User author status must be a boolean value');
-        }
-    }
-    
-    public function isAdmin($isAdmin)
-    {
-        if(is_bool($isAdmin))
-        {
-            $this->_isAdmin = $isAdmin;
-        }
-        else
-        {
-            throw new Exception('The User admin status must be a boolean value');
-        }
-    }
-    
+  
     //--------------------------------------------------------------------
     // ABOUT CONSTRUCTOR
     //--------------------------------------------------------------------
@@ -170,5 +146,7 @@ class User
     public function __construct(array $data)
     {
         $this->hydrate($data);
+        $this->_isAuthor = false;
+        $this->_isAdmin = false;
     }
 }
