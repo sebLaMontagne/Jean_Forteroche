@@ -6,7 +6,6 @@ class User
     private $_name;
     private $_password;
     private $_email;
-    private $_avatar;
     private $_isAuthor;
     private $_isAdmin;
     
@@ -18,7 +17,6 @@ class User
     public function name()      { return $this->_name; }
     public function password()  { return $this->_password; }
     public function email()     { return $this->_email; }
-    public function avatar()    { return $this->_avatar; }
     public function isAuthor()  { return $this->_isAuthor; }
     public function isAdmin()   { return $this->_isAdmin; }
     
@@ -32,7 +30,7 @@ class User
         {
             if($id > 0)
             {
-                $this->_id = $id
+                $this->_id = htmlspecialchars($id);
             }
             else
             {
@@ -51,7 +49,15 @@ class User
     {
         if(is_string($name))
         {
-            $this->_name = $name;
+            if(strlen($name) > 5)
+            {
+                $this->_name = htmlspecialchars($name);
+            }
+            else
+            {
+                throw new Exception('The User name must have at least 6 characters');
+            }
+            
         }
         else
         {
@@ -77,19 +83,14 @@ class User
             {
                 throw new Exception('The User password must have at least 1 number');
             }
-            elseif(!preg_match("#[:punct:]#", $password))
-            {
-                throw new Excpetion('The User password must have at least 1 special character');
-            }
             elseif(strlen($password) < 8)
             {
                 throw new Exception('The User password must have at least 8 characters');
             }
             else
             {
-                $this->_password = $password;
-            }
-            
+                $this->_password = htmlspecialchars($password);
+            }  
         }
         else
         {
@@ -103,25 +104,11 @@ class User
     {
         if(filter_var($email, FILTER_VALIDATE_EMAIL))
         {
-            $this->_email = $email;
+            $this->_email = htmlspecialchars($email);
         }
         else
         {
             throw new Exception('The User e-mail don\'t respect the requirements');
-        }
-    }
-    
-    //--------------------------------------------------------------------
-    
-    public function setAvatar($avatar)
-    {
-        if(is_string($avatar))
-        {
-            $this->_avatar = $avatar;
-        }
-        else
-        {
-            throw new Exception('The User avatar must be a string value');
         }
     }
   
@@ -146,7 +133,7 @@ class User
     public function __construct(array $data)
     {
         $this->hydrate($data);
-        $this->_isAuthor = false;
-        $this->_isAdmin = false;
+        $this->_isAuthor = 0;
+        $this->_isAdmin = 0;
     }
 }

@@ -1,6 +1,5 @@
 <?php
 require_once('Manager.php');
-require_once('User.php');
 
 class UserManager extends Manager
 {
@@ -10,22 +9,19 @@ class UserManager extends Manager
             INSERT INTO user(
                 user_name, 
                 user_password, 
-                user_email, 
-                user_avatar, 
+                user_email,  
                 user_isAuthor, 
                 user_isAdmin) 
             VALUES(
                 :userName, 
                 :userPassword,
                 :userEmail,
-                :userAvatar,
                 :userIsAuthor,
                 :userIsAdmin)');
         
         $q->bindValue(':userName', $user->name());
         $q->bindValue(':userPassword', $user->password());
         $q->bindValue(':userEmail', $user->email());
-        $q->bindValue(':userAvatar', $user->avatar());
         $q->bindValue(':userIsAuthor', $user->isAuthor());
         $q->bindValue(':userIsAdmin', $user->isAdmin());
         
