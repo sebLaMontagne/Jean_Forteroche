@@ -30,7 +30,10 @@ class UserManager extends Manager
     
     public function getUser($userName, $passWord)
     {
-        $q = $this->_db->prepare('SELECT * FROM users WHERE name = :userName AND password = :password');
+        $q = $this->_db->prepare('
+            SELECT * FROM user 
+            WHERE user_name = :userName AND 
+                  user_password = :password');
         
         $q->bindValue(':userName', $userName);
         $q->bindValue(':password', $passWord);
@@ -41,7 +44,7 @@ class UserManager extends Manager
     
     public function updateUser($id, $newUserName, $newPassWord)
     {
-        $q = $this->_db->prepare('UPDATE users SET name = :userName, password = :password WHERE id = :id');
+        $q = $this->_db->prepare('UPDATE user SET name = :userName, password = :password WHERE id = :id');
         
         $q->bindValue(':userName', $newUserName);
         $q->bindValue(':password', $newPassWord);
@@ -52,7 +55,7 @@ class UserManager extends Manager
     
     public function deleteUser($id)
     {
-        $q = $this->_db->prepare('DELETE FROM users WHERE id = :id');
+        $q = $this->_db->prepare('DELETE FROM user WHERE id = :id');
         $q->bindValue(':id', $id);
         $q->execute();
     }

@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 spl_autoload_register(function($class){
     
     $file = '../Models/'.$class.'.php';
@@ -36,10 +38,20 @@ spl_autoload_register(function($class){
                 <a href="chapters.php">Liste des chapitres</a>
                 <a href="contact.php">Contact</a>
                 <div class="account-access">
-                    <a href="login.php">Connection</a>
-                    <a href="register.php">S'inscrire</a>
+                    <?php 
+                    if(!empty($_SESSION['pseudo']))
+                    {
+                        echo '<p>Bienvenue '.htmlspecialchars($_SESSION['pseudo']).'</p>';
+                        echo '<a href="logout.php">Déconnexion</a>';
+                    }
+                    else
+                    {
+                        echo '<a href="login.php">Connection</a>';
+                        echo '<a href="register.php">S\'inscrire</a>';
+                    }
+                    ?>   
                 </div>
             </nav>
-        </header>     
+        </header>    
     </body>
 </html>

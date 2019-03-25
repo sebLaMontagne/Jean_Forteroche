@@ -1,6 +1,7 @@
 <?php
 
 $title = 'Billet simple pour l\'Alaska - Accueil';
+$content = ''; 
 require('template.php');
 ?>
 
@@ -42,10 +43,11 @@ if(!empty($_POST))
     $user = new User($_POST);
     $userManager = new UserManager();
     $userManager->addUser($user);
+    
     //check the username uniqueness with db
-    //configure user session
-    //send a cookie to user
+    $_SESSION['pseudo'] = $user->name();
     //send a succès view to user
+    
 }
 ?>
 
