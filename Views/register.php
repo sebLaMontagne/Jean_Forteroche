@@ -12,7 +12,6 @@ require('template.php');
 
     <div id="username-feedback">
         <p id="username-length">*Le pseudo doit contenir au moins 6 caractères</p>
-        <p id="username-uniqueness">*Le pseudo ne doit pas déjà être pris</p>
     </div>
 
     <label for="email"></label>
@@ -42,10 +41,36 @@ if(!empty($_POST))
 {
     $user = new User($_POST);
     $userManager = new UserManager();
-    $userManager->addUser($user);
     
-    //check the username uniqueness with db
-    $_SESSION['pseudo'] = $user->name();
+    if($userManager->isUsernameFree($user))
+    {
+        echo '<p>Pseudo valide</p>';
+    }
+    else
+    {
+        echo '<p>Le pseudo est déjà pris en base de données</p>';
+    }
+    
+    if($userManager->isEmailFree($user))
+    {
+        echo '<p>Email valide</p>';
+    }
+    else
+    {
+        echo '<p>L\'email est déjà pris en base de données</p>';
+    }
+    
+    if($userManager->isUsernameFree($user) && $userManager->isEmailFree($user))
+    {
+        echo '<p>Inscription valide';
+        echo '<br />Un email de confirmation va vous être envoyé</p>';
+        $userManager->addUser($user);
+    }
+    else
+    {
+        echo '<p>Inscription invalide</p>';
+    }
+
     //send a succès view to user
     
 }

@@ -52,6 +52,6 @@ spl_autoload_register(function($class){
                     ?>   
                 </div>
             </nav>
-        </header>    
+        </header>  
     </body>
 </html>
