@@ -15,23 +15,25 @@ require('template.php');
 <?php 
 
 if(!empty($_POST))
-{
-    $user = new User($_POST);
+{ 
     $userManager = new UserManager();
-    $userdata = $userManager->loginUser($user);
-
-    if($userdata == false)
+    $user = $userManager->getUserByLogins($_POST['name'], $_POST['password']);
+    
+    var_dump($_POST);
+    var_dump($user);
+    
+    if($user == null)
     {
         echo '<p>Identifiants incorrects</p>';
     }
-    elseif($userdata['user_activation'] == 0)
+    elseif(!$user->isActivated())
     {
-        echo '<p>Ce compte existe mais n\'a pas encore été activé</p>';
+        echo '<p>Compte existant mais non activé</p>';
     }
     else
     {
-        $_SESSION['pseudo'] = $userdata['user_name'];
-        header('Location:home.php');
+        $_SESSION['pseudo'] = $user->name();
+        header('Location: home.php');
     }
 }
 

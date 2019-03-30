@@ -3,6 +3,20 @@ require_once('Manager.php');
 
 class UserManager extends Manager
 {
+    private function refineAnswer($brutAnswer)
+    {      
+        $refinedAnswer['id']            = (int) $brutAnswer['user_id'];
+        $refinedAnswer['name']          =       $brutAnswer['user_name'];
+        $refinedAnswer['password']      =       $brutAnswer['user_password'];
+        $refinedAnswer['email']         =       $brutAnswer['user_email'];
+        $refinedAnswer['isAuthor']      = (int) $brutAnswer['user_isAuthor'];
+        $refinedAnswer['isAdmin']       = (int) $brutAnswer['user_isAdmin'];
+        $refinedAnswer['token']         =       $brutAnswer['user_token'];
+        $refinedAnswer['isActivated']   = (int) $brutAnswer['user_activation'];
+        
+        return $refinedAnswer;
+    }
+    
     public function addUser(User $user)
     { 
         $q = $this->_db->prepare('
@@ -58,20 +72,6 @@ class UserManager extends Manager
         $q->execute();
     }
     
-    public function loginUser(User $user)
-    {
-        $q = $this->_db->prepare('
-            SELECT * FROM user 
-            WHERE user_name = :userName AND 
-                  user_password = :password');
-        
-        $q->bindValue(':userName', $user->name());
-        $q->bindValue(':password', $user->password());
-        
-        $q->execute();
-        return $q->fetch(); //A FAIRE Renvoyer un User
-    }
-    
     public function isUsernameFree(User $user)
     {    
         $q = $this->_db->prepare('SELECT COUNT(user_name) FROM user WHERE user_name = :userName');
@@ -108,24 +108,32 @@ class UserManager extends Manager
         }
     }
     
-    //METTRE A JOUR LE MODEL USER !!! 
-    //Créer la fonction de raffinement de réponses
-    public function getUser($id)
+    public function getUserById($id)
     {
         $q = $this->_db->prepare('SELECT * FROM user WHERE user_id = :userId');
-        $q->bindValue(':userId', $id);
+        $q->bindValue(':userId', htmlspecialchars($id));
         $q->execute();
         
-        $brutAnswer = $q->fetch();
+        if($a = $q->fetch())
+        {
+            return new User($this->refineAnswer($a));
+        }
+    }
+    
+    public function getUserByLogins($username, $password)
+    {
+        $q = $this->_db->prepare('
+            SELECT * FROM user 
+            WHERE user_name = :userName AND 
+                  user_password = :password');
         
-        $refinedAnswer['id']            = (int) $brutAnswer['user_id'];
-        $refinedAnswer['name']          =       $brutAnswer['user_name'];
-        $refinedAnswer['password']      =       $brutAnswer['user_password'];
-        $refinedAnswer['email']         =       $brutAnswer['user_email'];
-        $refinedAnswer['isAuthor']      = (int) $brutAnswer['user_isAuthor'];
-        $refinedAnswer['isAdmin']       = (int) $brutAnswer['user_isAdmin'];
+        $q->bindValue(':userName', htmlspecialchars($username));
+        $q->bindValue(':password', htmlspecialchars($password));
+        $q->execute();
         
-        $user = new User($refinedAnswer);
-        return $user;
+        if($a = $q->fetch())
+        {
+            return new User($this->refineAnswer($a));
+        }
     }
 }

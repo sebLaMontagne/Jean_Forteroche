@@ -12,7 +12,7 @@ $content = '';
 for($i = 0; $i < count($posts); $i++)
 {
     $postDate = new DateTime($posts[$i]->Date());
-    $postAuthor = $userManager->getUser($posts[$i]->authorId());
+    $postAuthor = $userManager->getUserById($posts[$i]->authorId());
     
     //Ajouter un extrait
     echo

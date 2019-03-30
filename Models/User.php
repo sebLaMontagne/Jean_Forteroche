@@ -8,17 +8,21 @@ class User
     private $_email;
     private $_isAuthor;
     private $_isAdmin;
+    private $_token;
+    private $_isActivated;
     
     //--------------------------------------------------------------------
     // GETTERS
     //--------------------------------------------------------------------
     
-    public function id()        { return $this->_id; }
-    public function name()      { return $this->_name; }
-    public function password()  { return $this->_password; }
-    public function email()     { return $this->_email; }
-    public function isAuthor()  { return $this->_isAuthor; }
-    public function isAdmin()   { return $this->_isAdmin; }
+    public function id()            { return $this->_id; }
+    public function name()          { return $this->_name; }
+    public function password()      { return $this->_password; }
+    public function email()         { return $this->_email; }
+    public function isAuthor()      { return $this->_isAuthor; }
+    public function isAdmin()       { return $this->_isAdmin; }
+    public function token()         { return $this->_token; }
+    public function isActivated()   { return $this->_isActivated; }
     
     //--------------------------------------------------------------------
     // SETTERS
@@ -111,12 +115,60 @@ class User
             throw new Exception('The User e-mail don\'t respect the requirements');
         }
     }
-  
+    
+    public function setToken($token)
+    {
+        if(preg_match('#^[0-9]{12}$#', $token))
+        {
+            $this->_token = htmlspecialchars($token);
+        }
+        else
+        {
+            throw new Exception('the token don\'t respect the right format');
+        }
+    }
+    
+    public function setIsAuthor($isAuthor)
+    {
+        if($isAuthor == 1 || $isAuthor == 0)
+        {
+            $this->_isAuthor = htmlspecialchars($isAuthor);
+        }
+        else
+        {
+            throw new Exception('The author status must be a boolean value');
+        }
+    }
+    
+    public function setIsAdmin($isAdmin)
+    {
+        if($isAdmin == 1 || $isAdmin == 0)
+        {
+            $this->_isAdmin = htmlspecialchars($isAdmin);
+        }
+        else
+        {
+            throw new Exception('The admin status must be a boolean value');
+        }
+    }
+    
+    public function setIsActivated($isActivated)
+    {
+        if($isActivated == 1 || $isActivated == 0)
+        {
+            $this->_isActivated = htmlspecialchars($isActivated);
+        }
+        else
+        {
+            throw new Exception('The activation status must be a boolean value');
+        }
+    }
+    
     //--------------------------------------------------------------------
     // ABOUT CONSTRUCTOR
     //--------------------------------------------------------------------
     
-    public function hydrate(array $data)
+    private function hydrate(array $data)
     {
         foreach($data as $key => $value)
         {
@@ -133,7 +185,5 @@ class User
     public function __construct(array $data)
     {
         $this->hydrate($data);
-        $this->_isAuthor = 0;
-        $this->_isAdmin = 0;
     }
 }
