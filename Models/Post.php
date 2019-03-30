@@ -32,7 +32,7 @@ class Post
         {
             if($id > 0)
             {
-                $this->_id = $id
+                $this->_id = htmlspecialchars($id);
             }
             else
             {
@@ -53,7 +53,7 @@ class Post
         {
             if($authorId > 0)
             {
-                $this->_authorId = $authorId
+                $this->_authorId = htmlspecialchars($authorId);
             }
             else
             {
@@ -72,7 +72,7 @@ class Post
     {
         if(is_string($title))
         {
-            $this->_title = $title;
+            $this->_title = htmlspecialchars($title);
         }
         else
         {
@@ -88,7 +88,7 @@ class Post
         {
             if($chapterNumber > 0)
             {
-                $this->_chapterNumber = $chapterNulber
+                $this->_chapterNumber = htmlspecialchars($chapterNumber);
             }
             else
             {
@@ -105,11 +105,11 @@ class Post
     
     public function setIllustration($illustration)
     {
-        if(is_string($title))
+        if(is_string($illustration))
         {
             if(preg_match("#^/Ressources/img/illustrations/.+(\.jpeg|\.png)$#", $illustration))
             {
-                $this->_title = $title;
+                $this->_title = htmlspecialchars($illustration);
             }
         }
         else
@@ -122,9 +122,9 @@ class Post
     
     public function setContent($content)
     {
-        if(is_string($title))
+        if(is_string($content))
         {
-            $this->_content = $content;
+            $this->_content = htmlspecialchars($content);
         }
         else
         {
@@ -136,7 +136,21 @@ class Post
     
     public function setDate($date)
     {
-        //Check date validity by regex
+        if(is_string($date))
+        {
+            if(preg_match("#^20[0-9]{2}(-[0-9]{2}){2} ([0-9]{2}:){2}([0-9]){2}$#", $date))
+            {
+                $this->_date = htmlspecialchars($date);
+            }
+            else
+            {
+                throw new Exception('The date don\'t respect the date format');
+            }
+        }
+        else
+        {
+            throw new Exception('The date must be a string value');
+        }
     }
     
     //--------------------------------------------------------------------

@@ -41,10 +41,10 @@ class UserManager extends Manager
         
         $q->execute();
         
-        $to = $user->email();  
+        $to = 'juniorwebdesign27@gmail.com;';  
         $subject = "Confirmation d'inscription";  
         $message = "Voici votre lien d'activation : \n";
-        $message.= '<a href="https://billetsimplepourlalaska.000webhostapp.com/views/emailConfirmation.php?token='.$confirmToken.'">lien</a>';
+        $message.= 'https://billetsimplepourlalaska.000webhostapp.com/Views/confirmRegistration.php?token='.$confirmToken;
         $from = "us-imm-node1a.000webhost.io";
         $headers = "From: $from";
         
@@ -69,11 +69,11 @@ class UserManager extends Manager
         $q->bindValue(':password', $user->password());
         
         $q->execute();
-        return $q->fetch();
+        return $q->fetch(); //A FAIRE Renvoyer un User
     }
     
-    public function isUsernameFree(User $user){
-        
+    public function isUsernameFree(User $user)
+    {    
         $q = $this->_db->prepare('SELECT COUNT(user_name) FROM user WHERE user_name = :userName');
         
         $q->bindValue(':userName', $user->name());
@@ -90,14 +90,14 @@ class UserManager extends Manager
         }
     }
     
-    public function isEmailFree(User $user){
-        
+    public function isEmailFree(User $user)
+    {    
         $q = $this->_db->prepare('SELECT COUNT(user_email) FROM user WHERE user_email = :userEmail');
         
         $q->bindValue(':userEmail', $user->email());
         $q->execute();
-        $r = $q->fetch()[0];
         
+        $r = $q->fetch()[0];
         if($r == 0)
         {
             return true;
@@ -106,5 +106,26 @@ class UserManager extends Manager
         {
             return false;
         }
+    }
+    
+    //METTRE A JOUR LE MODEL USER !!! 
+    //Créer la fonction de raffinement de réponses
+    public function getUser($id)
+    {
+        $q = $this->_db->prepare('SELECT * FROM user WHERE user_id = :userId');
+        $q->bindValue(':userId', $id);
+        $q->execute();
+        
+        $brutAnswer = $q->fetch();
+        
+        $refinedAnswer['id']            = (int) $brutAnswer['user_id'];
+        $refinedAnswer['name']          =       $brutAnswer['user_name'];
+        $refinedAnswer['password']      =       $brutAnswer['user_password'];
+        $refinedAnswer['email']         =       $brutAnswer['user_email'];
+        $refinedAnswer['isAuthor']      = (int) $brutAnswer['user_isAuthor'];
+        $refinedAnswer['isAdmin']       = (int) $brutAnswer['user_isAdmin'];
+        
+        $user = new User($refinedAnswer);
+        return $user;
     }
 }

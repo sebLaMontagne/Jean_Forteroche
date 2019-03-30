@@ -35,7 +35,7 @@ spl_autoload_register(function($class){
             <nav>
                 <a href="home.php">Accueil</a>
                 <a href="about.php">A propos de l'auteur</a>
-                <a href="chapters.php">Liste des chapitres</a>
+                <a href="chaptersList.php">Liste des chapitres</a>
                 <a href="contact.php">Contact</a>
                 <div class="account-access">
                     <?php 
