@@ -12,15 +12,14 @@ require('template.php');
     <input type="submit" value="Se connecter" />
 </form>
 
+<p><a href="reset.php">Avez-vous oublié vos identifiants</a></p>
+
 <?php 
 
 if(!empty($_POST))
 { 
     $userManager = new UserManager();
     $user = $userManager->getUserByLogins($_POST['name'], $_POST['password']);
-    
-    var_dump($_POST);
-    var_dump($user);
     
     if($user == null)
     {

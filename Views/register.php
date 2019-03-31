@@ -5,7 +5,7 @@ $content = '';
 require('template.php');
 ?>
 
-<form method="post" action="register.php" id="register-form">
+<form method="post" action="register.php<?php if(isset($_GET['mail'])){echo'?mail='.$_GET['mail'];} ?>" id="register-form">
 
     <label for="pseudo"></label>
     <input type="text" name="name" id="pseudo" placeholder="Entrez votre pseudonyme" required />
@@ -14,10 +14,15 @@ require('template.php');
         <p id="username-length">*Le pseudo doit contenir au moins 6 caractères</p>
     </div>
 
-    <label for="email"></label>
-    <input type="email" name="email" id="email" placeholder="Entrez votre email" required />
+    <?php
+    
+    if(!isset($_GET['mail']))
+    {
+        echo '<label for="email"></label>
+        <input type="email" name="email" id="email" placeholder="Entrez votre email" required />';
+    }
 
-    <div class="email-feedback"></div>
+    ?>
 
     <label for="password"></label>
     <input type="password" name="password" id="password" placeholder="Entrez votre mot de passe" required />
@@ -32,17 +37,16 @@ require('template.php');
         <p id="password-repeat">*Les deux mots de passe doivent être identiques</p>
     </div>
 
-    <input type="submit" value="confirmer l'inscription" id="confirm" />
+    <input type="submit" value="<?php if(isset($_GET['mail'])){ echo 'mettre à jour';} else { echo 'confirmer l\'inscription';} ?>" id="confirm" />
 </form>
 
 <?php
 
-if(!empty($_POST))
-{
-    $user = new User($_POST);
-    $userManager = new UserManager();
-    
-    if($userManager->isUsernameFree($user))
+$userManager = new UserManager();
+
+if(!empty($_POST) && empty($_GET))
+{   
+    if($userManager->isUsernameFree($_POST['name']))
     {
         echo '<p>Pseudo valide</p>';
     }
@@ -51,7 +55,7 @@ if(!empty($_POST))
         echo '<p>Le pseudo est déjà pris en base de données</p>';
     }
     
-    if($userManager->isEmailFree($user))
+    if($userManager->isEmailFree($_POST['email']))
     {
         echo '<p>Email valide</p>';
     }
@@ -60,21 +64,38 @@ if(!empty($_POST))
         echo '<p>L\'email est déjà pris en base de données</p>';
     }
     
-    if($userManager->isUsernameFree($user) && $userManager->isEmailFree($user))
+    if($userManager->isUsernameFree($_POST['name']) && $userManager->isEmailFree($_POST['email']))
     {
-        echo '<p>Inscription valide';
-        echo '<br />Un email de confirmation va vous être envoyé</p>';
-        $userManager->addUser($user);
+        echo '<p>Inscription valide</p>';
+        echo '<p>Un email de confirmation va vous être envoyé</p>';
+        $userManager->addUser($_POST['name'], $_POST['password'], $_POST['email']);
     }
     else
     {
         echo '<p>Inscription invalide</p>';
     }
-
-    //send a succès view to user
-    
 }
+
+if(!empty($_GET) && !empty($_POST) && isset($_GET['mail']))
+{
+    if(filter_var($_GET['mail'], FILTER_VALIDATE_EMAIL))
+    {
+        $user = $userManager->getUserByEmail($_GET['mail']);
+        
+        if($user != null)
+        {
+            $userManager->updateUser($user, $_POST['name'], $_POST['password']);
+            echo 'votre compte a été mis à jour';
+        }
+        else
+        {
+            echo '<p>L\'email ne correspond à aucun utilisateur</p>';
+        }
+    }
+}
+
+var_dump($_POST);
+var_dump($_GET);
 ?>
 
 <script src="../Ressources/js/register-form.js"></script>
-

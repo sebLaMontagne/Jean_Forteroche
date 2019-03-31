@@ -17,7 +17,7 @@ class UserManager extends Manager
         return $refinedAnswer;
     }
     
-    public function addUser(User $user)
+    public function addUser($name, $password, $email)
     { 
         $q = $this->_db->prepare('
             INSERT INTO user(
@@ -45,11 +45,11 @@ class UserManager extends Manager
             $confirmToken .= mt_rand(0,9);
         }
         
-        $q->bindValue(':userName', $user->name());
-        $q->bindValue(':userPassword', $user->password());
-        $q->bindValue(':userEmail', $user->email());
-        $q->bindValue(':userIsAuthor', $user->isAuthor());
-        $q->bindValue(':userIsAdmin', $user->isAdmin());
+        $q->bindValue(':userName', htmlspecialchars($name));
+        $q->bindValue(':userPassword', htmlspecialchars($password));
+        $q->bindValue(':userEmail', htmlspecialchars($email));
+        $q->bindValue(':userIsAuthor', 0);
+        $q->bindValue(':userIsAdmin', 0);
         $q->bindValue(':userToken', $confirmToken);
         $q->bindValue(':userActivation', 0);
         
@@ -72,39 +72,37 @@ class UserManager extends Manager
         $q->execute();
     }
     
-    public function isUsernameFree(User $user)
+    public function isUsernameFree($name)
     {    
-        $q = $this->_db->prepare('SELECT COUNT(user_name) FROM user WHERE user_name = :userName');
+        $q = $this->_db->prepare('SELECT user_name FROM user WHERE user_name = :userName');
         
-        $q->bindValue(':userName', $user->name());
+        $q->bindValue(':userName', htmlspecialchars($name));
         $q->execute();
-        $r = $q->fetch()[0];
         
-        if($r == 0)
+        if($r = $q->fetch())
         {
-            return true;
+            return false;
         }
         else
         {
-            return false;
+            return true;
         }
     }
     
-    public function isEmailFree(User $user)
+    public function isEmailFree($email)
     {    
-        $q = $this->_db->prepare('SELECT COUNT(user_email) FROM user WHERE user_email = :userEmail');
+        $q = $this->_db->prepare('SELECT user_email FROM user WHERE user_email = :userEmail');
         
-        $q->bindValue(':userEmail', $user->email());
+        $q->bindValue(':userEmail', htmlspecialchars($email));
         $q->execute();
         
-        $r = $q->fetch()[0];
-        if($r == 0)
+        if($r = $q->fetch())
         {
-            return true;
+            return false;
         }
         else
         {
-            return false;
+            return true;
         }
     }
     
@@ -135,5 +133,31 @@ class UserManager extends Manager
         {
             return new User($this->refineAnswer($a));
         }
+    }
+    
+    public function getUserByEmail($email)
+    {
+        $q = $this->_db->prepare('SELECT * FROM user WHERE user_email = :email');
+        $q->bindValue(':email', htmlspecialchars($email));
+        $q->execute();
+        
+        if($a = $q->fetch())
+        {
+            return new User($this->refineAnswer($a));
+        }
+    }
+    
+    public function updateUser(User $user, $username, $password)
+    {
+        $q = $this->_db->prepare('
+            UPDATE  user 
+            SET     user_name       = :username,
+                    user_password   = :password
+            WHERE   user_id         = :id');
+        
+        $q->bindValue(':username', htmlspecialchars($username));
+        $q->bindValue(':password', htmlspecialchars($password));
+        $q->bindValue(':id', $user->id());
+        $q->execute();
     }
 }
