@@ -32,7 +32,7 @@ if(!empty($_POST))
     else
     {
         $_SESSION['pseudo'] = $user->name();
-        header('Location: home.php');
+        //header('Location: home.php');
     }
 }
 

@@ -46,7 +46,7 @@ class UserManager extends Manager
         }
         
         $q->bindValue(':userName', htmlspecialchars($name));
-        $q->bindValue(':userPassword', htmlspecialchars($password));
+        $q->bindValue(':userPassword', password_hash(htmlspecialchars($password), PASSWORD_DEFAULT));
         $q->bindValue(':userEmail', htmlspecialchars($email));
         $q->bindValue(':userIsAuthor', 0);
         $q->bindValue(':userIsAdmin', 0);
@@ -120,18 +120,17 @@ class UserManager extends Manager
     
     public function getUserByLogins($username, $password)
     {
-        $q = $this->_db->prepare('
-            SELECT * FROM user 
-            WHERE user_name = :userName AND 
-                  user_password = :password');
+        $q = $this->_db->prepare('SELECT * FROM user WHERE user_name = :userName');
         
         $q->bindValue(':userName', htmlspecialchars($username));
-        $q->bindValue(':password', htmlspecialchars($password));
         $q->execute();
         
         if($a = $q->fetch())
         {
-            return new User($this->refineAnswer($a));
+            if(password_verify($password, $a['user_password']))
+            {
+                return new User($this->refineAnswer($a));
+            }
         }
     }
     
@@ -156,7 +155,7 @@ class UserManager extends Manager
             WHERE   user_id         = :id');
         
         $q->bindValue(':username', htmlspecialchars($username));
-        $q->bindValue(':password', htmlspecialchars($password));
+        $q->bindValue(':password', password_hash(htmlspecialchars($password), PASSWORD_DEFAULT));
         $q->bindValue(':id', $user->id());
         $q->execute();
     }
