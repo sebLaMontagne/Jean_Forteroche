@@ -10,19 +10,21 @@ class User
     private $_isAdmin;
     private $_token;
     private $_isActivated;
+    private $_tokenExpiration;
     
     //--------------------------------------------------------------------
     // GETTERS
     //--------------------------------------------------------------------
     
-    public function id()            { return $this->_id; }
-    public function name()          { return $this->_name; }
-    public function password()      { return $this->_password; }
-    public function email()         { return $this->_email; }
-    public function isAuthor()      { return $this->_isAuthor; }
-    public function isAdmin()       { return $this->_isAdmin; }
-    public function token()         { return $this->_token; }
-    public function isActivated()   { return $this->_isActivated; }
+    public function id()                { return $this->_id; }
+    public function name()              { return $this->_name; }
+    public function password()          { return $this->_password; }
+    public function email()             { return $this->_email; }
+    public function isAuthor()          { return $this->_isAuthor; }
+    public function isAdmin()           { return $this->_isAdmin; }
+    public function token()             { return $this->_token; }
+    public function isActivated()       { return $this->_isActivated; }
+    public function tokenExpiration()   { return $this->_tokenExpiration; }
     
     //--------------------------------------------------------------------
     // SETTERS
@@ -125,6 +127,22 @@ class User
         else
         {
             throw new Exception('the token don\'t respect the right format');
+        }
+    }
+    
+    public function setTokenExpiration($tokenExpiration)
+    {
+        if(is_int($tokenExpiration) && preg_match('#^([0-9]){10}$#',$tokenExpiration))
+        {
+            $this->_tokenExpiration = $tokenExpiration;
+        }
+        elseif(is_string($tokenExpiration) && preg_match('#^20[0-9]{2}(-([0-9]{2})){2} (([0-9]{2}:){2}([0-9]{2}))$#', $tokenExpiration))
+        {
+            $this->_tokenExpiration = strtotime($tokenExpiration);
+        }
+        else
+        {
+            throw new Exception('the token expiration don\'t respect the right format');
         }
     }
     

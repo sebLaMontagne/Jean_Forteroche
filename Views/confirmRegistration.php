@@ -1,16 +1,33 @@
 <?php
 
-$title = 'Email validé';
+$title = 'Validation de compte';
 require('template.php');
 
-if(isset($_GET) && !empty($_GET['token']))
+if(!empty($_GET['token']) && preg_match('#^([0-9]){12}$#',$_GET['token']))
 {
     $userManager = new UserManager();
-    $a = $userManager->confirmUser($_GET['token']);
-    echo'<p>Votre compte a bien été validé</p>';
-    
+    $user = $userManager->getUserByToken($_GET['token']);
+
+    if($user->tokenExpiration() > time())
+    {   
+        if($user->isActivated() == 0)
+        {
+            $userManager->confirmAccount($user);
+            echo'<p>Votre compte a été activé avec succès</p>';
+        }
+        else
+        {
+            echo'<p>Votre compte a déjà été activé</p>';
+        }
+    }
+    else
+    {
+        echo'<p>Lien d\'activation expiré</p>';
+        $userManager->renewActivationLink($user);
+        echo'<p>Un nouveau lien d\'activation a été envoyé sur votre adresse mail</p>';
+    }
 }
 else
 {
-    echo'<p>Erreur dans votre lien d\'activation</p>';
+    echo '<p>Lien d\'activation invalide</p>';
 }

@@ -84,7 +84,7 @@ if(!empty($_GET) && !empty($_POST) && isset($_GET['mail']))
         
         if($user != null)
         {
-            $userManager->updateUser($user, $_POST['name'], $_POST['password']);
+            $userManager->updateUserLogins($user, $_POST['name'], $_POST['password']);
             echo 'votre compte a été mis à jour';
         }
         else
@@ -94,8 +94,6 @@ if(!empty($_GET) && !empty($_POST) && isset($_GET['mail']))
     }
 }
 
-var_dump($_POST);
-var_dump($_GET);
 ?>
 
 <script src="../Ressources/js/register-form.js"></script>

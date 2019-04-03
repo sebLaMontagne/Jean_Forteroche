@@ -18,7 +18,7 @@ if(!empty($_POST))
     if($_POST['logout'] == 'yes')
     {
         session_destroy();
-        //header('Location:home.php');
+        header('Location:home.php');
     }
 }
 

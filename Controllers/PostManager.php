@@ -28,10 +28,10 @@ class PostManager extends Manager
         return $list;
     }
     
-    public function getPost($id)
+    public function getPost($chapter)
     {
-        $q = $this->_db->prepare('SELECT * FROM post WHERE post_id = :postId');
-        $q->bindValue(':postId',htmlspecialchars($id));
+        $q = $this->_db->prepare('SELECT * FROM post WHERE post_chapter_number = :chapter');
+        $q->bindValue(':chapter',htmlspecialchars($chapter));
         $q->execute();
         
         return new Post($this->refineAnswer($q->fetch()));

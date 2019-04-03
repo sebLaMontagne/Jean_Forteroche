@@ -5,14 +5,15 @@ class UserManager extends Manager
 {
     private function refineAnswer($brutAnswer)
     {      
-        $refinedAnswer['id']            = (int) $brutAnswer['user_id'];
-        $refinedAnswer['name']          =       $brutAnswer['user_name'];
-        $refinedAnswer['password']      =       $brutAnswer['user_password'];
-        $refinedAnswer['email']         =       $brutAnswer['user_email'];
-        $refinedAnswer['isAuthor']      = (int) $brutAnswer['user_isAuthor'];
-        $refinedAnswer['isAdmin']       = (int) $brutAnswer['user_isAdmin'];
-        $refinedAnswer['token']         =       $brutAnswer['user_token'];
-        $refinedAnswer['isActivated']   = (int) $brutAnswer['user_activation'];
+        $refinedAnswer['id']                = (int) $brutAnswer['user_id'];
+        $refinedAnswer['name']              =       $brutAnswer['user_name'];
+        $refinedAnswer['password']          =       $brutAnswer['user_password'];
+        $refinedAnswer['email']             =       $brutAnswer['user_email'];
+        $refinedAnswer['isAuthor']          = (int) $brutAnswer['user_isAuthor'];
+        $refinedAnswer['isAdmin']           = (int) $brutAnswer['user_isAdmin'];
+        $refinedAnswer['token']             =       $brutAnswer['user_token'];
+        $refinedAnswer['isActivated']       = (int) $brutAnswer['user_activation'];
+        $refinedAnswer['tokenExpiration']   =       $brutAnswer['user_token_expiration'];
         
         return $refinedAnswer;
     }
@@ -27,26 +28,34 @@ class UserManager extends Manager
                 user_isAuthor, 
                 user_isAdmin,
                 user_token,
-                user_activation) 
+                user_activation,
+                user_token_expiration) 
             VALUES(
-                :userName, 
+                :userName,
                 :userPassword,
                 :userEmail,
                 :userIsAuthor,
                 :userIsAdmin,
                 :userToken,
-                :userActivation)');
+                :userActivation,
+                CURTIME() + INTERVAL 1 DAY)');
         
         $confirmToken = '';
         $tokenLength = 12;
         
-        for($i = 0; $i < $tokenLength; $i++)
-        {
-            $confirmToken .= mt_rand(0,9);
-        }
+        //Vérifier si le code existe déjà en base de données, auquel cas on en créé un nouveau
+        do{
+            
+            for($i = 0; $i < $tokenLength; $i++)
+            {
+                $confirmToken .= mt_rand(0,9);
+            }
+            
+        }while(0);
+
         
         $q->bindValue(':userName', htmlspecialchars($name));
-        $q->bindValue(':userPassword', password_hash(htmlspecialchars($password), PASSWORD_DEFAULT));
+        $q->bindValue(':userPassword', password_hash($password, PASSWORD_DEFAULT));
         $q->bindValue(':userEmail', htmlspecialchars($email));
         $q->bindValue(':userIsAuthor', 0);
         $q->bindValue(':userIsAdmin', 0);
@@ -65,10 +74,14 @@ class UserManager extends Manager
         mail($to,$subject,$message,$headers);
     }
     
-    public function confirmUser($token)
+    public function confirmAccount(User $user)
     {
-        $q = $this->_db->prepare('UPDATE user SET user_activation = 1 WHERE user_token = :userToken');
-        $q->bindValue(':userToken', htmlspecialchars($token));
+        $q = $this->_db->prepare('
+            UPDATE  user 
+            SET     user_activation = 1
+            WHERE   user_id         = :id');
+        
+        $q->bindValue(':id', $user->id());      
         $q->execute();
     }
     
@@ -91,19 +104,28 @@ class UserManager extends Manager
     
     public function isEmailFree($email)
     {    
-        $q = $this->_db->prepare('SELECT user_email FROM user WHERE user_email = :userEmail');
+        $q = $this->_db->prepare('SELECT * FROM user WHERE user_email = :userEmail');
         
         $q->bindValue(':userEmail', htmlspecialchars($email));
         $q->execute();
+
+        return !$q->fetch();
+    }
+    
+    public function renewActivationLink(User $user)
+    {
+        $q = $this->_db->prepare('UPDATE user SET user_token_expiration = CURTIME() + INTERVAL 1 DAY WHERE user_id = :id');
+        $q->bindValue(':token', htmlspecialchars($user->id()));
+        $q->execute();
         
-        if($r = $q->fetch())
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+        $to = 'juniorwebdesign27@gmail.com;';  
+        $subject = "Confirmation d'inscription";  
+        $message = "Voici votre lien d'activation : \n";
+        $message.= 'https://billetsimplepourlalaska.000webhostapp.com/Views/confirmRegistration.php?token='.$user->token();
+        $from = "us-imm-node1a.000webhost.io";
+        $headers = "From: $from";
+        
+        mail($to,$subject,$message,$headers);
     }
     
     public function getUserById($id)
@@ -146,7 +168,19 @@ class UserManager extends Manager
         }
     }
     
-    public function updateUser(User $user, $username, $password)
+    public function getUserByToken($token)
+    {
+        $q = $this->_db->prepare('SELECT * FROM user WHERE user_token = :token');
+        $q->bindValue(':token', htmlspecialchars($token));
+        $q->execute();
+        
+        if($a = $q->fetch())
+        {
+            return new User($this->refineAnswer($a));
+        }
+    }
+    
+    public function updateUserLogins(User $user, $username, $password)
     {
         $q = $this->_db->prepare('
             UPDATE  user 

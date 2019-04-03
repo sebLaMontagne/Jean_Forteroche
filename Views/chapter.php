@@ -10,7 +10,7 @@ if(isset($_GET) && !empty($_GET['id']))
     $postDate = new DateTime($selectedPost->Date());
     
     $userManager = new UserManager();
-    $postAuthor = $userManager->getUser($selectedPost->authorId());
+    $postAuthor = $userManager->getUserById($selectedPost->authorId());
     
     echo
     '<h3>Chapitre '.$selectedPost->chapterNumber().' : '.$selectedPost->Title().'</h3>

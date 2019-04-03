@@ -16,7 +16,7 @@ for($i = 0; $i < count($posts); $i++)
     
     //Ajouter un extrait
     echo
-    '<a href="chapter.php?id='.$posts[$i]->Id().'">
+    '<a href="chapter.php?id='.$posts[$i]->chapterNumber().'">
         <h3>Chapitre '.$posts[$i]->chapterNumber().' : '.$posts[$i]->Title().'</h3>
         <p>Publié le '.$postDate->format('d/m/Y à H:i:s').' par '.$postAuthor->name().'</p>
     </a>';

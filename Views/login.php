@@ -17,7 +17,8 @@ require('template.php');
 <?php 
 
 if(!empty($_POST))
-{ 
+{
+    var_dump($_POST);
     $userManager = new UserManager();
     $user = $userManager->getUserByLogins($_POST['name'], $_POST['password']);
     
@@ -32,8 +33,7 @@ if(!empty($_POST))
     else
     {
         $_SESSION['pseudo'] = $user->name();
-        //header('Location: home.php');
+        header('Location: home.php');
     }
 }
-
 ?>
