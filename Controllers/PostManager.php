@@ -33,7 +33,23 @@ class PostManager extends Manager
         $q = $this->_db->prepare('SELECT * FROM post WHERE post_chapter_number = :chapter');
         $q->bindValue(':chapter',htmlspecialchars($chapter));
         $q->execute();
-        
+
         return new Post($this->refineAnswer($q->fetch()));
+    }
+    
+    public function isChapterExist($chapter)
+    {
+        $q = $this->_db->prepare('SELECT * FROM post WHERE post_chapter_number = :chapter');
+        $q->bindValue(':chapter',htmlspecialchars($chapter));
+        $q->execute();
+        
+        if($a = $q->fetch())
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }
