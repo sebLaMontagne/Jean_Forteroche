@@ -39,7 +39,7 @@ spl_autoload_register(function($class){
                 <a href="contact.php">Contact</a>
                 <div class="account-access">
                     <?php 
-                    if(!empty($_SESSION['pseudo']))
+                    if(!empty($_SESSION['pseudo']) && !empty($_SESSION['email']))
                     {
                         echo '<p>Bienvenue '.htmlspecialchars($_SESSION['pseudo']).'</p>';
                         echo '<a href="logout.php">Déconnexion</a>';

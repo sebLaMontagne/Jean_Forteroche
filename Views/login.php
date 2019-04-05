@@ -33,6 +33,7 @@ if(!empty($_POST))
     else
     {
         $_SESSION['pseudo'] = $user->name();
+        $_SESSION['email'] = $user->email();
         header('Location: home.php');
     }
 }

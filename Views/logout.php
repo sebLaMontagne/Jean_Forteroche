@@ -13,13 +13,11 @@ require('template.php');
 
 
 <?php
-if(!empty($_POST))
+
+if(isset($_POST['logout']) && $_POST['logout'] == 'yes')
 {
-    if($_POST['logout'] == 'yes')
-    {
-        session_destroy();
-        header('Location:home.php');
-    }
+    session_destroy();
+    header('Location:home.php');
 }
 
 ?>
