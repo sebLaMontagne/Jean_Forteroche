@@ -34,6 +34,7 @@ if(!empty($_POST))
         $_SESSION['pseudo'] = $user->name();
         $_SESSION['email'] = $user->email();
         $_SESSION['isAdmin'] = $user->isAdmin();
+        $_SESSION['id'] = $user->id();
         header('Location: home.php');
     }
 }

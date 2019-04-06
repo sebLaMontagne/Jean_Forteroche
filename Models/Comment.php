@@ -7,6 +7,7 @@ class Comment
     private $_userId;
     private $_content;
     private $_date;
+    private $_isNew;
     
     //--------------------------------------------------------------------
     // GETTERS
@@ -17,6 +18,7 @@ class Comment
     public function userId()    { return $this->_userId; }
     public function content()   { return $this->_content; }
     public function date()      { return $this->_date; }
+    public function isNew()     { return $this->_isNew; }
     
     //--------------------------------------------------------------------
     // SETTERS
@@ -93,7 +95,33 @@ class Comment
     
     public function setDate($date)
     {
-        //Check date validity
+        if(is_string($date))
+        {
+            if(preg_match("#^20[0-9]{2}(-[0-9]{2}){2} ([0-9]{2}:){2}([0-9]){2}$#", $date))
+            {
+                $this->_date = htmlspecialchars($date);
+            }
+            else
+            {
+                throw new Exception('The date don\'t respect the date format');
+            }
+        }
+        else
+        {
+            throw new Exception('The date must be a string value');
+        }
+    }
+    
+    public function setIsNew($isNew)
+    {
+        if($isNew == 1 || $isNew == 0)
+        {
+            $this->_isNew = htmlspecialchars($isNew);
+        }
+        else
+        {
+            throw new Exception('The isNew attribute must be a boolean value');
+        }
     }
     
     //--------------------------------------------------------------------
