@@ -96,4 +96,4 @@ if(!empty($_GET) && !empty($_POST) && isset($_GET['mail']))
 
 ?>
 
-<script src="../Ressources/js/register-form.js"></script>
+<script src="../../Ressources/js/register-form.js"></script>

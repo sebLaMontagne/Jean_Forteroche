@@ -4,14 +4,14 @@ session_start();
 
 spl_autoload_register(function($class){
     
-    $file = '../Models/'.$class.'.php';
+    $file = '../../Models/'.$class.'.php';
     if(file_exists($file))
     {
         require_once($file);
     }
     else
     {
-        $file = '../Controllers/'.$class.'.php';
+        $file = '../../Controllers/'.$class.'.php';
         if(file_exists($file))
         {
             require_once($file);
@@ -26,8 +26,8 @@ spl_autoload_register(function($class){
     <head>
         <meta charset="utf-8" />
         <title><?= $title ?></title>
-        <link rel="stylesheet" href="../Ressources/css/styles.css" />
-        <script src="../Ressources/js/jQuery.js"></script>
+        <link rel="stylesheet" href="../../Ressources/css/styles.css" />
+        <script src="../../Ressources/js/jQuery.js"></script>
     </head>
     <body>
         <header>
@@ -39,9 +39,14 @@ spl_autoload_register(function($class){
                 <a href="contact.php">Contact</a>
                 <div class="account-access">
                     <?php 
-                    if(!empty($_SESSION['pseudo']) && !empty($_SESSION['email']))
+                    if(!empty($_SESSION['pseudo']) && !empty($_SESSION['email']) && !empty($_SESSION['isAdmin']))
                     {
                         echo '<p>Bienvenue '.htmlspecialchars($_SESSION['pseudo']).'</p>';
+                        
+                        if($_SESSION['isAdmin'])
+                        {
+                            echo '<a href="../back/admin.php">Admin</a>';
+                        }
                         echo '<a href="logout.php">Déconnexion</a>';
                     }
                     else

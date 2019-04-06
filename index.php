@@ -2,7 +2,7 @@
 
 try
 {
-    header('Location:Views/home.php');
+    header('Location:Views/Front/home.php');
 }
 catch(Exception $e)
 {

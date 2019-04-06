@@ -20,11 +20,11 @@ if(isset($_GET) && !empty($_GET['chapter']) && $postManager->isChapterExist($_GE
     
     if($postManager->isChapterExist($_GET['chapter']-1))
     {
-        echo '<a href="http://localhost/P4/Views/chapter.php?chapter='.($_GET['chapter']-1).'">Chapitre précédent</a>';
+        echo '<a href="http://localhost/P4/Views/front/chapter.php?chapter='.($_GET['chapter']-1).'">Chapitre précédent</a>';
     }
     if($postManager->isChapterExist($_GET['chapter']+1))
     {
-        echo '<a href="http://localhost/P4/Views/chapter.php?chapter='.($_GET['chapter']+1).'">Chapitre suivant</a>';
+        echo '<a href="http://localhost/P4/Views/front/chapter.php?chapter='.($_GET['chapter']+1).'">Chapitre suivant</a>';
     }
 }
 else

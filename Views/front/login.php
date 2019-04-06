@@ -18,7 +18,6 @@ require('template.php');
 
 if(!empty($_POST))
 {
-    var_dump($_POST);
     $userManager = new UserManager();
     $user = $userManager->getUserByLogins($_POST['name'], $_POST['password']);
     
@@ -34,6 +33,7 @@ if(!empty($_POST))
     {
         $_SESSION['pseudo'] = $user->name();
         $_SESSION['email'] = $user->email();
+        $_SESSION['isAdmin'] = $user->isAdmin();
         header('Location: home.php');
     }
 }
