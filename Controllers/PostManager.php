@@ -52,4 +52,11 @@ class PostManager extends Manager
             return false;
         }
     }
+    
+    public function deletePost($chapter)
+    {
+        $q = $this->_db->prepare('DELETE FROM post WHERE post_chapter_number = :chapter');
+        $q->bindValue(':chapter', htmlspecialchars($chapter));
+        $q->execute();
+    }
 }
