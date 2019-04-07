@@ -9,6 +9,7 @@ class Post
     private $_illustration;
     private $_content;
     private $_date;
+    private $_isPublished;
     
     //--------------------------------------------------------------------
     // GETTERS
@@ -21,6 +22,7 @@ class Post
     public function illustration()  { return $this->_illustration; }
     public function content()       { return $this->_content; }
     public function date()          { return $this->_date; }
+    public function isPublished()   { return $this->_isPublished; }
     
     //--------------------------------------------------------------------
     // SETTERS
@@ -150,6 +152,18 @@ class Post
         else
         {
             throw new Exception('The date must be a string value');
+        }
+    }
+    
+    public function setIsPublished($isPublished)
+    {
+        if($isPublished == 0 || $isPublished == 1)
+        {
+            $this->_isPublished = $isPublished;
+        }
+        else
+        {
+            throw new Exception('The isPublished status must be a boolean value');
         }
     }
     
