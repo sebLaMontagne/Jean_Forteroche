@@ -6,7 +6,7 @@ require('template.php');
 $postManager = new PostManager();
 $userManager = new UserManager();
 
-$posts = $postManager->getAllPosts();
+$posts = $postManager->getAllPublishedPosts();
 $content = '';
 
 for($i = 0; $i < count($posts); $i++)

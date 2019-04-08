@@ -11,6 +11,7 @@ class PostManager extends Manager
         $refinedAnswer['chapterNumber'] = (int) $brutAnswer['post_chapter_number'];
         $refinedAnswer['content']       =       $brutAnswer['post_content'];
         $refinedAnswer['date']          =       $brutAnswer['post_date'];
+        $refinedAnswer['isPublished']   = (int) $brutAnswer['post_isPublished'];
         
         return $refinedAnswer;
     }
@@ -18,6 +19,19 @@ class PostManager extends Manager
     public function getAllPosts()
     {
         $q = $this->_db->query('SELECT * FROM post ORDER BY post_chapter_number');
+        
+        $list = [];
+        while($brutAnswer = $q->fetch())
+        {
+            $refinedAnswer = $this->refineAnswer($brutAnswer);
+            $list[] = new Post($refinedAnswer);
+        }
+        return $list;
+    }
+    
+    public function getAllPublishedPosts()
+    {
+        $q = $this->_db->query('SELECT * FROM post WHERE post_isPublished = 1 ORDER BY post_chapter_number');
         
         $list = [];
         while($brutAnswer = $q->fetch())
@@ -51,6 +65,52 @@ class PostManager extends Manager
         {
             return false;
         }
+    }
+    
+    public function savePost($author, $chapter, $title, $content, $publish)
+    {
+        $q = $this->_db->prepare('
+            INSERT INTO post(
+                user_id,
+                post_title,
+                post_chapter_number,
+                post_content,
+                post_date,
+                post_isPublished)
+            VALUES(
+                :author,
+                :title,
+                :chapter,
+                :content,
+                NOW(),
+                :publish)');
+        
+        $q->bindValue(':author', htmlspecialchars($author));
+        $q->bindValue(':title', htmlspecialchars($title));
+        $q->bindValue(':chapter', htmlspecialchars($chapter));
+        $q->bindValue(':content', $content);
+        $q->bindValue(':publish', htmlspecialchars($publish));
+        
+        $q->execute();
+    }
+    
+    public function updatePost($id, $chapter, $title, $content, $publish)
+    {
+        $q = $this->_db->prepare('
+            UPDATE  post
+            SET     post_chapter_number     = :chapter,
+                    post_title              = :title,
+                    post_content            = :content,
+                    post_isPublished        = :publish
+            WHERE   post_id                 = :id');
+        
+        $q->bindValue(':chapter', htmlspecialchars($chapter));
+        $q->bindValue(':title', htmlspecialchars($title));
+        $q->bindValue(':content', $content);
+        $q->bindValue(':publish', htmlspecialchars($publish));
+        $q->bindValue(':id', htmlspecialchars($id));
+        
+        $q->execute();
     }
     
     public function deletePost($chapter)
