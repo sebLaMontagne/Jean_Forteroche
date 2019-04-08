@@ -48,7 +48,7 @@ class CommentManager extends Manager
         while($brutAnswer = $q->fetch())
         {
             $refinedAnswer = $this->refineAnswer($brutAnswer);
-            $list[] = new Post($refinedAnswer);
+            $list[] = new Comment($refinedAnswer);
         }
         return $list;
     }

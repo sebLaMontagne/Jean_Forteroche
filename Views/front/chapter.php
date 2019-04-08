@@ -54,9 +54,11 @@ if(isset($_GET) && !empty($_GET['chapter']) && $postManager->isChapterExist($_GE
     for($i=0; $i < count($comments); $i++)
     {
         $commentDate = new DateTime($comments[$i]->date());
+        $commentAuthor = $userManager->getUserById($comments[$i]->userId());
+        
         echo
         '<div>
-            <p>'.$postAuthor->name().'</p>
+            <p>'.$commentAuthor->name().'</p>
             <p>a écrit le '.$commentDate->format('d/m/Y à H:i:s').' :</p>
             <p>'.$comments[$i]->content().'</p>
          </div>';

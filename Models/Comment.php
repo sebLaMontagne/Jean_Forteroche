@@ -30,7 +30,7 @@ class Comment
         {
             if($id > 0)
             {
-                $this->_id = $id
+                $this->_id = $id;
             }
             else
             {

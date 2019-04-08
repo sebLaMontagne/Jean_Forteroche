@@ -44,8 +44,6 @@ elseif(isset($_SESSION['data']))
         <input type="submit" value="sauvegarder" />
     </form>';
     
-    
-    https://www.youtube.com/watch?v=V4embr-iFCs&list=PLHQyGGzRHYIbEOPD1LyvIa9ZX68ci6c_s&index=3
 }
 else
 {
