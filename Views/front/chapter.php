@@ -18,6 +18,9 @@ if(isset($_GET) && !empty($_GET['chapter']) && $postManager->isChapterExist($_GE
      <p>'.$selectedPost->Content().'</p>
      <p>Publié le '.$postDate->format('d/m/Y à H:i:s').' par '.$postAuthor->name().'</p>';
     
+    /*
+    Changer la gestion des chapitre suivant/précédent pour afficher
+    
     if($postManager->isChapterExist($_GET['chapter']-1))
     {
         echo '<a href="http://localhost/P4/Views/front/chapter.php?chapter='.($_GET['chapter']-1).'">Chapitre précédent</a>';
@@ -26,14 +29,17 @@ if(isset($_GET) && !empty($_GET['chapter']) && $postManager->isChapterExist($_GE
     {
         echo '<a href="http://localhost/P4/Views/front/chapter.php?chapter='.($_GET['chapter']+1).'">Chapitre suivant</a>';
     }
+    */
     
-    if(!empty($_SESSION['pseudo']) && !empty($_SESSION['email']) && !empty($_SESSION['isAdmin']))
+    echo '<p>Next valid chapter : '.$postManager->getNextChapterNumber($_GET['chapter']).'</p>';
+    
+    if(!empty($_SESSION['pseudo']))
     {
         echo
         '<form method="post" action="chapter.php?chapter='.$_GET['chapter'].'">
             <textarea placeholder="Laissez-nous un commentaire" name="comment"></textarea>
             <input type="submit" value="commenter" />
-         </form>';  
+         </form>';
     }
     else
     {

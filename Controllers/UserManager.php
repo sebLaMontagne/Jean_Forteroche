@@ -40,18 +40,13 @@ class UserManager extends Manager
                 :userActivation,
                 CURTIME() + INTERVAL 1 DAY)');
         
-        $confirmToken = '';
-        $tokenLength = 12;
-        
-        //Vérifier si le code existe déjà en base de données, auquel cas on en créé un nouveau
         do{
-            
-            for($i = 0; $i < $tokenLength; $i++)
+            $confirmToken = '';
+            for($i = 0; $i < 12; $i++)
             {
                 $confirmToken .= mt_rand(0,9);
-            }
-            
-        }while(0);
+            }   
+        }while(!$this->isTokenFree(confirmToken));
 
         
         $q->bindValue(':userName', htmlspecialchars($name));
@@ -104,12 +99,35 @@ class UserManager extends Manager
     
     public function isEmailFree($email)
     {    
-        $q = $this->_db->prepare('SELECT * FROM user WHERE user_email = :userEmail');
+        $q = $this->_db->prepare('SELECT user_email FROM user WHERE user_email = :userEmail');
         
         $q->bindValue(':userEmail', htmlspecialchars($email));
         $q->execute();
 
         return !$q->fetch();
+    }
+    
+    public function isTokenFree($token)
+    {
+        if(preg_match('#^[0-9]{12}$#', $token))
+        {
+            $q = $this->_db->prepare('SELECT user_token FROM user WHERE user_token = :token');
+            $q->bindValue(':token', $token);
+            $q->execute();
+            
+            if($r = $q->fetch())
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        else
+        {
+            throw new Exception('The token is in an invalid format');
+        }
     }
     
     public function renewActivationLink(User $user)
