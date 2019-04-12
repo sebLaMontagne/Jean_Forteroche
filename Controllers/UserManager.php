@@ -118,8 +118,8 @@ class UserManager extends Manager
         $q->bindValue(':token', htmlspecialchars($user->id()));
         $q->execute();
         
-        $to = 'juniorwebdesign27@gmail.com;';  
-        $subject = "Confirmation d'inscription";  
+        $to = 'juniorwebdesign27@gmail.com;';
+        $subject = "Confirmation d'inscription";
         $message = "Voici votre lien d'activation : \n";
         $message.= 'https://billetsimplepourlalaska.000webhostapp.com/Views/confirmRegistration.php?token='.$user->token();
         $from = "us-imm-node1a.000webhost.io";

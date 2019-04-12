@@ -9,7 +9,7 @@ if(isset($_GET) && !empty($_GET['chapter']) && $postManager->isChapterExist($_GE
 {
     echo 
     '<p>Etes-vous sûr de vouloir supprimer cet article ?</p>
-     <form method="post" action="delete.php?chapter='.$_GET['chapter'].'">
+     <form method="post" action="deletePost.php?chapter='.$_GET['chapter'].'">
         <label for="delete-yes">Oui</label><input id="delete-yes" type="radio" name="delete" value="yes" />
         <label for="delete-no">Non</label><input id="delete-no" type="radio" name="delete" value="no" />
         <input type="submit" value="confirmer" />
@@ -21,6 +21,10 @@ if(isset($_GET) && !empty($_GET['chapter']) && $postManager->isChapterExist($_GE
         header('Location:chaptersList.php');
     }
     
+    if(isset($_POST['delete']) && $_POST['delete'] == 'no')
+    {
+        header('Location:chaptersList.php');
+    }
 }
 else
 {

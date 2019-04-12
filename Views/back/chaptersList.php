@@ -3,7 +3,7 @@
 $title = 'Liste des chapitres';
 require('template.php');
 
-echo '<p><a href="write.php">Ecrire un nouveau chapitre</a></p>';
+echo '<p><a href="newPost.php">Ecrire un nouveau chapitre</a></p>';
 
 $postManager = new PostManager;
 $list = $postManager->getAllPosts();
@@ -24,17 +24,8 @@ for($i = 0; $i < count($list); $i++)
     echo '
     <div>
         <p>Chapitre '.$list[$i]->chapterNumber().' : '.$list[$i]->title().'</p>
-        <a href="write.php?chapter='.$list[$i]->chapterNumber().'">modifier</a><a href="delete.php?chapter='.$list[$i]->chapterNumber().'">supprimer</a>
+        <a href="updatePost.php?chapter='.$list[$i]->chapterNumber().'">modifier</a><a href="deletePost.php?chapter='.$list[$i]->chapterNumber().'">supprimer</a>
     </div>';
 }
 
-echo '<p><a href="write.php">Ecrire un nouveau chapitre</a></p>';
-
-if(isset($_GET['a']) && $_GET['a'] == 'created')
-{
-    echo '<p>Le chapitre a bien été créé</p>';
-}
-if(isset($_GET['a']) && $_GET['a'] == 'updated')
-{
-    echo '<p>Le chapitre a bien été mis à jour</p>';
-}
+echo '<p><a href="newPost.php">Ecrire un nouveau chapitre</a></p>';

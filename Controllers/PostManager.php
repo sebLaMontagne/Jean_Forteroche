@@ -51,6 +51,15 @@ class PostManager extends Manager
         return new Post($this->refineAnswer($q->fetch()));
     }
     
+    public function getPostIDbyChapter($chapter)
+    {
+        $q = $this->_db->prepare('SELECT post_id FROM post WHERE post_chapter_number = :chapter');
+        $q->bindValue(':chapter', htmlspecialchars($chapter));
+        $q->execute();
+        
+        return $q->fetch()[0];
+    }
+    
     public function isChapterExist($chapter)
     {
         $q = $this->_db->prepare('SELECT * FROM post WHERE post_chapter_number = :chapter');
@@ -88,14 +97,14 @@ class PostManager extends Manager
         $q->bindValue(':author', htmlspecialchars($author));
         $q->bindValue(':title', htmlspecialchars($title));
         $q->bindValue(':chapter', htmlspecialchars($chapter));
-        $q->bindValue(':content', $content);
+        $q->bindValue(':content', htmlspecialchars($content));
         $q->bindValue(':publish', htmlspecialchars($publish));
         
         $q->execute();
     }
     
     public function updatePost($id, $chapter, $title, $content, $publish)
-    {
+    {   
         $q = $this->_db->prepare('
             UPDATE  post
             SET     post_chapter_number     = :chapter,
@@ -106,11 +115,12 @@ class PostManager extends Manager
         
         $q->bindValue(':chapter', htmlspecialchars($chapter));
         $q->bindValue(':title', htmlspecialchars($title));
-        $q->bindValue(':content', $content);
+        $q->bindValue(':content', htmlspecialchars($content));
         $q->bindValue(':publish', htmlspecialchars($publish));
         $q->bindValue(':id', htmlspecialchars($id));
         
         $q->execute();
+        
     }
     
     public function deletePost($chapter)

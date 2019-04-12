@@ -61,7 +61,9 @@ if(isset($_GET) && !empty($_GET['chapter']) && $postManager->isChapterExist($_GE
             <p>'.$commentAuthor->name().'</p>
             <p>a écrit le '.$commentDate->format('d/m/Y à H:i:s').' :</p>
             <p>'.$comments[$i]->content().'</p>
+            <p><a href="leaveAppreciation.php?appreciation=like&id='.$comments[$i]->id().'">Aimer</a>   <a  href="leaveAppreciation.php?appreciation=report&id='.$comments[$i]->id().'">Signaler</a>
          </div>';
+        //faire passer l'id du post
     }
 }
 else
