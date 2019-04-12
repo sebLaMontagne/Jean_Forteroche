@@ -60,6 +60,36 @@ class PostManager extends Manager
         return $q->fetch()[0];
     }
     
+    public function getNextChapterNumber($chapter)
+    {
+        if(intval($chapter) > 0)
+        {
+            $q = $this->_db->prepare('
+                SELECT post_chapter_number FROM post 
+                WHERE post_chapter_number > :chapter AND post_isPublished = 1
+                ORDER BY post_chapter_number ASC');
+            $q->bindValue(':chapter', $chapter);
+            $q->execute();
+            
+            return $q->fetch()[0];
+        }
+    }
+    
+    public function getPreviousChapterNumber($chapter)
+    {
+        if(intval($chapter) > 0)
+        {
+            $q = $this->_db->prepare('
+                SELECT post_chapter_number FROM post 
+                WHERE post_chapter_number < :chapter AND post_isPublished = 1
+                ORDER BY post_chapter_number DESC');
+            $q->bindValue(':chapter', $chapter);
+            $q->execute();
+            
+            return $q->fetch()[0];
+        }
+    }
+    
     public function isChapterExist($chapter)
     {
         $q = $this->_db->prepare('SELECT * FROM post WHERE post_chapter_number = :chapter');
@@ -125,6 +155,10 @@ class PostManager extends Manager
     
     public function deletePost($chapter)
     {
+        //récupérer l'id du post du chapitre
+        //supprimer les commentaires ayant un post_id = à l'id du post
+        //supprimer les appreciations ayant un comment_id à supprimer
+        
         $q = $this->_db->prepare('DELETE FROM post WHERE post_chapter_number = :chapter');
         $q->bindValue(':chapter', htmlspecialchars($chapter));
         $q->execute();

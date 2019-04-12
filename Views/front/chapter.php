@@ -17,21 +17,19 @@ if(isset($_GET) && !empty($_GET['chapter']) && $postManager->isChapterExist($_GE
     '<h3>Chapitre '.$selectedPost->chapterNumber().' : '.$selectedPost->Title().'</h3>
      <p>'.$selectedPost->Content().'</p>
      <p>Publié le '.$postDate->format('d/m/Y à H:i:s').' par '.$postAuthor->name().'</p>';
+
     
-    /*
-    Changer la gestion des chapitre suivant/précédent pour afficher
-    
-    if($postManager->isChapterExist($_GET['chapter']-1))
+    if($postManager->isChapterExist($postManager->getPreviousChapterNumber($_GET['chapter'])))
     {
-        echo '<a href="http://localhost/P4/Views/front/chapter.php?chapter='.($_GET['chapter']-1).'">Chapitre précédent</a>';
+         echo '<p><a href="http://localhost/P4/Views/front/chapter.php?chapter='.$postManager->getPreviousChapterNumber($_GET['chapter']).'">Précédent</a>';
     }
-    if($postManager->isChapterExist($_GET['chapter']+1))
-    {
-        echo '<a href="http://localhost/P4/Views/front/chapter.php?chapter='.($_GET['chapter']+1).'">Chapitre suivant</a>';
-    }
-    */
     
-    echo '<p>Next valid chapter : '.$postManager->getNextChapterNumber($_GET['chapter']).'</p>';
+    if($postManager->isChapterExist($postManager->getNextChapterNumber($_GET['chapter'])))
+    {
+         echo '<p><a href="http://localhost/P4/Views/front/chapter.php?chapter='.$postManager->getNextChapterNumber($_GET['chapter']).'">   Suivant</a>';
+    }
+    
+    //Formulaire commentaire
     
     if(!empty($_SESSION['pseudo']))
     {
@@ -48,6 +46,7 @@ if(isset($_GET) && !empty($_GET['chapter']) && $postManager->isChapterExist($_GE
     
     echo '<p>Commentaires :</p>';
     
+    //Affichage commentaire
     
     $commentManager = new CommentManager();
     
