@@ -4,6 +4,17 @@ require_once('Manager.php');
 
 class AppreciationManager extends Manager
 {
+    private function refineAnswer($brutAnswer)
+    {
+        $refinedAnswer['id']        = (int) $brutAnswer['appreciation_id'];
+        $refinedAnswer['commentId'] = (int) $brutAnswer['comment_id'];
+        $refinedAnswer['userId']    = (int) $brutAnswer['user_id'];
+        $refinedAnswer['isLike']    = (int) $brutAnswer['appreciation_isLike'];
+        $refinedAnswer['isReport']  = (int) $brutAnswer['appreciation_isReport'];
+
+        return $refinedAnswer;
+    } 
+    
     public function addAppreciation($commentId, $userId, $appreciationType = 'like')
     {
         if(intval($commentId) > 0)
@@ -58,7 +69,22 @@ class AppreciationManager extends Manager
         }
     }
     
-    public function getCommentAppreciation($commentId, $appreciationType = 'likes')
+    public function getCommentAppreciations(Comment $comment)
+    {
+        $q = $this->_db->prepare('SELECT * FROM appreciation WHERE comment_id = :comment_id');
+        $q->bindValue(':comment_id', $comment->id());
+        $q->execute();
+        
+        $list = [];
+        while($brutAnswer = $q->fetch())
+        {
+            $refinedAnswer = $this->refineAnswer($brutAnswer);
+            $list[] = new Appreciation($refinedAnswer);
+        }
+        return $list;
+    }
+    
+    public function countCommentAppreciations($commentId, $appreciationType = 'likes')
     {
         if(intval($commentId) > 0)
         {
@@ -150,6 +176,20 @@ class AppreciationManager extends Manager
             $q = $this->_db->prepare('DELETE FROM appreciation WHERE comment_id = :comment_id AND user_id = :user_id');
             $q->bindValue(':comment_id', $comment);
             $q->bindValue(':user_id', $user);
+            $q->execute();
+        }
+        else
+        {
+            throw new Exception('The parameters must be integer values');
+        }
+    }
+    
+    public function deleteAppreciationById($id)
+    {
+        if(intval($id) > 0)
+        {
+            $q = $this->_db->prepare('DELETE FROM appreciation WHERE appreciation_id = :appreciation_id');
+            $q->bindValue(':appreciation_id', $id);
             $q->execute();
         }
         else

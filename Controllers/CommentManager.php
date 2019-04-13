@@ -38,6 +38,15 @@ class CommentManager extends Manager
         $q->execute();
     }
     
+    public function getComment($id)
+    {
+        $q = $this->_db->prepare('SELECT * FROM comment WHERE comment_id = :id');
+        $q->bindValue(':id',htmlspecialchars($id));
+        $q->execute();
+
+        return new Comment($this->refineAnswer($q->fetch()));
+    }
+    
     public function getPostComments(Post $post)
     {
         $q = $this->_db->prepare('SELECT * FROM comment WHERE post_id = :postId');
@@ -91,6 +100,29 @@ class CommentManager extends Manager
         else
         {
             throw new Exception('the parameters must be strictly positive integer values');
+        }
+    }
+    
+    public function deleteComment($id)
+    {
+        if(intval($id) > 0)
+        {   
+            $comment = $this->getComment($id);
+            $appreciationManager = new AppreciationManager();
+            $appreciations = $appreciationManager->getCommentAppreciations($comment);
+            
+            for($i = 0; $i < count($appreciations); $i++)
+            {
+                $appreciationManager->deleteAppreciationById($appreciations[$i]->id());
+            }
+            
+            $q = $this->_db->prepare('DELETE FROM comment WHERE comment_id = :comment_id');
+            $q->bindValue(':comment_id', htmlspecialchars($id));
+            $q->execute();
+        }
+        else
+        {
+            throw new Exception('The chapter argument must be a strictly positive number');
         }
     }
     

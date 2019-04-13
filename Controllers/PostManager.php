@@ -165,9 +165,15 @@ class PostManager extends Manager
     public function deletePost($chapter)
     {
         if(intval($chapter) > 0)
-        {
+        {   
+            $post = $this->getPost($chapter);
             $commentManager = new CommentManager();
-            $commentManager->deletePostCommentsById($this->getPostIDbyChapter($chapter));
+            $comments = $commentManager->getPostComments($post);
+            
+            for($i = 0; $i < count($comments); $i++)
+            {
+                $commentManager->deleteComment($comments[$i]->id());
+            }
             
             $q = $this->_db->prepare('DELETE FROM post WHERE post_chapter_number = :chapter');
             $q->bindValue(':chapter', $chapter);
@@ -177,10 +183,5 @@ class PostManager extends Manager
         {
             throw new Exception('The chapter argument must be a strictly positive number');
         }
-        /*
-        $q = $this->_db->prepare('DELETE FROM post WHERE post_chapter_number = :chapter');
-        $q->bindValue(':chapter', htmlspecialchars($chapter));
-        $q->execute();
-        */
     }
 }

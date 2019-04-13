@@ -13,7 +13,7 @@ class Appreciation
     
     public function id()        { return $this->_id; }
     public function commentId() { return $this->_commentId; }
-    public function userid()    { return $this->_userId; }
+    public function userId()    { return $this->_userId; }
     public function isLike()    { return $this->_isLike; }
     public function isReport()  { return $this->_isReport; }
     
@@ -27,7 +27,7 @@ class Appreciation
         {
             if($id > 0)
             {
-                $this->_id = $id
+                $this->_id = $id;
             }
             else
             {
@@ -46,7 +46,7 @@ class Appreciation
         {
             if($commentId > 0)
             {
-                $this->_commentId = $commentId
+                $this->_commentId = $commentId;
             }
             else
             {
@@ -65,7 +65,7 @@ class Appreciation
         {
             if($userId > 0)
             {
-                $this->_userId = $userId
+                $this->_userId = $userId;
             }
             else
             {
@@ -80,25 +80,25 @@ class Appreciation
     
     public function setIsLike($isLike)
     {
-        if(is_bool($isLike))
+        if($isLike == 1 || $isLike == 0)
         {
-            $this->_isLike = $isLike;
+            $this->_isLike = htmlspecialchars($isLike);
         }
         else
         {
-            throw new Exception('The Appreciation isLike must be a boolean value');
+            throw new Exception('The author status must be a boolean value');
         }
     }
     
     public function setIsReport($isReport)
     {
-        if(is_bool($isReport))
+        if($isReport == 1 || $isReport == 0)
         {
-            $this->_isReport = $isReport;
+            $this->_isReport = htmlspecialchars($isReport);
         }
         else
         {
-            throw new Exception('The Appreciation isReport must be a boolean value');
+            throw new Exception('The author status must be a boolean value');
         }
     }
     
