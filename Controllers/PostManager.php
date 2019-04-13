@@ -155,12 +155,23 @@ class PostManager extends Manager
     
     public function deletePost($chapter)
     {
-        //récupérer l'id du post du chapitre
-        //supprimer les commentaires ayant un post_id = à l'id du post
-        //supprimer les appreciations ayant un comment_id à supprimer
-        
+        if(intval($chapter) > 0)
+        {
+            $commentManager = new CommentManager();
+            $commentManager->deletePostCommentsById($this->getPostIDbyChapter($chapter));
+            
+            $q = $this->_db->prepare('DELETE FROM post WHERE post_chapter_number = :chapter');
+            $q->bindValue(':chapter', $chapter);
+            $q->execute();
+        }
+        else
+        {
+            throw new Exception('The chapter argument must be a strictly positive number');
+        }
+        /*
         $q = $this->_db->prepare('DELETE FROM post WHERE post_chapter_number = :chapter');
         $q->bindValue(':chapter', htmlspecialchars($chapter));
         $q->execute();
+        */
     }
 }

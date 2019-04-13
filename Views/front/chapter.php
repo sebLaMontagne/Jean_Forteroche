@@ -61,6 +61,12 @@ if(isset($_GET) && !empty($_GET['chapter']) && $postManager->isChapterExist($_GE
         $commentDate = new DateTime($comments[$i]->date());
         $commentAuthor = $userManager->getUserById($comments[$i]->userId());
         
+        //N'afficher les commentaires que si l'utilisateur est connecté
+        //Afficher si l'utilisateur a liké ou report un comm
+        //L'utilisateur ne peut apprecier qu'une seule fois
+        //Donner une option pour reset l'appreciation (met isLike et isReport à 0)
+        //L'utilisateur ne peut pas apprecier ses propres posts
+
         echo
         '<div>
             <p>'.$commentAuthor->name().'</p>

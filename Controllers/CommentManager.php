@@ -52,4 +52,18 @@ class CommentManager extends Manager
         }
         return $list;
     }
+    
+    public function deletePostCommentsById($id)
+    {
+        if(intval($id) > 0)
+        {
+            $q = $this->_db->prepare('DELETE FROM comment WHERE post_id = :id');
+            $q->bindValue(':id', $id);
+            $q->execute();
+        }
+        else
+        {
+            throw new Exception('the id must be a strictly positive integer value');
+        }
+    }
 }

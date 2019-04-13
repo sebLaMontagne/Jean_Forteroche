@@ -45,7 +45,7 @@ spl_autoload_register(function($class){
                         
                         if($_SESSION['isAdmin'])
                         {
-                            echo '<a href="../back/admin.php">Admin</a>';
+                            echo '<a href="../back/admin.php?user='.$_SESSION['id'].'">Admin</a>';
                         }
                         echo '<a href="logout.php">Déconnexion</a>';
                     }

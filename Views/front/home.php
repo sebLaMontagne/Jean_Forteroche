@@ -11,4 +11,3 @@ require('template.php');
     <a href="chapter.php?chapter=1">Lire le premier chapitre</a>
     <a href="about.php">Découvrir votre serviteur</a>
 </div>
-
