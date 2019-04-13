@@ -53,6 +53,23 @@ class CommentManager extends Manager
         return $list;
     }
     
+    public function getChapterNumberByCommentId($id)
+    {
+        if(intval($id) > 0)
+        {
+            $q = $this->_db->prepare('SELECT post_id FROM comment WHERE comment_id = :id');
+            $q->bindValue(':id', $id);
+            $q->execute();
+            
+            $postManager = new PostManager();
+            return $postManager->getChapterByPostId($q->fetch()[0]);
+        }
+        else
+        {
+            throw new Exception('the id must be a strictly positive integer value');
+        }
+    }
+    
     public function deletePostCommentsById($id)
     {
         if(intval($id) > 0)

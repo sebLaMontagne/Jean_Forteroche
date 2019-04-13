@@ -2,18 +2,19 @@
 $title = 'gestion des appreciations';
 require('template.php');
 
-//passer en plus l'id du post
 
-if(isset($_GET['appreciation']))
+if(isset($_GET['appreciation']) && isset($_GET['id']))
 {
-    echo 'Le paramètre est passé';
+    /*if(($_GET['appreciation'] == 'like' || $_GET['appreciation'] == 'report') && intval($_GET['id']) > 0)
+    {
+        $appreciationManager = new AppreciationManager();
+        $appreciationManager->addAppreciation($_GET['id'], $_SESSION['id'], $_GET['appreciation']);
+    }*/
     
-    if($_GET['appreciation'] == 'like')
-    {
-        echo 'L\'appreciation est un like';
-    }
-    elseif($_GET['appreciation'] == 'report')
-    {
-        echo 'L\'appreciation est un report';
-    }
+    $commentManager = new CommentManager();
+    header('Location:chapter.php?chapter='.$commentManager->getChapterNumberByCommentId($_GET['id']));
+}
+else
+{
+    header('Location:home.php');
 }

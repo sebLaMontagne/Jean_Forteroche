@@ -55,7 +55,7 @@ if(isset($_GET) && !empty($_GET['chapter']) && $postManager->isChapterExist($_GE
         $commentManager->saveComment($selectedPost->id(), $_SESSION['id'], $_POST['comment']);
     }
     
-    //Affichage commentaire
+    //Affichage commentaires
     
     $comments = $commentManager->getPostComments($selectedPost);
     

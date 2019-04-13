@@ -60,6 +60,15 @@ class PostManager extends Manager
         return $q->fetch()[0];
     }
     
+    public function getChapterByPostId($id)
+    {
+        $q = $this->_db->prepare('SELECT post_chapter_number FROM post WHERE post_id = :id');
+        $q->bindValue(':id', htmlspecialchars($id));
+        $q->execute();
+        
+        return $q->fetch()[0];
+    }
+    
     public function getNextChapterNumber($chapter)
     {
         if(intval($chapter) > 0)
