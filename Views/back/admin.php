@@ -10,5 +10,5 @@ var_dump($_SESSION);
 
 if(!isset($_SESSION['isAdmin']) || $_SESSION['isAdmin'] != '1')
 {
-    header('Location:../front/home.php');
+    header("location:javascript://history.go(-1)");
 }
