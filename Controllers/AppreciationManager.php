@@ -85,8 +85,27 @@ class AppreciationManager extends Manager
         }
     }
     
-    public function isUserAlreadyAppreciated($user, $comment)
+    public function isUserAppreciated($user, $comment)
     {
-        
+        if(intval($user) > 0 && intval($comment) > 0)
+        {
+            $q = $this->_db->prepare('SELECT user_id FROM appreciation WHERE comment_id = :comment_id AND user_id = :user_id');
+            $q->bindValue(':comment_id', $comment);
+            $q->bindValue(':user_id', $user);
+            $q->execute();
+            
+            if($q->fetch())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            throw new Exception('The parameters must be integer values');
+        }
     }
 }

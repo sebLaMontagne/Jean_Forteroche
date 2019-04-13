@@ -72,14 +72,20 @@ if(isset($_GET) && !empty($_GET['chapter']) && $postManager->isChapterExist($_GE
         //Afficher si l'utilisateur a liké ou report un comm
         //L'utilisateur ne peut apprecier qu'une seule fois
         //Donner une option pour reset l'appreciation (met isLike et isReport à 0)
-        //L'utilisateur ne peut pas apprecier ses propres posts
-        if(isset($_SESSION['id']) && !$commentManager->isUserTheCommentAuthor($_SESSION['id'], $comments[$i]->id()))
+        
+        $appreciationManager = new AppreciationManager();
+        
+        if(isset($_SESSION['id']) && !$commentManager->isUserTheCommentAuthor($_SESSION['id'], $comments[$i]->id()) && !$appreciationManager->isUserAppreciated($_SESSION['id'], $comments[$i]->id()))
         {
             $display .=     '<p>';
             $display .=         '<a href="leaveAppreciation.php?appreciation=like&id='.$comments[$i]->id().'">Aimer</a>';
             $display .=         '&emsp;&emsp;';
             $display .=         '<a href="leaveAppreciation.php?appreciation=report&id='.$comments[$i]->id().'">Signaler</a>';
             $display .=     '</p>';
+        }
+        elseif(isset($_SESSION['id']) && !$commentManager->isUserTheCommentAuthor($_SESSION['id'], $comments[$i]->id()) && $appreciationManager->isUserAppreciated($_SESSION['id'], $comments[$i]->id()))
+        {
+            $display .=     '<p>Vous avez déjà laissé une appreciation</p>';
         }
         elseif(isset($_SESSION['id']) && $commentManager->isUserTheCommentAuthor($_SESSION['id'], $comments[$i]->id()))
         {
@@ -91,8 +97,6 @@ if(isset($_GET) && !empty($_GET['chapter']) && $postManager->isChapterExist($_GE
         }
         
         //Affichage likes / reports
-        
-        $appreciationManager = new AppreciationManager();
         
         $display .= '<p>'.$appreciationManager->getCommentAppreciation($comments[$i]->id(), 'likes').' likes</p>';
         $display .= '<p>'.$appreciationManager->getCommentAppreciation($comments[$i]->id(), 'reports').' reports</p>';
