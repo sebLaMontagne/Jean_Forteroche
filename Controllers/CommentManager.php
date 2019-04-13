@@ -70,6 +70,30 @@ class CommentManager extends Manager
         }
     }
     
+    public function isUserTheCommentAuthor($user, $comment)
+    {
+        if(intval($user) > 0 && intval($comment) > 0)
+        {
+            $q = $this->_db->prepare('SELECT user_id FROM comment WHERE comment_id = :comment_id AND user_id = :user_id');
+            $q->bindValue(':user_id', $user);
+            $q->bindValue(':comment_id', $comment);
+            $q->execute();
+            
+            if($q->fetch())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            throw new Exception('the parameters must be strictly positive integer values');
+        }
+    }
+    
     public function deletePostCommentsById($id)
     {
         if(intval($id) > 0)

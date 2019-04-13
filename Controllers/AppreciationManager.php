@@ -85,11 +85,6 @@ class AppreciationManager extends Manager
         }
     }
     
-    public function isUserTheCommentAuthor($user)
-    {
-        
-    }
-    
     public function isUserAlreadyAppreciated($user, $comment)
     {
         
