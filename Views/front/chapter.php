@@ -46,7 +46,7 @@ if(isset($_GET) && !empty($_GET['chapter']) && $postManager->isChapterExist($_GE
     
     echo '<p>Commentaires :</p>';
     
-    //Affichage commentaire
+    //Enregistrement commentaire
     
     $commentManager = new CommentManager();
     
@@ -55,26 +55,46 @@ if(isset($_GET) && !empty($_GET['chapter']) && $postManager->isChapterExist($_GE
         $commentManager->saveComment($selectedPost->id(), $_SESSION['id'], $_POST['comment']);
     }
     
+    //Affichage commentaire
+    
     $comments = $commentManager->getPostComments($selectedPost);
+    
     for($i=0; $i < count($comments); $i++)
     {
         $commentDate = new DateTime($comments[$i]->date());
         $commentAuthor = $userManager->getUserById($comments[$i]->userId());
         
-        //N'afficher les commentaires que si l'utilisateur est connecté
+        $display  = '';
+        $display .= '<div>';
+        $display .=     '<p>'.$commentAuthor->name().'</p>';
+        $display .=     '<p>a écrit le '.$commentDate->format('d/m/Y à H:i:s').' :</p>';
+        $display .=     '<p>'.$comments[$i]->content().'</p>';
         //Afficher si l'utilisateur a liké ou report un comm
         //L'utilisateur ne peut apprecier qu'une seule fois
         //Donner une option pour reset l'appreciation (met isLike et isReport à 0)
         //L'utilisateur ne peut pas apprecier ses propres posts
-
-        echo
-        '<div>
-            <p>'.$commentAuthor->name().'</p>
-            <p>a écrit le '.$commentDate->format('d/m/Y à H:i:s').' :</p>
-            <p>'.$comments[$i]->content().'</p>
-            <p><a href="leaveAppreciation.php?appreciation=like&id='.$comments[$i]->id().'">Aimer</a>   <a  href="leaveAppreciation.php?appreciation=report&id='.$comments[$i]->id().'">Signaler</a>
-         </div>';
-        //faire passer l'id du post
+        if(isset($_SESSION['pseudo']))
+        {
+            $display .=     '<p>';
+            $display .=         '<a href="leaveAppreciation.php?appreciation=like&id='.$comments[$i]->id().'">Aimer</a>';
+            $display .=         '&emsp;&emsp;';
+            $display .=         '<a href="leaveAppreciation.php?appreciation=report&id='.$comments[$i]->id().'">Signaler</a>';
+            $display .=     '</p>';
+        }
+        else
+        {
+            $display .=     '<p><a href="register.php">Inscrivez-vous</a> ou <a href="login.php">connectez-vous</a> pour laisser une appreciation</p>';
+        }
+        
+        //Affichage likes / reports
+        
+        $appreciationManager = new AppreciationManager();
+        
+        $display .= '<p>'.$appreciationManager->getCommentAppreciation($comments[$i]->id(), 'likes').' likes</p>';
+        $display .= '<p>'.$appreciationManager->getCommentAppreciation($comments[$i]->id(), 'reports').' reports</p>';
+        $display .= '</div>';
+        
+        echo $display;
     }
 }
 else
