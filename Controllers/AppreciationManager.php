@@ -85,7 +85,7 @@ class AppreciationManager extends Manager
         }
     }
     
-    public function isUserAppreciated($user, $comment)
+    public function isAppreciationExist($user, $comment)
     {
         if(intval($user) > 0 && intval($comment) > 0)
         {
@@ -136,6 +136,21 @@ class AppreciationManager extends Manager
             $q->execute();
             
             return $q->fetch()[0];
+        }
+        else
+        {
+            throw new Exception('The parameters must be integer values');
+        }
+    }
+    
+    public function deleteAppreciation($user, $comment)
+    {
+        if(intval($user) > 0 && intval($comment) > 0)
+        {
+            $q = $this->_db->prepare('DELETE FROM appreciation WHERE comment_id = :comment_id AND user_id = :user_id');
+            $q->bindValue(':comment_id', $comment);
+            $q->bindValue(':user_id', $user);
+            $q->execute();
         }
         else
         {

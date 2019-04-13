@@ -69,13 +69,12 @@ if(isset($_GET) && !empty($_GET['chapter']) && $postManager->isChapterExist($_GE
         $display .=     '<p>'.$commentAuthor->name().'</p>';
         $display .=     '<p>a écrit le '.$commentDate->format('d/m/Y à H:i:s').' :</p>';
         $display .=     '<p>'.$comments[$i]->content().'</p>';
-        //Afficher si l'utilisateur a liké ou report un comm
-        //L'utilisateur ne peut apprecier qu'une seule fois
+        
         //Donner une option pour reset l'appreciation (met isLike et isReport à 0)
         
         $appreciationManager = new AppreciationManager();
         
-        if(isset($_SESSION['id']) && !$commentManager->isUserTheCommentAuthor($_SESSION['id'], $comments[$i]->id()) && !$appreciationManager->isUserAppreciated($_SESSION['id'], $comments[$i]->id()))
+        if(isset($_SESSION['id']) && !$commentManager->isUserTheCommentAuthor($_SESSION['id'], $comments[$i]->id()) && !$appreciationManager->isAppreciationExist($_SESSION['id'], $comments[$i]->id()))
         {
             $display .= '<p>';
             $display .=     '<a href="leaveAppreciation.php?appreciation=like&id='.$comments[$i]->id().'">Aimer</a>';
@@ -83,7 +82,7 @@ if(isset($_GET) && !empty($_GET['chapter']) && $postManager->isChapterExist($_GE
             $display .=     '<a href="leaveAppreciation.php?appreciation=report&id='.$comments[$i]->id().'">Signaler</a>';
             $display .= '</p>';
         }
-        elseif(isset($_SESSION['id']) && !$commentManager->isUserTheCommentAuthor($_SESSION['id'], $comments[$i]->id()) && $appreciationManager->isUserAppreciated($_SESSION['id'], $comments[$i]->id()))
+        elseif(isset($_SESSION['id']) && !$commentManager->isUserTheCommentAuthor($_SESSION['id'], $comments[$i]->id()) && $appreciationManager->isAppreciationExist($_SESSION['id'], $comments[$i]->id()))
         {
             if($appreciationManager->AppreciationIsLike($_SESSION['id'], $comments[$i]->id()))
             {
@@ -93,6 +92,7 @@ if(isset($_GET) && !empty($_GET['chapter']) && $postManager->isChapterExist($_GE
             {
                 $display .= '<p>Vous avez déjà report ce commentaire</p>';
             }
+            $display .= '<p><a href="leaveAppreciation.php?appreciation=reset&id='.$comments[$i]->id().'">Retirer votre appréciation</a></p>';
         }
         elseif(isset($_SESSION['id']) && $commentManager->isUserTheCommentAuthor($_SESSION['id'], $comments[$i]->id()))
         {
