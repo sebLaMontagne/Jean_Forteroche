@@ -39,7 +39,7 @@ spl_autoload_register(function($class){
                 <a href="contact.php">Contact</a>
                 <div class="account-access">
                     <?php 
-                    if(!empty($_SESSION['pseudo']) && !empty($_SESSION['email']) && !empty($_SESSION['isAdmin']) && !empty($_SESSION['id']))
+                    if(!empty($_SESSION['pseudo']) && !empty($_SESSION['email']) && ($_SESSION['isAdmin'] == '0' || S_SESSION == '1') && !empty($_SESSION['id']))
                     {
                         echo '<p>Bienvenue '.htmlspecialchars($_SESSION['pseudo']).'</p>';
                         
