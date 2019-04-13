@@ -108,4 +108,38 @@ class AppreciationManager extends Manager
             throw new Exception('The parameters must be integer values');
         }
     }
+    
+    public function appreciationIsLike($user, $comment)
+    {
+        if(intval($user) > 0 && intval($comment) > 0)
+        {
+            $q = $this->_db->prepare('SELECT appreciation_isLike FROM appreciation WHERE comment_id = :comment_id AND user_id = :user_id');
+            $q->bindValue(':comment_id', $comment);
+            $q->bindValue(':user_id', $user);
+            $q->execute();
+            
+            return $q->fetch()[0];
+        }
+        else
+        {
+            throw new Exception('The parameters must be integer values');
+        }
+    }
+    
+    public function appreciationIsReport($user, $comment)
+    {
+        if(intval($user) > 0 && intval($comment) > 0)
+        {
+            $q = $this->_db->prepare('SELECT appreciation_isReport FROM appreciation WHERE comment_id = :comment_id AND user_id = :user_id');
+            $q->bindValue(':comment_id', $comment);
+            $q->bindValue(':user_id', $user);
+            $q->execute();
+            
+            return $q->fetch()[0];
+        }
+        else
+        {
+            throw new Exception('The parameters must be integer values');
+        }
+    }
 }

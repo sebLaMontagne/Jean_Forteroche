@@ -77,23 +77,30 @@ if(isset($_GET) && !empty($_GET['chapter']) && $postManager->isChapterExist($_GE
         
         if(isset($_SESSION['id']) && !$commentManager->isUserTheCommentAuthor($_SESSION['id'], $comments[$i]->id()) && !$appreciationManager->isUserAppreciated($_SESSION['id'], $comments[$i]->id()))
         {
-            $display .=     '<p>';
-            $display .=         '<a href="leaveAppreciation.php?appreciation=like&id='.$comments[$i]->id().'">Aimer</a>';
-            $display .=         '&emsp;&emsp;';
-            $display .=         '<a href="leaveAppreciation.php?appreciation=report&id='.$comments[$i]->id().'">Signaler</a>';
-            $display .=     '</p>';
+            $display .= '<p>';
+            $display .=     '<a href="leaveAppreciation.php?appreciation=like&id='.$comments[$i]->id().'">Aimer</a>';
+            $display .=     '&emsp;&emsp;';
+            $display .=     '<a href="leaveAppreciation.php?appreciation=report&id='.$comments[$i]->id().'">Signaler</a>';
+            $display .= '</p>';
         }
         elseif(isset($_SESSION['id']) && !$commentManager->isUserTheCommentAuthor($_SESSION['id'], $comments[$i]->id()) && $appreciationManager->isUserAppreciated($_SESSION['id'], $comments[$i]->id()))
         {
-            $display .=     '<p>Vous avez déjà laissé une appreciation</p>';
+            if($appreciationManager->AppreciationIsLike($_SESSION['id'], $comments[$i]->id()))
+            {
+                $display .= '<p>Vous avez déjà liké ce commentaire</p>';
+            }
+            elseif($appreciationManager->AppreciationIsReport($_SESSION['id'], $comments[$i]->id()))
+            {
+                $display .= '<p>Vous avez déjà report ce commentaire</p>';
+            }
         }
         elseif(isset($_SESSION['id']) && $commentManager->isUserTheCommentAuthor($_SESSION['id'], $comments[$i]->id()))
         {
-            $display .=     '<p>Vous ne pouvez pas laisser d\'appreciation sur vos commentaires</p>';
+            $display .= '<p>Vous ne pouvez pas laisser d\'appreciation sur vos commentaires</p>';
         }
         else
         {
-            $display .=     '<p><a href="register.php">Inscrivez-vous</a> ou <a href="login.php">connectez-vous</a> pour laisser une appreciation</p>';
+            $display .= '<p><a href="register.php">Inscrivez-vous</a> ou <a href="login.php">connectez-vous</a> pour laisser une appreciation</p>';
         }
         
         //Affichage likes / reports
