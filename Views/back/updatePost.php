@@ -30,7 +30,7 @@ if(!empty($_GET['chapter']) && intval($_GET['chapter']) > 0)
             <form method="post" action="confirmUpdatePost.php">
                 <input type="hidden" name="chapterNumber" value="'.$_GET['chapter'].'" />
                 Chaptre n°'.$_GET['chapter'].' : <input type="text" name="title" placeholder="Titre" value="'.$selectedChapter->title().'" required />
-                <textarea name="content">'.$selectedChapter->content().'</textarea>
+                <textarea name="content">'.$postManager->decode($selectedChapter->content()).'</textarea>
                 <input type="radio" id="publish" name="publish" value="1" required /><label for="publish">Publier</label>
                 <input type="radio" id="draft" name="publish" value="0" required /><label for="draft">Brouillon</label>
                 <input type="submit" value="sauvegarder" />

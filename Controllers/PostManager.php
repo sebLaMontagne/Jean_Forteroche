@@ -9,11 +9,107 @@ class PostManager extends Manager
         $refinedAnswer['authorId']      = (int) $brutAnswer['user_id'];
         $refinedAnswer['title']         =       $brutAnswer['post_title'];
         $refinedAnswer['chapterNumber'] = (int) $brutAnswer['post_chapter_number'];
-        $refinedAnswer['content']       =       $brutAnswer['post_content'];
+        $refinedAnswer['content']       = $brutAnswer['post_content'];
         $refinedAnswer['date']          =       $brutAnswer['post_date'];
         $refinedAnswer['isPublished']   = (int) $brutAnswer['post_isPublished'];
         
         return $refinedAnswer;
+    }
+    
+    public function encode($text)
+    {
+        //headings
+        $text = preg_replace('@<h1>(.+)</h1>@isU', '[h1]$1[/h1]', $text);
+        $text = preg_replace('@<h2>(.+)</h2>@isU', '[h2]$1[/h2]', $text);
+        $text = preg_replace('@<h3>(.+)</h3>@isU', '[h3]$1[/h3]', $text);
+        $text = preg_replace('@<h4>(.+)</h4>@isU', '[h4]$1[/h4]', $text);
+        $text = preg_replace('@<h5>(.+)</h5>@isU', '[h5]$1[/h5]', $text);
+        $text = preg_replace('@<h6>(.+)</h6>@isU', '[h6]$1[/h6]', $text);
+        //inlines
+        $text = preg_replace('@<strong>(.+)</strong>@isU', '[b]$1[/b]', $text);
+        $text = preg_replace('@<em>(.+)</em>@isU', '[i]$1[/i]', $text);
+        $text = preg_replace('@<span style="text-decoration: underline;">(.+)</span>@isU', '[u]$1[/u]', $text);
+        $text = preg_replace('@<span style="text-decoration: line-through;">(.+)</span>@isU', '[s]$1[/s]', $text);
+        $text = preg_replace('@<sup>(.+)</sup>@isU', '[sup]$1[/sup]', $text);
+        $text = preg_replace('@<sub>(.+)</sub>@isU', '[sub]$1[/sub]', $text);
+        $text = preg_replace('@<code>(.+)</code>@isU', '[code]$1[/code]', $text);
+        //blocks
+        $text = preg_replace('@<p>(.+)</p>@isU', '[p]$1[/p]', $text);
+        $text = preg_replace('@<blockquote>(.+)</blockquote>@isU', '[quote]$1[/quote]', $text);
+        $text = preg_replace('@<div>(.+)</div>@isU', '[div]$1[/div]', $text);
+        $text = preg_replace('@<pre>(.+)</pre>@isU', '[pre]$1[/pre]', $text); 
+
+        //styles
+        $text = preg_replace('@<p style="text-align: (left|center|right|justify);">(.+)</p>@isU', '[p $1]$2[/p]', $text);
+        $text = preg_replace('@<div style="text-align: (left|center|right|justify);">(.+)</div>@isU', '[div $1]$2[/div]', $text);
+        $text = preg_replace('@<pre style="text-align: (left|center|right|justify);">(.+)</pre>@isU', '[pre $1]$2[/pre]', $text);
+
+        $text = preg_replace('@<p style="padding-left: ([0-9]+)px;">(.+)</p>@isU', '[p $1]$2[/p]', $text);
+        $text = preg_replace('@<div style="padding-left: ([0-9]+)px;">(.+)</div>@isU', '[div $1]$2[/div]', $text);
+        $text = preg_replace('@<pre style="padding-left: ([0-9]+)px;">(.+)</pre>@isU', '[pre $1]$2[/pre]', $text);
+
+        $text = preg_replace('@<p style="padding-left: ([0-9]+)px; text-align: (left|center|right|justify);">(.+)</p>@isU', '[p $1 $2]$3[/p]', $text);
+        $text = preg_replace('@<div style="padding-left: ([0-9]+)px; text-align: (left|center|right|justify);">(.+)</div>@isU', '[div $1 $2]$3[/div]', $text);
+        $text = preg_replace('@<pre style="padding-left: ([0-9]+)px; text-align: (left|center|right|justify);">(.+)</pre>@isU', '[pre $1 $2]$3[/pre]', $text);
+
+        $text = preg_replace('@<p style="text-align: (left|center|right|justify); padding-left: ([0-9]+)px;">(.+)</p>@isU', '[p $1 $2]$3[/p]', $text);
+        $text = preg_replace('@<div style="text-align: (left|center|right|justify); padding-left: ([0-9]+)px;">(.+)</div>@isU', '[div $1 $2]$3[/div]', $text);
+        $text = preg_replace('@<pre style="text-align: (left|center|right|justify); padding-left: ([0-9]+)px;">(.+)</pre>@isU', '[pre $1 $2]$3[/pre]', $text);
+
+        //exceptions
+        $text = preg_replace('@<p><p>(.+)</p></p>@isU', '[p]$1[/p]', $text);
+        $text = preg_replace('@<div><div>(.+)</div></div>@isU', '[div]$1[/div]', $text);
+        $text = preg_replace('@<pre><pre>(.+)</pre></pre>@isU', '[pre]$1[/pre]', $text);
+
+        return $text;
+    }
+
+    public function decode($text)
+    {
+        //headings
+        $text = preg_replace('@\[h1\](.+)\[/h1\]@isU', '<h1>$1</h1>', $text);
+        $text = preg_replace('@\[h2\](.+)\[/h2\]@isU', '<h2>$1</h2>', $text);
+        $text = preg_replace('@\[h3\](.+)\[/h3\]@isU', '<h3>$1</h3>', $text);
+        $text = preg_replace('@\[h4\](.+)\[/h4\]@isU', '<h4>$1</h4>', $text);
+        $text = preg_replace('@\[h5\](.+)\[/h5\]@isU', '<h5>$1</h5>', $text);
+        $text = preg_replace('@\[h6\](.+)\[/h6\]@isU', '<h6>$1</h6>', $text);
+        //inlines
+        $text = preg_replace('@\[b\](.+)\[/b\]@isU', '<strong>$1</strong>', $text);
+        $text = preg_replace('@\[i\](.+)\[/i\]@isU', '<em>$1</em>', $text);
+        $text = preg_replace('@\[u\](.+)\[/u\]@isU', '<span style="text-decoration: underline;">$1</span>', $text);
+        $text = preg_replace('@\[s\](.+)\[/s\]@isU', '<span style="text-decoration: line-through;">$1</span>', $text);
+        $text = preg_replace('@\[sup\](.+)\[/sup\]@isU', '<sup>$1</sup>', $text);
+        $text = preg_replace('@\[sub\](.+)\[/sub\]@isU', '<sub>$1</sub>', $text);
+        $text = preg_replace('@\[code\](.+)\[/code\]@isU', '<code>$1</code>', $text);
+        //blocks
+        $text = preg_replace('@\[p\](.+)\[/p\]@isU', '<p>$1</p>', $text);
+        $text = preg_replace('@\[quote\](.+)\[/quote\]@isU', '<blockquote>$1</blockquote>', $text);
+        $text = preg_replace('@\[div\](.+)\[/div\]@isU', '<div>$1</div>', $text);
+        $text = preg_replace('@\[pre\](.+)\[/pre\]@isU', '<pre>$1</pre>', $text);
+
+        //styles
+        $text = preg_replace('@\[p (left|center|right|justify)\](.+)\[/p\]@isU', '<p style="text-align: $1;">$2</p>', $text);
+        $text = preg_replace('@\[div (left|center|right|justify)\](.+)\[/div\]@isU', '<div style="text-align: $1;">$2</div>', $text);
+        $text = preg_replace('@\[pre (left|center|right|justify)\](.+)\[/pre\]@isU', '<pre style="text-align: $1;">$2</pre>', $text);
+
+        $text = preg_replace('@\[p ([0-9]+)\](.+)\[/p\]@isU', '<p style="padding-left: $1px;">$2</p>', $text);
+        $text = preg_replace('@\[div ([0-9]+)\](.+)\[/div\]@isU', '<div style="padding-left: $1px;">$2</div>', $text);
+        $text = preg_replace('@\[pre ([0-9]+)\](.+)\[/pre\]@isU', '<pre style="padding-left: $1px;">$2</pre>', $text);
+
+        $text = preg_replace('@\[p ([0-9]+) (left|center|right|justify)\](.+)\[/p\]@isU', '<p style="padding-left: $1px; text-align: $2;">$3</p>', $text);
+        $text = preg_replace('@\[div ([0-9]+) (left|center|right|justify)\](.+)\[/div\]@isU', '<div style="padding-left: $1px; text-align: $2;">$3</div>', $text);
+        $text = preg_replace('@\[pre ([0-9]+) (left|center|right|justify)\](.+)\[/pre\]@isU', '<pre style="padding-left: $1px; text-align: $2;">$3</pre>', $text);
+
+        $text = preg_replace('@\[p (left|center|right|justify) ([0-9]+)\](.+)\[/p\]@isU', '<p style="text-align: $1; padding-left: $2px;">$3</p>', $text);
+        $text = preg_replace('@\[div (left|center|right|justify) ([0-9]+)\](.+)\[/div\]@isU', '<div style="text-align: $1; padding-left: $2px;">$3</div>', $text);
+        $text = preg_replace('@\[pre (left|center|right|justify) ([0-9]+)\](.+)\[/pre\]@isU', '<pre style="text-align: $1; padding-left: $2px;">$3</pre>', $text);
+
+        //exceptions
+        $text = preg_replace('@\[p\]\[p\](.+)\[/p\]\[/p\]@isU', '<p>$1</p>', $text);
+        $text = preg_replace('@\[div\]\[div\](.+)\[/div\]\[/div\]@isU', '<div>$1</div>', $text);
+        $text = preg_replace('@\[pre\]\[pre\](.+)\[/pre\]\[/pre\]@isU', '<pre>$1</pre>', $text);
+
+        return $text;
     }
     
     public function getAllPosts()
@@ -136,7 +232,7 @@ class PostManager extends Manager
         $q->bindValue(':author', htmlspecialchars($author));
         $q->bindValue(':title', htmlspecialchars($title));
         $q->bindValue(':chapter', htmlspecialchars($chapter));
-        $q->bindValue(':content', htmlspecialchars($content));
+        $q->bindValue(':content', $this->encode($content));
         $q->bindValue(':publish', htmlspecialchars($publish));
         
         $q->execute();

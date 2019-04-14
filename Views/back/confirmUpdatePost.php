@@ -21,7 +21,7 @@ if(!isset($_POST['confirmation']))
 }
 elseif($_POST['confirmation'] == 'yes')
 {
-    $postManager->updatePost($postManager->getPostIDbyChapter($_POST['chapterNumber']), $_POST['chapterNumber'], $_POST['title'], $_POST['content'], $_POST['publish']);
+    $postManager->updatePost($postManager->getPostIDbyChapter($_POST['chapterNumber']), $_POST['chapterNumber'], $_POST['title'], $postManager->encode($_POST['content']), $_POST['publish']);
     header('Location:chaptersList.php');
 }
 elseif($_POST['confirmation'] == 'no')

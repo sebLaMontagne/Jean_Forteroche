@@ -14,9 +14,8 @@ if(isset($_GET) && !empty($_GET['chapter']) && $postManager->isChapterExist($_GE
     $postAuthor = $userManager->getUserById($selectedPost->authorId());
     
     echo
-    '<h3>Chapitre '.$selectedPost->chapterNumber().' : '.$selectedPost->Title().'</h3>
-     <p>'.$selectedPost->Content().'</p>
-     <p>Publié le '.$postDate->format('d/m/Y à H:i:s').' par '.$postAuthor->name().'</p>';
+    '<h3>Chapitre '.$selectedPost->chapterNumber().' : '.$selectedPost->Title().'</h3>'.$postManager->decode($selectedPost->Content()).
+    '<p>Publié le '.$postDate->format('d/m/Y à H:i:s').' par '.$postAuthor->name().'</p>';
 
     
     if($postManager->isChapterExist($postManager->getPreviousChapterNumber($_GET['chapter'])))
