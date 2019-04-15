@@ -11,6 +11,7 @@ class UserManager extends Manager
         $refinedAnswer['email']             =       $brutAnswer['user_email'];
         $refinedAnswer['isAuthor']          = (int) $brutAnswer['user_isAuthor'];
         $refinedAnswer['isAdmin']           = (int) $brutAnswer['user_isAdmin'];
+        $refinedAnswer['isBanned']          = (int) $brutAnswer['user_isBanned'];
         $refinedAnswer['token']             =       $brutAnswer['user_token'];
         $refinedAnswer['isActivated']       = (int) $brutAnswer['user_activation'];
         $refinedAnswer['tokenExpiration']   =       $brutAnswer['user_token_expiration'];

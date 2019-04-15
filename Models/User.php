@@ -8,6 +8,7 @@ class User
     private $_email;
     private $_isAuthor;
     private $_isAdmin;
+    private $_isBanned;
     private $_token;
     private $_isActivated;
     private $_tokenExpiration;
@@ -22,6 +23,7 @@ class User
     public function email()             { return $this->_email; }
     public function isAuthor()          { return $this->_isAuthor; }
     public function isAdmin()           { return $this->_isAdmin; }
+    public function isBanned()          { return $this->_isBanned; }
     public function token()             { return $this->_token; }
     public function isActivated()       { return $this->_isActivated; }
     public function tokenExpiration()   { return $this->_tokenExpiration; }
@@ -179,6 +181,18 @@ class User
         else
         {
             throw new Exception('The activation status must be a boolean value');
+        }
+    }
+    
+    public function setIsBanned($isBanned)
+    {
+        if($isBanned == 1 || $isBanned == 0)
+        {
+            $this->_isBanned = htmlspecialchars($isBanned);
+        }
+        else
+        {
+            throw new Exception('The banned status must be a boolean value');
         }
     }
     

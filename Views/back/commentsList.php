@@ -39,9 +39,18 @@ else
         $display .=     '<p>'.$comments[$i]->likes().' likes '.$comments[$i]->reports().' reports</p>';
         $display .=     '<p>';
         $display .=         '<a href="confirmCommentSuppression.php?id='.$comments[$i]->id().'">supprimer le commentaire</a>';
-        $display .=         '<a href="confirmBanUser">bannir l\'utilisateur</a>';
+        
+        if($commentAuthor->isBanned())
+        {
+            $display .= '<span>Utilisateur banni</span>';
+        }
+        else
+        {
+            $display .= '<a href="confirmBanUser">bannir l\'utilisateur</a>';
+        }
+        
         $display .=     '</p>';
-        $display .= '<p><a href="commentsList.php?user='.$comments[$i]->userId().'">Voir tous les commentaires de cet utilisateur</a></p>';
+        $display .= '<p><a href="commentsList.php?user='.$commentAuthor->id().'">Voir tous les commentaires de cet utilisateur</a></p>';
         $display .= '<div>';
         $display .= '<hr />';
 
