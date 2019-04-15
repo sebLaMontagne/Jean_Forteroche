@@ -18,6 +18,12 @@ class PostManager extends Manager
     
     public function encode($text)
     {
+        //trashes
+        $text = preg_replace('@"@','[m]', $text);
+        $text = preg_replace('@<p><p>(.+)</p></p>@isU', '[p]$1[/p]', $text);
+        $text = preg_replace('@<div><div>(.+)</div></div>@isU', '[div]$1[/div]', $text);
+        $text = preg_replace('@<pre><pre>(.+)</pre></pre>@isU', '[pre]$1[/pre]', $text);
+
         //headings
         $text = preg_replace('@<h1>(.+)</h1>@isU', '[h1]$1[/h1]', $text);
         $text = preg_replace('@<h2>(.+)</h2>@isU', '[h2]$1[/h2]', $text);
@@ -28,8 +34,8 @@ class PostManager extends Manager
         //inlines
         $text = preg_replace('@<strong>(.+)</strong>@isU', '[b]$1[/b]', $text);
         $text = preg_replace('@<em>(.+)</em>@isU', '[i]$1[/i]', $text);
-        $text = preg_replace('@<span style="text-decoration: underline;">(.+)</span>@isU', '[u]$1[/u]', $text);
-        $text = preg_replace('@<span style="text-decoration: line-through;">(.+)</span>@isU', '[s]$1[/s]', $text);
+        $text = preg_replace('@<span style=\[m\]text-decoration: underline;\[m\]>(.+)</span>@isU', '[u]$1[/u]', $text);
+        $text = preg_replace('@<span style=\[m\]text-decoration: line-through;\[m\]>(.+)</span>@isU', '[s]$1[/s]', $text);
         $text = preg_replace('@<sup>(.+)</sup>@isU', '[sup]$1[/sup]', $text);
         $text = preg_replace('@<sub>(.+)</sub>@isU', '[sub]$1[/sub]', $text);
         $text = preg_replace('@<code>(.+)</code>@isU', '[code]$1[/code]', $text);
@@ -40,32 +46,35 @@ class PostManager extends Manager
         $text = preg_replace('@<pre>(.+)</pre>@isU', '[pre]$1[/pre]', $text); 
 
         //styles
-        $text = preg_replace('@<p style="text-align: (left|center|right|justify);">(.+)</p>@isU', '[p $1]$2[/p]', $text);
-        $text = preg_replace('@<div style="text-align: (left|center|right|justify);">(.+)</div>@isU', '[div $1]$2[/div]', $text);
-        $text = preg_replace('@<pre style="text-align: (left|center|right|justify);">(.+)</pre>@isU', '[pre $1]$2[/pre]', $text);
+        $text = preg_replace('@<p style=\[m\]text-align: (left|center|right|justify);\[m\]>(.+)</p>@isU', '[p $1]$2[/p]', $text);
+        $text = preg_replace('@<div style=\[m\]text-align: (left|center|right|justify);\[m\]>(.+)</div>@isU', '[div $1]$2[/div]', $text);
+        $text = preg_replace('@<pre style=\[m\]text-align: (left|center|right|justify);\[m\]>(.+)</pre>@isU', '[pre $1]$2[/pre]', $text);
 
-        $text = preg_replace('@<p style="padding-left: ([0-9]+)px;">(.+)</p>@isU', '[p $1]$2[/p]', $text);
-        $text = preg_replace('@<div style="padding-left: ([0-9]+)px;">(.+)</div>@isU', '[div $1]$2[/div]', $text);
-        $text = preg_replace('@<pre style="padding-left: ([0-9]+)px;">(.+)</pre>@isU', '[pre $1]$2[/pre]', $text);
+        $text = preg_replace('@<p style=\[m\]padding-left: ([0-9]+)px;\[m\]>(.+)</p>@isU', '[p $1]$2[/p]', $text);
+        $text = preg_replace('@<div style=\[m\]padding-left: ([0-9]+)px;\[m\]>(.+)</div>@isU', '[div $1]$2[/div]', $text);
+        $text = preg_replace('@<pre style=\[m\]padding-left: ([0-9]+)px;\[m\]>(.+)</pre>@isU', '[pre $1]$2[/pre]', $text);
 
-        $text = preg_replace('@<p style="padding-left: ([0-9]+)px; text-align: (left|center|right|justify);">(.+)</p>@isU', '[p $1 $2]$3[/p]', $text);
-        $text = preg_replace('@<div style="padding-left: ([0-9]+)px; text-align: (left|center|right|justify);">(.+)</div>@isU', '[div $1 $2]$3[/div]', $text);
-        $text = preg_replace('@<pre style="padding-left: ([0-9]+)px; text-align: (left|center|right|justify);">(.+)</pre>@isU', '[pre $1 $2]$3[/pre]', $text);
+        $text = preg_replace('@<p style=\[m\]padding-left: ([0-9]+)px; text-align: (left|center|right|justify);\[m\]>(.+)</p>@isU', '[p $1 $2]$3[/p]', $text);
+        $text = preg_replace('@<div style=\[m\]padding-left: ([0-9]+)px; text-align: (left|center|right|justify);\[m\]>(.+)</div>@isU', '[div $1 $2]$3[/div]', $text);
+        $text = preg_replace('@<pre style=\[m\]padding-left: ([0-9]+)px; text-align: (left|center|right|justify);\[m\]>(.+)</pre>@isU', '[pre $1 $2]$3[/pre]', $text);
 
-        $text = preg_replace('@<p style="text-align: (left|center|right|justify); padding-left: ([0-9]+)px;">(.+)</p>@isU', '[p $1 $2]$3[/p]', $text);
-        $text = preg_replace('@<div style="text-align: (left|center|right|justify); padding-left: ([0-9]+)px;">(.+)</div>@isU', '[div $1 $2]$3[/div]', $text);
-        $text = preg_replace('@<pre style="text-align: (left|center|right|justify); padding-left: ([0-9]+)px;">(.+)</pre>@isU', '[pre $1 $2]$3[/pre]', $text);
-
-        //exceptions
-        $text = preg_replace('@<p><p>(.+)</p></p>@isU', '[p]$1[/p]', $text);
-        $text = preg_replace('@<div><div>(.+)</div></div>@isU', '[div]$1[/div]', $text);
-        $text = preg_replace('@<pre><pre>(.+)</pre></pre>@isU', '[pre]$1[/pre]', $text);
+        $text = preg_replace('@<p style=\[m\]text-align: (left|center|right|justify); padding-left: ([0-9]+)px;\[m\]>(.+)</p>@isU', '[p $1 $2]$3[/p]', $text);
+        $text = preg_replace('@<div style=\[m\]text-align: (left|center|right|justify); padding-left: ([0-9]+)px;\[m\]>(.+)</div>@isU', '[div $1 $2]$3[/div]', $text);
+        $text = preg_replace('@<pre style=\[m\]text-align: (left|center|right|justify); padding-left: ([0-9]+)px;\[m\]>(.+)</pre>@isU', '[pre $1 $2]$3[/pre]', $text);
+	
+	return $text;
 
         return $text;
     }
 
     public function decode($text)
     {
+        //trashes
+        $text = preg_replace('@\[m\]@','"', $text);
+        $text = preg_replace('@\[p\]\[p\](.+)\[/p\]\[/p\]@isU', '<p>$1</p>', $text);
+        $text = preg_replace('@\[div\]\[div\](.+)\[/div\]\[/div\]@isU', '<div>$1</div>', $text);
+        $text = preg_replace('@\[pre\]\[pre\](.+)\[/pre\]\[/pre\]@isU', '<pre>$1</pre>', $text);
+
         //headings
         $text = preg_replace('@\[h1\](.+)\[/h1\]@isU', '<h1>$1</h1>', $text);
         $text = preg_replace('@\[h2\](.+)\[/h2\]@isU', '<h2>$1</h2>', $text);
@@ -103,11 +112,6 @@ class PostManager extends Manager
         $text = preg_replace('@\[p (left|center|right|justify) ([0-9]+)\](.+)\[/p\]@isU', '<p style="text-align: $1; padding-left: $2px;">$3</p>', $text);
         $text = preg_replace('@\[div (left|center|right|justify) ([0-9]+)\](.+)\[/div\]@isU', '<div style="text-align: $1; padding-left: $2px;">$3</div>', $text);
         $text = preg_replace('@\[pre (left|center|right|justify) ([0-9]+)\](.+)\[/pre\]@isU', '<pre style="text-align: $1; padding-left: $2px;">$3</pre>', $text);
-
-        //exceptions
-        $text = preg_replace('@\[p\]\[p\](.+)\[/p\]\[/p\]@isU', '<p>$1</p>', $text);
-        $text = preg_replace('@\[div\]\[div\](.+)\[/div\]\[/div\]@isU', '<div>$1</div>', $text);
-        $text = preg_replace('@\[pre\]\[pre\](.+)\[/pre\]\[/pre\]@isU', '<pre>$1</pre>', $text);
 
         return $text;
     }
@@ -232,7 +236,7 @@ class PostManager extends Manager
         $q->bindValue(':author', htmlspecialchars($author));
         $q->bindValue(':title', htmlspecialchars($title));
         $q->bindValue(':chapter', htmlspecialchars($chapter));
-        $q->bindValue(':content', $this->encode($content));
+        $q->bindValue(':content', htmlspecialchars($content));
         $q->bindValue(':publish', htmlspecialchars($publish));
         
         $q->execute();
