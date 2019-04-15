@@ -62,7 +62,7 @@ class CommentManager extends Manager
         return $list;
     }
     
-    public function getAllComments()
+    public function getAllCommentsSortedByReports()
     {
         $q = $this->_db->query('SELECT * FROM comment');
         
@@ -70,12 +70,12 @@ class CommentManager extends Manager
         while($brutAnswer = $q->fetch())
         {
             $refinedAnswer = $this->refineAnswer($brutAnswer);
-            $comment = new Comment($refinedAnswer);
-            
-            //working on the comment
-            
-            $list[] = $comment;
+            $list[] = new Comment($refinedAnswer);
         }
+        
+        function comparator($object1, $object2) { return $object1->reports() < $object2->reports(); }
+        usort($list, "comparator");
+        
         return $list;
     }
     

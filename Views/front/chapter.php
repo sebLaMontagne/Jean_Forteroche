@@ -69,8 +69,6 @@ if(isset($_GET) && !empty($_GET['chapter']) && $postManager->isChapterExist($_GE
         $display .=     '<p>a écrit le '.$commentDate->format('d/m/Y à H:i:s').' :</p>';
         $display .=     '<p>'.$comments[$i]->content().'</p>';
         
-        //Donner une option pour reset l'appreciation (met isLike et isReport à 0)
-        
         $appreciationManager = new AppreciationManager();
         
         if(isset($_SESSION['id']) && !$commentManager->isUserTheCommentAuthor($_SESSION['id'], $comments[$i]->id()) && !$appreciationManager->isAppreciationExist($_SESSION['id'], $comments[$i]->id()))
