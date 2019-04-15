@@ -16,13 +16,20 @@ else
     $commentManager = new CommentManager();
     $userManager = new UserManager();
     
-    $comments = $commentManager->getAllCommentsSortedByReports();
+    if(isset($_GET['user']) && intval($_GET['user'] > 0))
+    {
+        $comments = $commentManager->getAllUserCommentsSortedByReports($_GET['user']);
+    }
+    else
+    {
+        $comments = $commentManager->getAllCommentsSortedByReports();
+    }
     
     for($i=0; $i < count($comments); $i++)
     {
         $commentDate = new DateTime($comments[$i]->date());
         $commentAuthor = $userManager->getUserById($comments[$i]->userId());
-        
+
         $display  = '';
         $display .= '<div>';
         $display .=     '<p>'.$commentAuthor->name().'</p>';
@@ -34,10 +41,10 @@ else
         $display .=         '<a href="confirmCommentSuppression.php?id='.$comments[$i]->id().'">supprimer le commentaire</a>';
         $display .=         '<a href="confirmBanUser">bannir l\'utilisateur</a>';
         $display .=     '</p>';
+        $display .= '<p><a href="commentsList.php?user='.$comments[$i]->userId().'">Voir tous les commentaires de cet utilisateur</a></p>';
         $display .= '<div>';
         $display .= '<hr />';
-        
+
         echo $display;
     }
-    var_dump($comments);
 }

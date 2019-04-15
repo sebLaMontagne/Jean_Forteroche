@@ -79,6 +79,28 @@ class CommentManager extends Manager
         return $list;
     }
     
+    public function getAllUserCommentsSortedByReports($id)
+    {
+        if(intval($id > 0))
+        {
+            $q = $this->_db->prepare('SELECT * FROM comment WHERE user_id = :id');
+            $q->bindValue(':id', $id);
+            $q->execute();
+        
+            $list = [];
+            while($brutAnswer = $q->fetch())
+            {
+                $refinedAnswer = $this->refineAnswer($brutAnswer);
+                $list[] = new Comment($refinedAnswer);
+            }
+
+            function comparator($object1, $object2) { return $object1->reports() < $object2->reports(); }
+            usort($list, "comparator");
+
+            return $list;
+        }
+    }
+    
     public function getChapterNumberByCommentId($id)
     {
         if(intval($id) > 0)
