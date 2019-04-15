@@ -62,6 +62,23 @@ class CommentManager extends Manager
         return $list;
     }
     
+    public function getAllComments()
+    {
+        $q = $this->_db->query('SELECT * FROM comment');
+        
+        $list = [];
+        while($brutAnswer = $q->fetch())
+        {
+            $refinedAnswer = $this->refineAnswer($brutAnswer);
+            $comment = new Comment($refinedAnswer);
+            
+            //working on the comment
+            
+            $list[] = $comment;
+        }
+        return $list;
+    }
+    
     public function getChapterNumberByCommentId($id)
     {
         if(intval($id) > 0)

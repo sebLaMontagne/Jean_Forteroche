@@ -8,6 +8,8 @@ class Comment
     private $_content;
     private $_date;
     private $_isNew;
+    private $_likes;
+    private $_reports;
     
     //--------------------------------------------------------------------
     // GETTERS
@@ -19,6 +21,8 @@ class Comment
     public function content()   { return $this->_content; }
     public function date()      { return $this->_date; }
     public function isNew()     { return $this->_isNew; }
+    public function likes()     { return $this->_likes; }
+    public function reports()   { return $this->_reports; }
     
     //--------------------------------------------------------------------
     // SETTERS
@@ -145,5 +149,8 @@ class Comment
     public function __construct(array $data)
     {
         $this->hydrate($data);
+        $appreciationManager = new AppreciationManager();
+        $this->_likes = (int) $appreciationManager->countCommentAppreciations($this->_id, 'likes');
+        $this->_reports = (int) $appreciationManager->countCommentAppreciations($this->_id, 'reports');
     }
 }

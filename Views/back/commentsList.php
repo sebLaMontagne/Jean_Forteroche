@@ -12,5 +12,8 @@ if(!isset($_SESSION['isAdmin']) || $_SESSION['isAdmin'] != '1')
 }
 else
 {
-    echo '<p>Cette page arrive</p>';
+    $commentManager = new CommentManager();
+    $comments = $commentManager->getAllComments();
+    
+    var_dump($comments);
 }

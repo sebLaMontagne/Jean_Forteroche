@@ -104,8 +104,8 @@ if(isset($_GET) && !empty($_GET['chapter']) && $postManager->isChapterExist($_GE
         
         //Affichage likes / reports
         
-        $display .= '<p>'.$appreciationManager->countCommentAppreciations($comments[$i]->id(), 'likes').' likes</p>';
-        $display .= '<p>'.$appreciationManager->countCommentAppreciations($comments[$i]->id(), 'reports').' reports</p>';
+        $display .= '<p>'.$comments[$i]->likes().' likes</p>';
+        $display .= '<p>'.$comments[$i]->reports().' reports</p>';
         $display .= '</div>';
         
         echo $display;
