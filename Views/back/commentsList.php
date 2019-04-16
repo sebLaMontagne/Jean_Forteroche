@@ -51,11 +51,11 @@ else
         
         if($commentAuthor->isBanned())
         {
-            $display .= '<a href="confirmBanUser.php?action=unban&id='.$commentAuthor->id().'">Débannir</a>';
+            $display .= '<a href="confirmBanUser.php?action=unban&id='.$commentAuthor->id().'&redirect=commentsList.php">Débannir</a>';
         }
         else
         {
-            $display .= '<a href="confirmBanUser.php?action=ban&id='.$commentAuthor->id().'">bannir l\'utilisateur</a>';
+            $display .= '<a href="confirmBanUser.php?action=ban&id='.$commentAuthor->id().'&redirect=commentsList.php">bannir l\'utilisateur</a>';
         }
         
         $display .=     '</p>';

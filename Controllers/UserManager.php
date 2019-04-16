@@ -199,6 +199,18 @@ class UserManager extends Manager
         }
     }
     
+    public function getAllUsers()
+    {
+        $q = $this->_db->query('SELECT * FROM user');
+        
+        $list = [];
+        while($a = $q->fetch())
+        {
+            $list[] = new User($this->refineAnswer($a));
+        }
+        return $list;
+    }
+    
     public function updateUserLogins(User $user, $username, $password)
     {
         $q = $this->_db->prepare('
