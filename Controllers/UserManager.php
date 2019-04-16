@@ -212,4 +212,31 @@ class UserManager extends Manager
         $q->bindValue(':id', $user->id());
         $q->execute();
     }
+    
+    public function banUser($id)
+    {
+        if(intval($id) > 0)
+        {
+            $q = $this->_db->prepare('
+            UPDATE  user 
+            SET     user_isBanned   = 1
+            WHERE   user_id         = :id');
+            $q->bindValue(':id', $id);
+            $q->execute();
+        }
+        
+    }
+    
+    public function unbanUser($id)
+    {
+        if(intval($id) > 0)
+        {
+            $q = $this->_db->prepare('
+            UPDATE  user 
+            SET     user_isBanned   = 0
+            WHERE   user_id         = :id');
+            $q->bindValue(':id', $id);
+            $q->execute();
+        }
+    }
 }

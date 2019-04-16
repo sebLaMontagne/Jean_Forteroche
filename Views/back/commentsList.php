@@ -32,7 +32,16 @@ else
 
         $display  = '';
         $display .= '<div>';
-        $display .=     '<p>'.$commentAuthor->name().'</p>';
+        
+        if($commentAuthor->isBanned())
+        {
+            $display .= '<p>'.$commentAuthor->name().' (Utilisateur banni)</p>';
+        }
+        else
+        {
+            $display .= '<p>'.$commentAuthor->name().'</p>';
+        }
+        
         $display .=     '<p>a écrit le '.$commentDate->format('d/m/Y à H:i:s').' :</p>';
         $display .=     '<p>Sur le chapitre '.$postManager->getChapterByPostId($comments[$i]->postId()).'</p>';
         $display .=     '<p>'.$comments[$i]->content().'</p>';
@@ -42,11 +51,11 @@ else
         
         if($commentAuthor->isBanned())
         {
-            $display .= '<span>Utilisateur banni</span>';
+            $display .= '<a href="confirmBanUser.php?action=unban&id='.$commentAuthor->id().'">Débannir</a>';
         }
         else
         {
-            $display .= '<a href="confirmBanUser">bannir l\'utilisateur</a>';
+            $display .= '<a href="confirmBanUser.php?action=ban&id='.$commentAuthor->id().'">bannir l\'utilisateur</a>';
         }
         
         $display .=     '</p>';

@@ -25,6 +25,10 @@ if(!empty($_POST))
     {
         echo '<p>Identifiants incorrects</p>';
     }
+    elseif($user->isBanned())
+    {
+        echo '<p>Votre compte a été banni. Vous ne pouvez qu\'implorer la clémence de notre maître et seigneur à tous</p>';
+    }
     elseif(!$user->isActivated())
     {
         echo '<p>Compte existant mais non activé</p>';
