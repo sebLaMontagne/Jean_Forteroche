@@ -211,6 +211,26 @@ class UserManager extends Manager
         return $list;
     }
     
+    public function getAllUsersCount()
+    {
+        return $this->_db->query('SELECT COUNT(user_id) FROM user WHERE user_activation = 1')->fetch()[0];
+    }
+    
+    public function getBannedUsersCount()
+    {
+        return $this->_db->query('SELECT COUNT(user_id) FROM user WHERE user_activation = 1 AND user_isBanned = 1')->fetch()[0];
+    }
+    
+    public function getAdminUsersCount()
+    {
+        return $this->_db->query('SELECT COUNT(user_id) FROM user WHERE user_activation = 1 AND user_isAdmin = 1')->fetch()[0];
+    }
+    
+    public function getNormalUsersCount()
+    {
+        return $this->_db->query('SELECT COUNT(user_id) FROM user WHERE user_activation = 1 AND user_isAdmin = 0 AND user_isBanned = 0')->fetch()[0];
+    }
+    
     public function updateUserLogins(User $user, $username, $password)
     {
         $q = $this->_db->prepare('

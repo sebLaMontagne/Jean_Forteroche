@@ -32,6 +32,7 @@ spl_autoload_register(function($class){
     
     <body>
         <h1>Panneau d'administration</h1>
+        <h2><?= 'Bienvenue '.$_SESSION['pseudo']; ?></h2>
         <nav>
             <a href="../front/home.php">Retourner sur le site</a>
             <a href="admin.php">Accueil</a>

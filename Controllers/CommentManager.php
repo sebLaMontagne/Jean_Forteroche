@@ -62,6 +62,11 @@ class CommentManager extends Manager
         return $list;
     }
     
+    public function getAllCommentsCount()
+    {
+        return $this->_db->query('SELECT COUNT(comment_id) FROM comment')->fetch()[0];
+    }
+    
     public function getAllCommentsSortedByReports()
     {
         $q = $this->_db->query('SELECT * FROM comment');

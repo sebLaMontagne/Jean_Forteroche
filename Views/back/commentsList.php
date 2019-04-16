@@ -42,16 +42,20 @@ else
             $display .= '<p>'.$commentAuthor->name().'</p>';
         }
         
-        $display .=     '<p>a écrit le '.$commentDate->format('d/m/Y à H:i:s').' :</p>';
-        $display .=     '<p>Sur le chapitre '.$postManager->getChapterByPostId($comments[$i]->postId()).'</p>';
-        $display .=     '<p>'.$comments[$i]->content().'</p>';
-        $display .=     '<p>'.$comments[$i]->likes().' likes '.$comments[$i]->reports().' reports</p>';
-        $display .=     '<p>';
-        $display .=         '<a href="confirmCommentSuppression.php?id='.$comments[$i]->id().'">supprimer le commentaire</a>';
+        $display .= '<p>a écrit le '.$commentDate->format('d/m/Y à H:i:s').' :</p>';
+        $display .= '<p>Sur le chapitre '.$postManager->getChapterByPostId($comments[$i]->postId()).'</p>';
+        $display .= '<p>'.$comments[$i]->content().'</p>';
+        $display .= '<p>'.$comments[$i]->likes().' likes '.$comments[$i]->reports().' reports</p>';
+        $display .= '<p>';
+        $display .= '<a href="confirmCommentSuppression.php?id='.$comments[$i]->id().'">supprimer le commentaire</a>';
         
         if($commentAuthor->isBanned())
         {
             $display .= '<a href="confirmBanUser.php?action=unban&id='.$commentAuthor->id().'&redirect=commentsList.php">Débannir</a>';
+        }
+        elseif($commentAuthor->isAdmin())
+        {
+            
         }
         else
         {

@@ -199,6 +199,24 @@ class PostManager extends Manager
         }
     }
     
+    public function getPublicChaptersCount()
+    {
+        $q = $this->_db->query('SELECT COUNT(post_id) FROM post WHERE post_isPublished = 1');
+        return $q->fetch()[0];
+    }
+    
+    public function getDraftChaptersCount()
+    {
+        $q = $this->_db->query('SELECT COUNT(post_id) FROM post WHERE post_isPublished = 0');
+        return $q->fetch()[0];
+    }
+    
+    public function getAllChaptersCount()
+    {
+        $q = $this->_db->query('SELECT COUNT(post_id) FROM post');
+        return $q->fetch()[0];
+    }
+    
     public function isChapterExist($chapter)
     {
         $q = $this->_db->prepare('SELECT * FROM post WHERE post_chapter_number = :chapter');

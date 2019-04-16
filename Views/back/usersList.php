@@ -29,7 +29,6 @@ else
         elseif($users[$i]->isAdmin())
         {
             $display .= ' (administrateur)</p>';
-            $display .= '<p><a href="confirmBanUser.php?action=ban&id='.$users[$i]->id().'&redirect=usersList.php">Bannir</a></p>';
         }
         elseif(!$users[$i]->isActivated())
         {
@@ -40,6 +39,9 @@ else
             $display .= ' (simple usager)</p>';
             $display .= '<p><a href="confirmBanUser.php?action=ban&id='.$users[$i]->id().'&redirect=usersList.php">Bannir</a></p>';
         }
+        
+        $display .= '<p><a href="commentsList.php?id='.$users[$i]->id().'">Voir tous les commentaires de cet utilisateur</a></p>';
+        $display .= '<hr />';
     }
     
     echo $display;
