@@ -220,9 +220,24 @@ class UserManager extends Manager
         }
     }
     
-    public function getAllUsers()
+    public function getAllUsers($filter)
     {
-        $q = $this->_db->query('SELECT * FROM user');
+        if($filter == 'all')
+        {
+            $q = $this->_db->query('SELECT * FROM user');
+        }
+        elseif($filter == 'admins')
+        {
+            $q = $this->_db->query('SELECT * FROM user WHERE user_isAdmin = 1');
+        }
+        elseif($filter == 'banned')
+        {
+            $q = $this->_db->query('SELECT * FROM user WHERE user_isBanned = 1');
+        }
+        elseif($filter == 'users')
+        {
+            $q = $this->_db->query('SELECT * FROM user WHERE user_isBanned = 0 AND user_isAdmin = 0');
+        }
         
         $list = [];
         while($a = $q->fetch())

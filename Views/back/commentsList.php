@@ -19,10 +19,9 @@ else
     echo '<p>Ici, vous pouvez supprimer des commentaires ou bannir des utilisateurs pour leur mauvais comportement et filtrer les commentaires en fonction de plusieurs critères</p>';
     
     $sorter  = '<p>Trier les commentaires par : </p>';
-    $sorter .= '<form action="commentsList" method="get">';
+    $sorter .= '<form action="commentsList.php" method="get">';
     $sorter .= '<select name="sortedBy">';
     $sorter .= '<option value="date">date</option>';
-    $sorter .= '<option value="users">utilisateur</option>';
     $sorter .= '<option value="likes">nombre de likes</option>';
     $sorter .= '<option value="reports">nombre de reports</option>';
     $sorter .= '</select>';
@@ -31,7 +30,7 @@ else
     
     echo $sorter;
     
-    if(empty($_GET['sortedBy']) || ($_GET['sortedBy'] != 'reports' && $_GET['sortedBy'] != 'likes' && $_GET['sortedBy'] != 'users' && $_GET['sortedBy'] != 'date'))
+    if(empty($_GET['sortedBy']) || ($_GET['sortedBy'] != 'reports' && $_GET['sortedBy'] != 'likes' && $_GET['sortedBy'] != 'date'))
     {
         header('Location:admin.php');
     }
@@ -72,7 +71,7 @@ else
         $display .= '<p>'.$comments[$i]->content().'</p>';
         $display .= '<p>'.$comments[$i]->likes().' likes '.$comments[$i]->reports().' reports</p>';
         $display .= '<p>';
-        $display .= '<a href="confirmCommentSuppression.php?id='.$comments[$i]->id().'">supprimer le commentaire</a>';
+        $display .= '<a href="confirmCommentSuppression.php?id='.$comments[$i]->id().'&redirect='.$_GET['sortedBy'].'">supprimer le commentaire</a>';
         
         if($commentAuthor->isBanned())
         {
@@ -89,10 +88,9 @@ else
         
         $display .= '</p>';
         $display .= '<p>Voir tous les commentaires de cet utilisateur triés par : </p>';
-        $display .= '<form action="commentsList" method="get">';
+        $display .= '<form action="commentsList.php" method="get">';
         $display .= '<select name="sortedBy">';
         $display .= '<option value="date">date</option>';
-        $display .= '<option value="users">utilisateur</option>';
         $display .= '<option value="likes">nombre de likes</option>';
         $display .= '<option value="reports">nombre de reports</option>';
         $display .= '</select>';

@@ -20,18 +20,18 @@ else
             {
                 $commentManager = new CommentManager();
                 $commentManager->deleteComment($_GET['id']);
-                header('Location: commentsList.php');
+                header('Location: commentsList.php?sortedBy='.$_GET['redirect']);
             }
             elseif($_POST['confirmation'] == 'no')
             {
-                header('Location: commentsList.php');
+                header('Location: commentsList.php?sortedBy='.$_GET['redirect']);
             }
         }
         else
         {
             echo'
             <p>Etes-vous sûr de vouloir supprimer ce commentaire</p>
-            <form method="post" action="confirmCommentSuppression.php?id='.$_GET['id'].'">
+            <form method="post" action="confirmCommentSuppression.php?id='.$_GET['id'].'&redirect='.$_GET['redirect'].'">
                 <input type="radio" name="confirmation" value="yes" id="confirm-yes" required /><label for="confirm-yes">Oui</label>
                 <input type="radio" name="confirmation" value="no" id="confirm-no" required /><label for="confirm-no">Non</label>
                 <input type="submit" value="valider" />

@@ -86,10 +86,6 @@ class CommentManager extends Manager
         {
             function comparator($object1, $object2) { return $object1->likes() < $object2->likes(); }
         }
-        elseif($filter == 'users')
-        {
-            function comparator($object1, $object2) { return $object1->userId() < $object2->userId(); }
-        }
         elseif($filter == 'date')
         {
             function comparator($object1, $object2) { return $object1->date() < $object2->date(); }
@@ -120,10 +116,6 @@ class CommentManager extends Manager
             elseif($filter == 'likes')
             {
                 function comparator($object1, $object2) { return $object1->likes() < $object2->likes(); }
-            }
-            elseif($filter == 'users')
-            {
-                function comparator($object1, $object2) { return $object1->userId() < $object2->userId(); }
             }
             elseif($filter == 'date')
             {

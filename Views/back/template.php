@@ -38,7 +38,7 @@ spl_autoload_register(function($class){
             <a href="admin.php">Accueil</a>
             <a href="chaptersList.php">Gestion des Chapitres</a>
             <a href="commentsList.php?sortedBy=reports">Gestion des Commentaires</a>
-            <a href="usersList.php">Gestion des utilisateurs</a>
+            <a href="usersList.php?show=all">Gestion des utilisateurs</a>
         </nav>
     </body>
 </html>

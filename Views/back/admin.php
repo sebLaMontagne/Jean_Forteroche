@@ -22,8 +22,8 @@ else
     $display .= '<p>Il y a actuellement : </p>';
     $display .= '<ul>';
     $display .= '<li>'.$postManager->getAllChaptersCount().' chapitres dont '.$postManager->getPublicChaptersCount().' publics et '.$postManager->getDraftChaptersCount().' brouillons &rarr; <a href="chaptersList.php">Gérer les chapitres</a></li>';
-    $display .= '<li>'.$userManager->getAllUsersCount().' utilisateurs dont '.$userManager->getAdminUsersCount().' administrateurs, '.$userManager->getNormalUsersCount().' utilisateurs et '.$userManager->getBannedUsersCount().' bannis &rarr; <a href="usersList.php">Gérer les utilisateurs</a></li>';
-    $display .= '<li>'.$commentManager->getAllCommentsCount().' commentaires &rarr; <a href="commentsList.php">Gérer les commentaires</a></li>';
+    $display .= '<li>'.$userManager->getAllUsersCount().' utilisateurs dont '.$userManager->getAdminUsersCount().' administrateurs, '.$userManager->getNormalUsersCount().' utilisateurs et '.$userManager->getBannedUsersCount().' bannis &rarr; <a href="usersList.php?show=all">Gérer les utilisateurs</a></li>';
+    $display .= '<li>'.$commentManager->getAllCommentsCount().' commentaires &rarr; <a href="commentsList.php?sortedBy=reports">Gérer les commentaires</a></li>';
     $display .= '</ul>';
     
     echo $display;
