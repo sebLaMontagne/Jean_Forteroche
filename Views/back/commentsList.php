@@ -16,22 +16,47 @@ else
     $commentManager = new CommentManager();
     $userManager = new UserManager();
     
-    if(isset($_GET['user']) && intval($_GET['user'] > 0))
+    echo '<p>Ici, vous pouvez supprimer des commentaires ou bannir des utilisateurs pour leur mauvais comportement et filtrer les commentaires en fonction de plusieurs critères</p>';
+    
+    $sorter  = '<p>Trier les commentaires par : </p>';
+    $sorter .= '<form action="commentsList" method="get">';
+    $sorter .= '<select name="sortedBy">';
+    $sorter .= '<option value="date">date</option>';
+    $sorter .= '<option value="users">utilisateur</option>';
+    $sorter .= '<option value="likes">nombre de likes</option>';
+    $sorter .= '<option value="reports">nombre de reports</option>';
+    $sorter .= '</select>';
+    $sorter .= '<input type="submit" value="Confirmer"/>';
+    $sorter .= '</form>';
+    
+    echo $sorter;
+    
+    if(empty($_GET['sortedBy']) || ($_GET['sortedBy'] != 'reports' && $_GET['sortedBy'] != 'likes' && $_GET['sortedBy'] != 'users' && $_GET['sortedBy'] != 'date'))
     {
-        $comments = $commentManager->getAllUserCommentsSortedByReports($_GET['user']);
+        header('Location:admin.php');
     }
     else
     {
-        $comments = $commentManager->getAllCommentsSortedByReports();
+        if(empty($_GET['id']))
+        {
+            $comments = $commentManager->getAllCommentsSortedBy($_GET['sortedBy']);
+        }
+        elseif(!empty($_GET['id']) && $userManager->isUserExist($_GET['id']))
+        {
+            $comments = $commentManager->getAllUserCommentsSortedBy($_GET['id'], $_GET['sortedBy']);
+        }
+        else
+        {
+            header('Location:admin.php');
+        }
     }
     
     for($i=0; $i < count($comments); $i++)
     {
         $commentDate = new DateTime($comments[$i]->date());
         $commentAuthor = $userManager->getUserById($comments[$i]->userId());
-
-        $display  = '';
-        $display .= '<div>';
+        
+        $display = '<div>';
         
         if($commentAuthor->isBanned())
         {
@@ -62,9 +87,19 @@ else
             $display .= '<a href="confirmBanUser.php?action=ban&id='.$commentAuthor->id().'&redirect=commentsList.php">bannir l\'utilisateur</a>';
         }
         
-        $display .=     '</p>';
-        $display .= '<p><a href="commentsList.php?user='.$commentAuthor->id().'">Voir tous les commentaires de cet utilisateur</a></p>';
-        $display .= '<div>';
+        $display .= '</p>';
+        $display .= '<p>Voir tous les commentaires de cet utilisateur triés par : </p>';
+        $display .= '<form action="commentsList" method="get">';
+        $display .= '<select name="sortedBy">';
+        $display .= '<option value="date">date</option>';
+        $display .= '<option value="users">utilisateur</option>';
+        $display .= '<option value="likes">nombre de likes</option>';
+        $display .= '<option value="reports">nombre de reports</option>';
+        $display .= '</select>';
+        $display .= '<input type="hidden" name="id" value="'.$commentAuthor->id().'" />';
+        $display .= '<input type="submit" value="confirmer" />';
+        $display .= '</form>';
+        $display .= '</div>';
         $display .= '<hr />';
 
         echo $display;

@@ -67,7 +67,7 @@ class CommentManager extends Manager
         return $this->_db->query('SELECT COUNT(comment_id) FROM comment')->fetch()[0];
     }
     
-    public function getAllCommentsSortedByReports()
+    public function getAllCommentsSortedBy($filter)
     {
         $q = $this->_db->query('SELECT * FROM comment');
         
@@ -78,13 +78,27 @@ class CommentManager extends Manager
             $list[] = new Comment($refinedAnswer);
         }
         
-        function comparator($object1, $object2) { return $object1->reports() < $object2->reports(); }
+        if($filter == 'reports')
+        {
+            function comparator($object1, $object2) { return $object1->reports() < $object2->reports(); }
+        }
+        elseif($filter == 'likes')
+        {
+            function comparator($object1, $object2) { return $object1->likes() < $object2->likes(); }
+        }
+        elseif($filter == 'users')
+        {
+            function comparator($object1, $object2) { return $object1->userId() < $object2->userId(); }
+        }
+        elseif($filter == 'date')
+        {
+            function comparator($object1, $object2) { return $object1->date() < $object2->date(); }
+        }
         usort($list, "comparator");
-        
         return $list;
     }
     
-    public function getAllUserCommentsSortedByReports($id)
+    public function getAllUserCommentsSortedBy($id, $filter)
     {
         if(intval($id > 0))
         {
@@ -99,7 +113,22 @@ class CommentManager extends Manager
                 $list[] = new Comment($refinedAnswer);
             }
 
-            function comparator($object1, $object2) { return $object1->reports() < $object2->reports(); }
+            if($filter == 'reports')
+            {
+                function comparator($object1, $object2) { return $object1->reports() < $object2->reports(); }
+            }
+            elseif($filter == 'likes')
+            {
+                function comparator($object1, $object2) { return $object1->likes() < $object2->likes(); }
+            }
+            elseif($filter == 'users')
+            {
+                function comparator($object1, $object2) { return $object1->userId() < $object2->userId(); }
+            }
+            elseif($filter == 'date')
+            {
+                function comparator($object1, $object2) { return $object1->date() < $object2->date(); }
+            }
             usort($list, "comparator");
 
             return $list;

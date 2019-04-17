@@ -30,16 +30,18 @@ class UserManager extends Manager
                 user_isAdmin,
                 user_token,
                 user_activation,
-                user_token_expiration) 
+                user_token_expiration,
+                user_isBanned) 
             VALUES(
                 :userName,
                 :userPassword,
                 :userEmail,
-                :userIsAuthor,
-                :userIsAdmin,
+                0,
+                0,
                 :userToken,
-                :userActivation,
-                CURTIME() + INTERVAL 1 DAY)');
+                0,
+                CURTIME() + INTERVAL 1 DAY,
+                0)');
         
         do{
             $confirmToken = '';
@@ -47,16 +49,13 @@ class UserManager extends Manager
             {
                 $confirmToken .= mt_rand(0,9);
             }   
-        }while(!$this->isTokenFree(confirmToken));
+        }while(!$this->isTokenFree($confirmToken));
 
         
         $q->bindValue(':userName', htmlspecialchars($name));
         $q->bindValue(':userPassword', password_hash($password, PASSWORD_DEFAULT));
         $q->bindValue(':userEmail', htmlspecialchars($email));
-        $q->bindValue(':userIsAuthor', 0);
-        $q->bindValue(':userIsAdmin', 0);
         $q->bindValue(':userToken', $confirmToken);
-        $q->bindValue(':userActivation', 0);
         
         $q->execute();
         
@@ -128,6 +127,28 @@ class UserManager extends Manager
         else
         {
             throw new Exception('The token is in an invalid format');
+        }
+    }
+    
+    public function isUserExist($id)
+    {
+        if(intval($id) > 0)
+        {
+            $q = $this->_db->prepare('SELECT COUNT(user_id) FROM user WHERE user_id = :id');
+            $q->bindValue(':id', $id);
+            $q->execute();
+            if($q->fetch()[0] == 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            throw new Exception('The user id must be a stictly positive integer value');
         }
     }
     

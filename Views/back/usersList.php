@@ -15,7 +15,8 @@ else
     $userManager = new UserManager();
     $users = $userManager->getAllUsers();
     
-    $display = '<h2>Liste des utilisateurs</h2>';
+    $display  = '<h3>Liste des utilisateurs</h3>';
+    $display .= '<p>Sur cette page, vous pouvez consulter la liste des utilisateurs et leur statut actuel, et éventuellement en bannir ou en gracier</p>';
     
     for($i = 0; $i < count($users); $i++)
     {
@@ -45,6 +46,4 @@ else
     }
     
     echo $display;
-    
-    var_dump($users);
 }

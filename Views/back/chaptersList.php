@@ -12,6 +12,7 @@ if(!isset($_SESSION['isAdmin']) || $_SESSION['isAdmin'] != '1')
 }
 else
 {
+    echo '<p>Ici, vous pouvez écrire ou modifier des chapitres, et les rendre publics ou non</p>';
     echo '<p><a href="newPost.php">Ecrire un nouveau chapitre</a></p>';
 
     $postManager = new PostManager;
