@@ -17,55 +17,49 @@ class AppreciationManager extends Manager
     
     public function addAppreciation($commentId, $userId, $appreciationType = 'like')
     {
-        if(intval($commentId) > 0)
+        if(intval($commentId) > 0 && intval($userId) > 0)
         {
-            if(intval($userId) > 0)
+            if($appreciationType == 'like')
             {
-                if($appreciationType == 'like')
-                {
-                    $q = $this->_db->prepare('
-                        INSERT INTO appreciation(
-                            comment_id,
-                            user_id,
-                            appreciation_isLike,
-                            appreciation_isReport)
-                        VALUES(
-                            :comment_id,
-                            :user_id,
-                            1,
-                            0)');
-                }
-                elseif($appreciationType == 'report')
-                {
-                    $q = $this->_db->prepare('
-                        INSERT INTO appreciation(
-                            comment_id,
-                            user_id,
-                            appreciation_isLike,
-                            appreciation_isReport)
-                        VALUES(
-                            :comment_id,
-                            :user_id,
-                            0,
-                            1)');
-                }
-                else
-                {
-                    throw new Exception('The appreciation type must be either "like" or "report"');
-                }
-                
-                $q->bindValue(':comment_id', $commentId);
-                $q->bindValue(':user_id', $userId);
-                $q->execute();
+                $q = $this->_db->prepare('
+                    INSERT INTO appreciation(
+                        comment_id,
+                        user_id,
+                        appreciation_isLike,
+                        appreciation_isReport)
+                    VALUES(
+                        :comment_id,
+                        :user_id,
+                        1,
+                        0)');
+            }
+            elseif($appreciationType == 'report')
+            {
+                $q = $this->_db->prepare('
+                    INSERT INTO appreciation(
+                        comment_id,
+                        user_id,
+                        appreciation_isLike,
+                        appreciation_isReport)
+                    VALUES(
+                        :comment_id,
+                        :user_id,
+                        0,
+                        1)');
             }
             else
             {
-                throw new Exception('The user id must be a strictly positive integer value');
+                throw new Exception('The appreciation type must be either "like" or "report"');
             }
+
+            $q->bindValue(':comment_id', $commentId);
+            $q->bindValue(':user_id', $userId);
+            $q->execute();
+            
         }
         else
         {
-            throw new Exception('The comment id must be a strictly positive integer value');
+            throw new Exception('The ids parameters must be strictly positive integer values');
         }
     }
     
@@ -131,7 +125,7 @@ class AppreciationManager extends Manager
         }
         else
         {
-            throw new Exception('The parameters must be integer values');
+            throw new Exception('The parameters must be strictly positive integer values');
         }
     }
     
@@ -180,7 +174,7 @@ class AppreciationManager extends Manager
         }
         else
         {
-            throw new Exception('The parameters must be integer values');
+            throw new Exception('The parameters must be strictly integer values');
         }
     }
     

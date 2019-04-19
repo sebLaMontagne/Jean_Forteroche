@@ -6,7 +6,6 @@ class User
     private $_name;
     private $_password;
     private $_email;
-    private $_isAuthor;
     private $_isAdmin;
     private $_isBanned;
     private $_token;
@@ -21,7 +20,6 @@ class User
     public function name()              { return $this->_name; }
     public function password()          { return $this->_password; }
     public function email()             { return $this->_email; }
-    public function isAuthor()          { return $this->_isAuthor; }
     public function isAdmin()           { return $this->_isAdmin; }
     public function isBanned()          { return $this->_isBanned; }
     public function token()             { return $this->_token; }
@@ -34,47 +32,28 @@ class User
     
     public function setId($id)
     {
-        if(is_int($id))
+        if(intval($id) > 0)
         {
-            if($id > 0)
-            {
-                $this->_id = htmlspecialchars($id);
-            }
-            else
-            {
-                throw new Exception('The User id must be must be a strictly positive integer value');
-            }
+            $this->_id = htmlspecialchars($id);
         }
         else
         {
-            throw new Exception('The User id must be an integer value');
+            throw new Exception('The User id must be must be a strictly positive integer value');
         }
     }
-    
-    //--------------------------------------------------------------------
-    
+
     public function setName($name)
     {
-        if(is_string($name))
+        if(is_string($name) && strlen($name) > 5)
         {
-            if(strlen($name) > 5)
-            {
-                $this->_name = htmlspecialchars($name);
-            }
-            else
-            {
-                throw new Exception('The User name must have at least 6 characters');
-            }
-            
+            $this->_name = htmlspecialchars($name);   
         }
         else
         {
-            throw new Exception('The User name must be a string value');
+            throw new Exception('Invalid Username');
         }
     }
-    
-    //--------------------------------------------------------------------
-    
+
     public function setPassword($password)
     {
         if(is_string($password))
@@ -105,18 +84,16 @@ class User
             throw new Exception('The User password must be a string value');
         }
     }
-    
-    //--------------------------------------------------------------------
-    
+  
     public function setEmail($email)
     {
         if(filter_var($email, FILTER_VALIDATE_EMAIL))
         {
-            $this->_email = htmlspecialchars($email);
+            $this->_email = $email;
         }
         else
         {
-            throw new Exception('The User e-mail don\'t respect the requirements');
+            throw new Exception('Invalid email');
         }
     }
     
@@ -124,7 +101,7 @@ class User
     {
         if(preg_match('#^[0-9]{12}$#', $token))
         {
-            $this->_token = htmlspecialchars($token);
+            $this->_token = $token;
         }
         else
         {
@@ -148,23 +125,11 @@ class User
         }
     }
     
-    public function setIsAuthor($isAuthor)
-    {
-        if($isAuthor == 1 || $isAuthor == 0)
-        {
-            $this->_isAuthor = htmlspecialchars($isAuthor);
-        }
-        else
-        {
-            throw new Exception('The author status must be a boolean value');
-        }
-    }
-    
     public function setIsAdmin($isAdmin)
     {
         if($isAdmin == 1 || $isAdmin == 0)
         {
-            $this->_isAdmin = htmlspecialchars($isAdmin);
+            $this->_isAdmin = $isAdmin;
         }
         else
         {
@@ -176,7 +141,7 @@ class User
     {
         if($isActivated == 1 || $isActivated == 0)
         {
-            $this->_isActivated = htmlspecialchars($isActivated);
+            $this->_isActivated = $isActivated;
         }
         else
         {
@@ -188,7 +153,7 @@ class User
     {
         if($isBanned == 1 || $isBanned == 0)
         {
-            $this->_isBanned = htmlspecialchars($isBanned);
+            $this->_isBanned = $isBanned;
         }
         else
         {
@@ -211,8 +176,6 @@ class User
             }
         }
     }
-    
-    //--------------------------------------------------------------------
     
     public function __construct(array $data)
     {

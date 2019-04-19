@@ -10,41 +10,52 @@ class CommentManager extends Manager
         $refinedAnswer['userId']    = (int) $brutAnswer['user_id'];
         $refinedAnswer['content']   =       $brutAnswer['comment_content'];
         $refinedAnswer['date']      =       $brutAnswer['comment_date'];
-        $refinedAnswer['isNew']     = (int) $brutAnswer['comment_isNew'];
         
         return $refinedAnswer;
     }
     
     public function saveComment($postId, $author, $content)
     {
-        $q = $this->_db->prepare('
+        if(intval($postId > 0) && intval($postId > 0) && is_string($content))
+        {
+            $q = $this->_db->prepare('
             INSERT INTO comment(
                 post_id,
                 user_id,
                 comment_content,
-                comment_date,
-                comment_isNew)
+                comment_date)
             VALUES(
                 :postId,
                 :userId,
                 :content,
-                NOW(),
-                1)');
+                NOW())');
         
-        $q->bindValue(':postId', htmlspecialchars($postId));
-        $q->bindValue(':userId', htmlspecialchars($author));
-        $q->bindValue(':content', htmlspecialchars($content));
-        
-        $q->execute();
+            $q->bindValue(':postId', $postId);
+            $q->bindValue(':userId', $author);
+            $q->bindValue(':content', htmlspecialchars($content));
+
+            $q->execute();
+        }
+        else
+        {
+            throw new Exception('The parameters doesn\'t respect the good format');
+        }
     }
     
     public function getComment($id)
     {
-        $q = $this->_db->prepare('SELECT * FROM comment WHERE comment_id = :id');
-        $q->bindValue(':id',htmlspecialchars($id));
-        $q->execute();
+        if(intval($id) > 0)
+        {
+            $q = $this->_db->prepare('SELECT * FROM comment WHERE comment_id = :id');
+            $q->bindValue(':id', $id);
+            $q->execute();
 
-        return new Comment($this->refineAnswer($q->fetch()));
+            return new Comment($this->refineAnswer($q->fetch()));
+        }
+        else
+        {
+            throw new Exception('The id must be a stricty positive integer value');
+        }
     }
     
     public function getPostComments(Post $post)
@@ -69,34 +80,45 @@ class CommentManager extends Manager
     
     public function getAllCommentsSortedBy($filter)
     {
-        $q = $this->_db->query('SELECT * FROM comment');
+        if(is_string($filter))
+        {
+            $q = $this->_db->query('SELECT * FROM comment');
         
-        $list = [];
-        while($brutAnswer = $q->fetch())
-        {
-            $refinedAnswer = $this->refineAnswer($brutAnswer);
-            $list[] = new Comment($refinedAnswer);
+            $list = [];
+            while($brutAnswer = $q->fetch())
+            {
+                $refinedAnswer = $this->refineAnswer($brutAnswer);
+                $list[] = new Comment($refinedAnswer);
+            }
+
+            if($filter == 'reports')
+            {
+                function comparator($object1, $object2) { return $object1->reports() < $object2->reports(); }
+            }
+            elseif($filter == 'likes')
+            {
+                function comparator($object1, $object2) { return $object1->likes() < $object2->likes(); }
+            }
+            elseif($filter == 'date')
+            {
+                function comparator($object1, $object2) { return $object1->date() < $object2->date(); }
+            }
+            else
+            {
+                throw new Exception('This filter does not exist');
+            }
+            usort($list, "comparator");
+            return $list;
         }
-        
-        if($filter == 'reports')
+        else
         {
-            function comparator($object1, $object2) { return $object1->reports() < $object2->reports(); }
+            throw new Exception('The filter must be a string value');
         }
-        elseif($filter == 'likes')
-        {
-            function comparator($object1, $object2) { return $object1->likes() < $object2->likes(); }
-        }
-        elseif($filter == 'date')
-        {
-            function comparator($object1, $object2) { return $object1->date() < $object2->date(); }
-        }
-        usort($list, "comparator");
-        return $list;
     }
     
     public function getAllUserCommentsSortedBy($id, $filter)
     {
-        if(intval($id > 0))
+        if(intval($id > 0) && is_string($filter))
         {
             $q = $this->_db->prepare('SELECT * FROM comment WHERE user_id = :id');
             $q->bindValue(':id', $id);
@@ -121,9 +143,16 @@ class CommentManager extends Manager
             {
                 function comparator($object1, $object2) { return $object1->date() < $object2->date(); }
             }
+            else
+            {
+                throw new Exception('This filter does not exist');
+            }
             usort($list, "comparator");
-
             return $list;
+        }
+        else
+        {
+            throw new Exception('The parameters does not respect the good format');
         }
     }
     
@@ -182,7 +211,7 @@ class CommentManager extends Manager
             }
             
             $q = $this->_db->prepare('DELETE FROM comment WHERE comment_id = :comment_id');
-            $q->bindValue(':comment_id', htmlspecialchars($id));
+            $q->bindValue(':comment_id', $id);
             $q->execute();
         }
         else

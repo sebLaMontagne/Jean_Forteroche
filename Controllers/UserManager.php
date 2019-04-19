@@ -9,7 +9,6 @@ class UserManager extends Manager
         $refinedAnswer['name']              =       $brutAnswer['user_name'];
         $refinedAnswer['password']          =       $brutAnswer['user_password'];
         $refinedAnswer['email']             =       $brutAnswer['user_email'];
-        $refinedAnswer['isAuthor']          = (int) $brutAnswer['user_isAuthor'];
         $refinedAnswer['isAdmin']           = (int) $brutAnswer['user_isAdmin'];
         $refinedAnswer['isBanned']          = (int) $brutAnswer['user_isBanned'];
         $refinedAnswer['token']             =       $brutAnswer['user_token'];
@@ -20,8 +19,10 @@ class UserManager extends Manager
     }
     
     public function addUser($name, $password, $email)
-    { 
-        $q = $this->_db->prepare('
+    {
+        if(is_string($name) && is_string($password) && filter_var($email, FILTER_VALIDATE_EMAIL))
+        {
+            $q = $this->_db->prepare('
             INSERT INTO user(
                 user_name, 
                 user_password, 
@@ -43,30 +44,35 @@ class UserManager extends Manager
                 CURTIME() + INTERVAL 1 DAY,
                 0)');
         
-        do{
-            $confirmToken = '';
-            for($i = 0; $i < 12; $i++)
-            {
-                $confirmToken .= mt_rand(0,9);
-            }   
-        }while(!$this->isTokenFree($confirmToken));
+            do{
+                $confirmToken = '';
+                for($i = 0; $i < 12; $i++)
+                {
+                    $confirmToken .= mt_rand(0,9);
+                }   
+            }while(!$this->isTokenFree($confirmToken));
 
-        
-        $q->bindValue(':userName', htmlspecialchars($name));
-        $q->bindValue(':userPassword', password_hash($password, PASSWORD_DEFAULT));
-        $q->bindValue(':userEmail', htmlspecialchars($email));
-        $q->bindValue(':userToken', $confirmToken);
-        
-        $q->execute();
-        
-        $to = 'juniorwebdesign27@gmail.com;';  
-        $subject = "Confirmation d'inscription";  
-        $message = "Voici votre lien d'activation : \n";
-        $message.= 'https://billetsimplepourlalaska.000webhostapp.com/Views/confirmRegistration.php?token='.$confirmToken;
-        $from = "us-imm-node1a.000webhost.io";
-        $headers = "From: $from";
-        
-        mail($to,$subject,$message,$headers);
+
+            $q->bindValue(':userName', htmlspecialchars($name));
+            $q->bindValue(':userPassword', password_hash($password, PASSWORD_DEFAULT));
+            $q->bindValue(':userEmail', htmlspecialchars($email));
+            $q->bindValue(':userToken', $confirmToken);
+
+            $q->execute();
+
+            $to = 'juniorwebdesign27@gmail.com;';  
+            $subject = "Confirmation d'inscription";  
+            $message = "Voici votre lien d'activation : \n";
+            $message.= 'https://billetsimplepourlalaska.000webhostapp.com/Views/confirmRegistration.php?token='.$confirmToken;
+            $from = "us-imm-node1a.000webhost.io";
+            $headers = "From: $from";
+
+            mail($to,$subject,$message,$headers);
+        }
+        else
+        {
+            throw new Exception('Invalid parameters');
+        }
     }
     
     public function confirmAccount(User $user)
@@ -81,30 +87,37 @@ class UserManager extends Manager
     }
     
     public function isUsernameFree($name)
-    {    
-        $q = $this->_db->prepare('SELECT user_name FROM user WHERE user_name = :userName');
-        
-        $q->bindValue(':userName', htmlspecialchars($name));
-        $q->execute();
-        
-        if($r = $q->fetch())
+    {
+        if(is_string($name))
         {
-            return false;
+            $q = $this->_db->prepare('SELECT user_name FROM user WHERE user_name = :userName');
+        
+            $q->bindValue(':userName', htmlspecialchars($name));
+            $q->execute();
+
+            return !$q->fetch();
         }
         else
         {
-            return true;
+            throw new Exception('the username parameter must be a string value');
         }
     }
     
     public function isEmailFree($email)
-    {    
-        $q = $this->_db->prepare('SELECT user_email FROM user WHERE user_email = :userEmail');
+    {
+        if(filter_var($email, FILTER_VALIDATE_EMAIL))
+        {
+            $q = $this->_db->prepare('SELECT user_email FROM user WHERE user_email = :userEmail');
         
-        $q->bindValue(':userEmail', htmlspecialchars($email));
-        $q->execute();
+            $q->bindValue(':userEmail', $email);
+            $q->execute();
 
-        return !$q->fetch();
+            return !$q->fetch();
+        }
+        else
+        {
+            throw new Exception('Invalid email format');
+        }
     }
     
     public function isTokenFree($token)
@@ -115,18 +128,11 @@ class UserManager extends Manager
             $q->bindValue(':token', $token);
             $q->execute();
             
-            if($r = $q->fetch())
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return !$q->fetch();
         }
         else
         {
-            throw new Exception('The token is in an invalid format');
+            throw new Exception('Invalid token format');
         }
     }
     
@@ -137,14 +143,8 @@ class UserManager extends Manager
             $q = $this->_db->prepare('SELECT COUNT(user_id) FROM user WHERE user_id = :id');
             $q->bindValue(':id', $id);
             $q->execute();
-            if($q->fetch()[0] == 1)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            
+            return $q->fetch();
         }
         else
         {
@@ -155,7 +155,7 @@ class UserManager extends Manager
     public function renewActivationLink(User $user)
     {
         $q = $this->_db->prepare('UPDATE user SET user_token_expiration = CURTIME() + INTERVAL 1 DAY WHERE user_id = :id');
-        $q->bindValue(':token', htmlspecialchars($user->id()));
+        $q->bindValue(':token', $user->id());
         $q->execute();
         
         $to = 'juniorwebdesign27@gmail.com;';
@@ -170,81 +170,121 @@ class UserManager extends Manager
     
     public function getUserById($id)
     {
-        $q = $this->_db->prepare('SELECT * FROM user WHERE user_id = :userId');
-        $q->bindValue(':userId', htmlspecialchars($id));
-        $q->execute();
-        
-        if($a = $q->fetch())
+        if(intval($id) > 0)
         {
-            return new User($this->refineAnswer($a));
+            $q = $this->_db->prepare('SELECT * FROM user WHERE user_id = :userId');
+            $q->bindValue(':userId', $id);
+            $q->execute();
+
+            if($a = $q->fetch())
+            {
+                return new User($this->refineAnswer($a));
+            }
         }
+        else
+        {
+            throw new Exception('The id must be a strictly positive integer value');
+        }
+        
     }
     
     public function getUserByLogins($username, $password)
     {
-        $q = $this->_db->prepare('SELECT * FROM user WHERE user_name = :userName');
-        
-        $q->bindValue(':userName', htmlspecialchars($username));
-        $q->execute();
-        
-        if($a = $q->fetch())
+        if(is_string($username) && is_string($password))
         {
-            if(password_verify($password, $a['user_password']))
+            $q = $this->_db->prepare('SELECT * FROM user WHERE user_name = :userName');
+        
+            $q->bindValue(':userName', htmlspecialchars($username));
+            $q->execute();
+
+            if($a = $q->fetch())
             {
-                return new User($this->refineAnswer($a));
+                if(password_verify($password, $a['user_password']))
+                {
+                    return new User($this->refineAnswer($a));
+                }
             }
+        }
+        else
+        {
+            throw new Exception('the parameters must be string values');
         }
     }
     
     public function getUserByEmail($email)
     {
-        $q = $this->_db->prepare('SELECT * FROM user WHERE user_email = :email');
-        $q->bindValue(':email', htmlspecialchars($email));
-        $q->execute();
-        
-        if($a = $q->fetch())
+        if(filter_var($email, FILTER_VALIDATE_EMAIL))
         {
-            return new User($this->refineAnswer($a));
+            $q = $this->_db->prepare('SELECT * FROM user WHERE user_email = :email');
+            $q->bindValue(':email', htmlspecialchars($email));
+            $q->execute();
+
+            if($a = $q->fetch())
+            {
+                return new User($this->refineAnswer($a));
+            }
+        }
+        else
+        {
+            'Invalid email format';
         }
     }
     
     public function getUserByToken($token)
     {
-        $q = $this->_db->prepare('SELECT * FROM user WHERE user_token = :token');
-        $q->bindValue(':token', htmlspecialchars($token));
-        $q->execute();
-        
-        if($a = $q->fetch())
+        if(preg_match('#^[0-9]{12}$#', $token))
         {
-            return new User($this->refineAnswer($a));
+            $q = $this->_db->prepare('SELECT * FROM user WHERE user_token = :token');
+            $q->bindValue(':token', htmlspecialchars($token));
+            $q->execute();
+
+            if($a = $q->fetch())
+            {
+                return new User($this->refineAnswer($a));
+            }
+        }
+        else
+        {
+            throw new Exception('Invalid token parameter');
         }
     }
     
     public function getAllUsers($filter)
     {
-        if($filter == 'all')
+        if(is_string($filter))
         {
-            $q = $this->_db->query('SELECT * FROM user');
+            if($filter == 'all')
+            {
+                $q = $this->_db->query('SELECT * FROM user');
+            }
+            elseif($filter == 'admins')
+            {
+                $q = $this->_db->query('SELECT * FROM user WHERE user_isAdmin = 1');
+            }
+            elseif($filter == 'banned')
+            {
+                $q = $this->_db->query('SELECT * FROM user WHERE user_isBanned = 1');
+            }
+            elseif($filter == 'users')
+            {
+                $q = $this->_db->query('SELECT * FROM user WHERE user_isBanned = 0 AND user_isAdmin = 0');
+            }
+            else
+            {
+                throw new Exception('Non-supported filter');
+            }
+
+            $list = [];
+            while($a = $q->fetch())
+            {
+                $list[] = new User($this->refineAnswer($a));
+            }
+            return $list;
         }
-        elseif($filter == 'admins')
+        else
         {
-            $q = $this->_db->query('SELECT * FROM user WHERE user_isAdmin = 1');
+            throw new Exception('The filter must be a string value');
         }
-        elseif($filter == 'banned')
-        {
-            $q = $this->_db->query('SELECT * FROM user WHERE user_isBanned = 1');
-        }
-        elseif($filter == 'users')
-        {
-            $q = $this->_db->query('SELECT * FROM user WHERE user_isBanned = 0 AND user_isAdmin = 0');
-        }
-        
-        $list = [];
-        while($a = $q->fetch())
-        {
-            $list[] = new User($this->refineAnswer($a));
-        }
-        return $list;
     }
     
     public function getAllUsersCount()
@@ -269,16 +309,23 @@ class UserManager extends Manager
     
     public function updateUserLogins(User $user, $username, $password)
     {
-        $q = $this->_db->prepare('
+        if(is_string($username) && is_string($password))
+        {
+            $q = $this->_db->prepare('
             UPDATE  user 
             SET     user_name       = :username,
                     user_password   = :password
             WHERE   user_id         = :id');
         
-        $q->bindValue(':username', htmlspecialchars($username));
-        $q->bindValue(':password', password_hash(htmlspecialchars($password), PASSWORD_DEFAULT));
-        $q->bindValue(':id', $user->id());
-        $q->execute();
+            $q->bindValue(':username', htmlspecialchars($username));
+            $q->bindValue(':password', password_hash(htmlspecialchars($password), PASSWORD_DEFAULT));
+            $q->bindValue(':id', $user->id());
+            $q->execute();
+        }
+        else
+        {
+            throw new Exception('The username and password must be string values');
+        }
     }
     
     public function banUser($id)

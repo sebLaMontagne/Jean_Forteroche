@@ -6,10 +6,9 @@ class PostManager extends Manager
     private function refineAnswer($brutAnswer)
     {
         $refinedAnswer['id']            = (int) $brutAnswer['post_id'];
-        $refinedAnswer['authorId']      = (int) $brutAnswer['user_id'];
         $refinedAnswer['title']         =       $brutAnswer['post_title'];
         $refinedAnswer['chapterNumber'] = (int) $brutAnswer['post_chapter_number'];
-        $refinedAnswer['content']       = $brutAnswer['post_content'];
+        $refinedAnswer['content']       =       $brutAnswer['post_content'];
         $refinedAnswer['date']          =       $brutAnswer['post_date'];
         $refinedAnswer['isPublished']   = (int) $brutAnswer['post_isPublished'];
         
@@ -144,34 +143,56 @@ class PostManager extends Manager
     
     public function getPost($chapter)
     {
-        $q = $this->_db->prepare('SELECT * FROM post WHERE post_chapter_number = :chapter');
-        $q->bindValue(':chapter',htmlspecialchars($chapter));
-        $q->execute();
+        if(intval($chapter) > 0 && intval($chapter) <= 65535)
+        {
+            $q = $this->_db->prepare('SELECT * FROM post WHERE post_chapter_number = :chapter');
+            $q->bindValue(':chapter', $chapter);
+            $q->execute();
 
-        return new Post($this->refineAnswer($q->fetch()));
+            return new Post($this->refineAnswer($q->fetch()));
+        }
+        else
+        {
+            throw new Exception('The chapter number must be a number comprise between 1 and 65535');
+        }
     }
     
     public function getPostIDbyChapter($chapter)
     {
-        $q = $this->_db->prepare('SELECT post_id FROM post WHERE post_chapter_number = :chapter');
-        $q->bindValue(':chapter', htmlspecialchars($chapter));
-        $q->execute();
+        if(intval($chapter) > 0 && intval($chapter) <= 65535)
+        {
+            $q = $this->_db->prepare('SELECT post_id FROM post WHERE post_chapter_number = :chapter');
+            $q->bindValue(':chapter', $chapter);
+            $q->execute();
         
-        return $q->fetch()[0];
+            return $q->fetch()[0];
+        }
+        else
+        {
+            throw new Exception('The chapter number must be a number comprise between 1 and 65535');
+        }
     }
     
     public function getChapterByPostId($id)
     {
-        $q = $this->_db->prepare('SELECT post_chapter_number FROM post WHERE post_id = :id');
-        $q->bindValue(':id', htmlspecialchars($id));
-        $q->execute();
+        if(intval($id) > 0)
+        {
+            $q = $this->_db->prepare('SELECT post_chapter_number FROM post WHERE post_id = :id');
+            $q->bindValue(':id', htmlspecialchars($id));
+            $q->execute();
+
+            return $q->fetch()[0];
+        }
+        else
+        {
+            throw new Exception('The id must be a strictly positive value');
+        }
         
-        return $q->fetch()[0];
     }
     
     public function getNextChapterNumber($chapter)
     {
-        if(intval($chapter) > 0)
+        if(intval($chapter) > 0 && intval($chapter) <= 65535)
         {
             $q = $this->_db->prepare('
                 SELECT post_chapter_number FROM post 
@@ -182,11 +203,15 @@ class PostManager extends Manager
             
             return $q->fetch()[0];
         }
+        else
+        {
+            throw new Exception('The chapter number must be a number comprise between 1 and 65535');
+        }
     }
     
     public function getPreviousChapterNumber($chapter)
     {
-        if(intval($chapter) > 0)
+        if(intval($chapter) > 0 && intval($chapter) <= 65535)
         {
             $q = $this->_db->prepare('
                 SELECT post_chapter_number FROM post 
@@ -197,92 +222,105 @@ class PostManager extends Manager
             
             return $q->fetch()[0];
         }
+        else
+        {
+            throw new Exception('The chapter number must be a number comprise between 1 and 65535');
+        }
     }
     
     public function getPublicChaptersCount()
     {
-        $q = $this->_db->query('SELECT COUNT(post_id) FROM post WHERE post_isPublished = 1');
-        return $q->fetch()[0];
+        return $this->_db->query('SELECT COUNT(post_id) FROM post WHERE post_isPublished = 1')->fetch()[0];
     }
     
     public function getDraftChaptersCount()
     {
-        $q = $this->_db->query('SELECT COUNT(post_id) FROM post WHERE post_isPublished = 0');
-        return $q->fetch()[0];
+        return $this->_db->query('SELECT COUNT(post_id) FROM post WHERE post_isPublished = 0')->fetch()[0];
     }
     
     public function getAllChaptersCount()
     {
-        $q = $this->_db->query('SELECT COUNT(post_id) FROM post');
-        return $q->fetch()[0];
+        return $this->_db->query('SELECT COUNT(post_id) FROM post')->fetch()[0];
     }
     
     public function isChapterExist($chapter)
     {
-        $q = $this->_db->prepare('SELECT * FROM post WHERE post_chapter_number = :chapter');
-        $q->bindValue(':chapter',htmlspecialchars($chapter));
-        $q->execute();
-        
-        if($a = $q->fetch())
+        if(intval($chapter) > 0 && intval($chapter) <= 65535)
         {
-            return true;
+            $q = $this->_db->prepare('SELECT * FROM post WHERE post_chapter_number = :chapter');
+            $q->bindValue(':chapter',htmlspecialchars($chapter));
+            $q->execute();
+
+            if($a = $q->fetch())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         else
         {
-            return false;
+            throw new Exception('The chapter number must be a number comprise between 1 and 65535');
         }
+        
     }
     
-    public function savePost($author, $chapter, $title, $content, $publish)
+    public function savePost($chapter, $title, $content, $publish)
     {
-        $q = $this->_db->prepare('
+        if(intval($chapter) > 0 && intval($chapter) <= 65535 && is_string($title) && is_string($content) && is_bool($publish))
+        {
+            $q = $this->_db->prepare('
             INSERT INTO post(
-                user_id,
                 post_title,
                 post_chapter_number,
                 post_content,
                 post_date,
                 post_isPublished)
             VALUES(
-                :author,
                 :title,
                 :chapter,
                 :content,
                 NOW(),
                 :publish)');
         
-        $q->bindValue(':author', htmlspecialchars($author));
-        $q->bindValue(':title', htmlspecialchars($title));
-        $q->bindValue(':chapter', htmlspecialchars($chapter));
-        $q->bindValue(':content', htmlspecialchars($content));
-        $q->bindValue(':publish', htmlspecialchars($publish));
-        
-        $q->execute();
+            $q->bindValue(':title', htmlspecialchars($title));
+            $q->bindValue(':chapter', $chapter);
+            $q->bindValue(':content', htmlspecialchars($content));
+            $q->bindValue(':publish', $publish);
+
+            $q->execute();
+        }
+        else
+        {
+            throw new Exception('The parameters does not respect the correct format');
+        }
     }
     
-    public function updatePost($id, $chapter, $title, $content, $publish)
+    public function updatePost($id, $title, $content, $publish)
     {   
-        $q = $this->_db->prepare('
+        if(intval($id) > 0 && is_string($title) && is_string($content) && is_bool($publish))
+        {
+            $q = $this->_db->prepare('
             UPDATE  post
-            SET     post_chapter_number     = :chapter,
-                    post_title              = :title,
+            SET     post_title              = :title,
                     post_content            = :content,
                     post_isPublished        = :publish
             WHERE   post_id                 = :id');
-        
-        $q->bindValue(':chapter', htmlspecialchars($chapter));
-        $q->bindValue(':title', htmlspecialchars($title));
-        $q->bindValue(':content', htmlspecialchars($content));
-        $q->bindValue(':publish', htmlspecialchars($publish));
-        $q->bindValue(':id', htmlspecialchars($id));
-        
-        $q->execute();
-        
+            
+            $q->bindValue(':title', htmlspecialchars($title));
+            $q->bindValue(':content', htmlspecialchars($content));
+            $q->bindValue(':publish', $publish);
+            $q->bindValue(':id', $id);
+
+            $q->execute();
+        }
     }
     
     public function deletePost($chapter)
     {
-        if(intval($chapter) > 0)
+        if(intval($chapter) > 0 && intval($chapter) <= 65535)
         {   
             $post = $this->getPost($chapter);
             $commentManager = new CommentManager();
@@ -299,7 +337,7 @@ class PostManager extends Manager
         }
         else
         {
-            throw new Exception('The chapter argument must be a strictly positive number');
+            throw new Exception('The chapter number must be a number comprise between 1 and 65535');
         }
     }
 }

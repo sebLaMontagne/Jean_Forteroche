@@ -23,58 +23,37 @@ class Appreciation
     
     public function setId($id)
     {
-        if(is_int($id))
+        if(intval($id) > 0)
         {
-            if($id > 0)
-            {
-                $this->_id = $id;
-            }
-            else
-            {
-                throw new Exception('The Appreciation id must be a strictly positive integer value');
-            }
+            $this->_id = $id;
         }
         else
         {
-            throw new Exception('The Appreciation id must be an integer value');
+            throw new Exception('The Appreciation_id must be a strictly positive integer value');
         }
     }
     
     public function setCommentId($commentId)
     {
-        if(is_int($commentId))
+        if(intval($commentId) > 0)
         {
-            if($commentId > 0)
-            {
-                $this->_commentId = $commentId;
-            }
-            else
-            {
-                throw new Exception('The Appreciation comment id must be a strictly positive integer value');
-            }
+            $this->_commentId = $commentId;
         }
         else
         {
-            throw new Exception('The Appreciation comment id must be an integer value');
+            throw new Exception('The Appreciation_comment_id must be a strictly positive integer value');
         }
     }
     
     public function setUserId($userId)
     {
-        if(is_int($userId))
+        if(intval($userId) > 0)
         {
-            if($userId > 0)
-            {
-                $this->_userId = $userId;
-            }
-            else
-            {
-                throw new Exception('The Appreciation user id must be a strictly positive integer value');
-            }
+            $this->_userId = $userId;
         }
         else
         {
-            throw new Exception('The Appreciation user id must be an integer value');
+            throw new Exception('The Appreciation user id must be a strictly positive integer value');
         }
     }
     
@@ -82,7 +61,7 @@ class Appreciation
     {
         if($isLike == 1 || $isLike == 0)
         {
-            $this->_isLike = htmlspecialchars($isLike);
+            $this->_isLike = $isLike;
         }
         else
         {
@@ -94,7 +73,7 @@ class Appreciation
     {
         if($isReport == 1 || $isReport == 0)
         {
-            $this->_isReport = htmlspecialchars($isReport);
+            $this->_isReport = $isReport;
         }
         else
         {
@@ -117,8 +96,6 @@ class Appreciation
             }
         }
     }
-    
-    //--------------------------------------------------------------------
     
     public function __construct(array $data)
     {
