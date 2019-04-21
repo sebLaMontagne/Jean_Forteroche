@@ -59,15 +59,13 @@ class UserManager extends Manager
             $q->bindValue(':userToken', $confirmToken);
 
             $q->execute();
+          
+            $header = "From: \"Jean Forteroche\"<jean.forteroche@jeanforteroche.fr>\n";
+            $header.= "Reply-to: \"Jean Forteroche\"<jean.forteroche@jeanforteroche.fr>\n";
+            $header.= "MIME-Version: 1.0\n";
+            $header.= "Content-Type: text/html;";
 
-            $to = 'juniorwebdesign27@gmail.com;';  
-            $subject = "Confirmation d'inscription";  
-            $message = "Voici votre lien d'activation : \n";
-            $message.= 'https://billetsimplepourlalaska.000webhostapp.com/Views/confirmRegistration.php?token='.$confirmToken;
-            $from = "us-imm-node1a.000webhost.io";
-            $headers = "From: $from";
-
-            mail($to,$subject,$message,$headers);
+            mail($email, 'validation de compte', '<html><head></head><body><p>Voici votre lien d\'activation : <a href="http://jeanforteroche.fr/Views/front/confirmRegistration.php?token='.$confirmToken.'">activer</a></p></body></html>', $header);
         }
         else
         {
@@ -157,15 +155,13 @@ class UserManager extends Manager
         $q = $this->_db->prepare('UPDATE user SET user_token_expiration = CURTIME() + INTERVAL 1 DAY WHERE user_id = :id');
         $q->bindValue(':token', $user->id());
         $q->execute();
-        
-        $to = 'juniorwebdesign27@gmail.com;';
-        $subject = "Confirmation d'inscription";
-        $message = "Voici votre lien d'activation : \n";
-        $message.= 'https://billetsimplepourlalaska.000webhostapp.com/Views/confirmRegistration.php?token='.$user->token();
-        $from = "us-imm-node1a.000webhost.io";
-        $headers = "From: $from";
-        
-        mail($to,$subject,$message,$headers);
+      
+      	$header = "From: \"Jean Forteroche\"<jean.forteroche@jeanforteroche.fr>\n";
+        $header.= "Reply-to: \"Jean Forteroche\"<jean.forteroche@jeanforteroche.fr>\n";
+        $header.= "MIME-Version: 1.0\n";
+        $header.= "Content-Type: text/html;";
+
+        mail($user->email(), 'validation de compte', '<html><head></head><body><p>Voici votre lien d\'activation : <a href="http://jeanforteroche.fr/Views/front/confirmRegistration.php?token='.$user->token().'">activer</a></p></body></html>', $header);
     }
     
     public function getUserById($id)

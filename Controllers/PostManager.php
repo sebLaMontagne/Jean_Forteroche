@@ -245,26 +245,11 @@ class PostManager extends Manager
     
     public function isChapterExist($chapter)
     {
-        if(intval($chapter) > 0 && intval($chapter) <= 65535)
-        {
-            $q = $this->_db->prepare('SELECT * FROM post WHERE post_chapter_number = :chapter');
-            $q->bindValue(':chapter',htmlspecialchars($chapter));
-            $q->execute();
+        $q = $this->_db->prepare('SELECT * FROM post WHERE post_chapter_number = :chapter');
+        $q->bindValue(':chapter',htmlspecialchars($chapter));
+        $q->execute();
 
-            if($a = $q->fetch())
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        else
-        {
-            throw new Exception('The chapter number must be a number comprise between 1 and 65535');
-        }
-        
+        return $q->fetch();
     }
     
     public function savePost($chapter, $title, $content, $publish)

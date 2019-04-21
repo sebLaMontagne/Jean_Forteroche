@@ -1,45 +1,52 @@
 <?php
 
-$title = 'Confirmation de suppression';
-require('template.php');
-
-$_SESSION['refresh'] = 1;
-unset($_SESSION['refresh']);
-
-if(!isset($_SESSION['isAdmin']) || $_SESSION['isAdmin'] != '1')
+try
 {
-    header("location:javascript://history.go(-1)");
-}
-else
-{
-    if(isset($_GET['id']) && intval($_GET['id']) > 0)
+    $title = 'Confirmation de suppression';
+    require('template.php');
+
+    $_SESSION['refresh'] = 1;
+    unset($_SESSION['refresh']);
+
+    if(!isset($_SESSION['isAdmin']) || $_SESSION['isAdmin'] != '1')
     {
-        if(isset($_POST['confirmation']))
+        header("location:javascript://history.go(-1)");
+    }
+    else
+    {
+        if(isset($_GET['id']) && intval($_GET['id']) > 0)
         {
-            if($_POST['confirmation'] == 'yes')
+            if(isset($_POST['confirmation']))
             {
-                $commentManager = new CommentManager();
-                $commentManager->deleteComment($_GET['id']);
-                header('Location: commentsList.php?sortedBy='.$_GET['redirect']);
+                if($_POST['confirmation'] == 'yes')
+                {
+                    $commentManager = new CommentManager();
+                    $commentManager->deleteComment($_GET['id']);
+                    header('Location: commentsList.php?sortedBy='.$_GET['redirect']);
+                }
+                elseif($_POST['confirmation'] == 'no')
+                {
+                    header('Location: commentsList.php?sortedBy='.$_GET['redirect']);
+                }
             }
-            elseif($_POST['confirmation'] == 'no')
+            else
             {
-                header('Location: commentsList.php?sortedBy='.$_GET['redirect']);
+                echo'
+                <p>Etes-vous sûr de vouloir supprimer ce commentaire</p>
+                <form method="post" action="confirmCommentSuppression.php?id='.$_GET['id'].'&redirect='.$_GET['redirect'].'">
+                    <input type="radio" name="confirmation" value="yes" id="confirm-yes" required /><label for="confirm-yes">Oui</label>
+                    <input type="radio" name="confirmation" value="no" id="confirm-no" required /><label for="confirm-no">Non</label>
+                    <input type="submit" value="valider" />
+                </form>';
             }
         }
         else
         {
-            echo'
-            <p>Etes-vous sûr de vouloir supprimer ce commentaire</p>
-            <form method="post" action="confirmCommentSuppression.php?id='.$_GET['id'].'&redirect='.$_GET['redirect'].'">
-                <input type="radio" name="confirmation" value="yes" id="confirm-yes" required /><label for="confirm-yes">Oui</label>
-                <input type="radio" name="confirmation" value="no" id="confirm-no" required /><label for="confirm-no">Non</label>
-                <input type="submit" value="valider" />
-            </form>';
+            header('Location: admin.php');
         }
     }
-    else
-    {
-        header('Location: admin.php');
-    }
+}
+catch(Exception $e)
+{
+    echo 'Erreur : '.$e->getMessage();
 }
