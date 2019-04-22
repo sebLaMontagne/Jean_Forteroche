@@ -6,8 +6,8 @@ try
     
     $title = 'Billet simple pour l\'Alaska - Accueil';
     
-    $content  = '';
-    $content .= '<p>Vous pouvez me contacter en utilisant le formulaire çi-dessous :</p>';
+    $content  = '<div class="content filler">';
+    $content .= '<p style="text-align: center;">Vous pouvez me contacter en utilisant le formulaire çi-dessous :</p>';
     $content .= '<form method="post" action="contact.php">';
 
     if(!isset($_SESSION['pseudo']) && !isset($_SESSION['email']))
@@ -19,6 +19,7 @@ try
     $content .= '<textarea name="message" placeholder="Entrez votre message" required></textarea>';
     $content .= '<input type="submit" value="envoyer" />';
     $content .= '</form>';
+    $content .= '</div>';
 
     if(isset($_POST['message']))
     {

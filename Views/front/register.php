@@ -4,7 +4,7 @@ try
     require_once('../autoloader.php');
     
     $title = 'Billet simple pour l\'Alaska - Accueil';
-    $content = ''; 
+    $content = '<div class="content filler">';
     
     if(!empty($_GET['mail']))
     {
@@ -12,7 +12,7 @@ try
     }
     else
     {
-        $content = '<form method="post" action="register.php" id="register-form">';
+        $content .= '<form method="post" action="register.php" id="register-form">';
     }
     
     $content .= '<label for="pseudo"></label><input type="text" name="name" id="pseudo" placeholder="Entrez votre pseudonyme" required />';
@@ -53,31 +53,31 @@ try
     {   
         if($userManager->isUsernameFree($_POST['name']))
         {
-            $content .= '<p>Pseudo valide</p>';
+            $content .= '<p style="text-align: center;">Pseudo valide</p>';
         }
         else
         {
-            $content .= '<p>Le pseudo est déjà pris en base de données</p>';
+            $content .= '<p style="text-align: center;">Le pseudo est déjà pris en base de données</p>';
         }
 
         if($userManager->isEmailFree($_POST['email']))
         {
-            $content .= '<p>Email valide</p>';
+            $content .= '<p style="text-align: center;">Email valide</p>';
         }
         else
         {
-            $content .= '<p>L\'email est déjà pris en base de données</p>';
+            $content .= '<p style="text-align: center;">L\'email est déjà pris en base de données</p>';
         }
 
         if($userManager->isUsernameFree($_POST['name']) && $userManager->isEmailFree($_POST['email']))
         {
-            $content .= '<p>Inscription valide</p>';
-            $content .= '<p>Un email de confirmation va vous être envoyé</p>';
+            $content .= '<p style="text-align: center;">Inscription valide</p>';
+            $content .= '<p style="text-align: center;">Un email de confirmation va vous être envoyé</p>';
             $userManager->addUser($_POST['name'], $_POST['password'], $_POST['email']);
         }
         else
         {
-            $content .= '<p>Inscription invalide</p>';
+            $content .= '<p style="text-align: center;">Inscription invalide</p>';
         }
     }
 
@@ -90,15 +90,16 @@ try
             if($user != null)
             {
                 $userManager->updateUserLogins($user, $_POST['name'], $_POST['password']);
-                $content .= 'votre compte a été mis à jour';
+                $content .= '<p style="text-align: center;">votre compte a été mis à jour</p>';
             }
             else
             {
-                $content .= '<p>L\'email ne correspond à aucun utilisateur</p>';
+                $content .= '<p style="text-align: center;">L\'email ne correspond à aucun utilisateur</p>';
             }
         }
     }
 
+    $content .= '</div>';
     $content .= '<script src="../../Ressources/js/register-form.js"></script>';
     require('template.php');
 }

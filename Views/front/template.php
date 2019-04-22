@@ -5,6 +5,7 @@
     <head>
         <meta charset="utf-8" />
         <title><?= $title ?></title>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Libre+Baskerville" />
         <link rel="stylesheet" href="../../Ressources/css/styles.css" />
         <script src="../../Ressources/js/jQuery.js"></script>
     </head>
@@ -20,7 +21,7 @@
                     <?php 
                     if(!empty($_SESSION['pseudo']) && !empty($_SESSION['email']) && ($_SESSION['isAdmin'] == '0' || $_SESSION['isAdmin'] == '1') && !empty($_SESSION['id']))
                     {
-                        echo '<p>Bienvenue '.$_SESSION['pseudo'].'</p>';
+                        echo '<p>Bienvenue <span class="username">'.$_SESSION['pseudo'].'</span></p>';
                         
                         if($_SESSION['isAdmin'])
                         {
