@@ -63,7 +63,7 @@ try
         }
         
         $content .= '<script src="https://cloud.tinymce.com/5/tinymce.min.js"></script>';
-        $content .= '<script>tinymce.init({ selector:"textarea"});</script>';
+        $content .= '<script>tinymce.init({ selector:"textarea", entity_encoding : "raw"});</script>';
     }
     
     include('template.php');
