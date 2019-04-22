@@ -2,39 +2,40 @@
 
 try
 {
-    $title = 'Liste des utilisateurs';
-    require('template.php');
-
+    require_once('../autoloader.php');
+    
     $_SESSION['refresh'] = 1;
     unset($_SESSION['refresh']);
+    
+    $title = 'Liste des utilisateurs';
 
     if(!isset($_SESSION['isAdmin']) || $_SESSION['isAdmin'] != '1')
     {
         header("location:javascript://history.go(-1)");
+        exit();
     }
     else
     {
         $userManager = new UserManager();
 
-        $display  = '<h3>Liste des utilisateurs</h3>';
-        $display .= '<p>Sur cette page, vous pouvez consulter la liste des utilisateurs et leur statut actuel, et éventuellement en bannir ou en gracier</p>';
+        $content  = '<h3>Liste des utilisateurs</h3>';
+        $content .= '<p>Sur cette page, vous pouvez consulter la liste des utilisateurs et leur statut actuel, et éventuellement en bannir ou en gracier</p>';
 
-        $sorter  = '<p>Montrer : </p>';
-        $sorter .= '<form action="UsersList.php" method="get">';
-        $sorter .= '<select name="show">';
-        $sorter .= '<option value="all">tous les utilisateurs</option>';
-        $sorter .= '<option value="admins">les administrateurs</option>';
-        $sorter .= '<option value="banned">les bannis</option>';
-        $sorter .= '<option value="users">les simples usagers</option>';
-        $sorter .= '</select>';
-        $sorter .= '<input type="submit" value="Confirmer"/>';
-        $sorter .= '</form>';
-
-        echo $sorter;
+        $content .= '<p>Montrer : </p>';
+        $content .= '<form action="UsersList.php" method="get">';
+        $content .= '<select name="show">';
+        $content .= '<option value="all">tous les utilisateurs</option>';
+        $content .= '<option value="admins">les administrateurs</option>';
+        $content .= '<option value="banned">les bannis</option>';
+        $content .= '<option value="users">les simples usagers</option>';
+        $content .= '</select>';
+        $content .= '<input type="submit" value="Confirmer"/>';
+        $content .= '</form>';
 
         if(empty($_GET['show']) || ($_GET['show'] != 'all' && $_GET['show'] != 'admins' && $_GET['show'] != 'banned' && $_GET['show'] != 'users'))
         {
             header('Location:admin.php');
+            exit();
         }
         else
         {
@@ -43,33 +44,33 @@ try
 
         for($i = 0; $i < count($users); $i++)
         {
-            $display .= '<p>'.$users[$i]->name();
+            $content .= '<p>'.$users[$i]->name();
 
             if($users[$i]->isBanned())
             { 
-                $display .= ' (banni)</p>';
-                $display .= '<p><a href="confirmBanUser.php?action=unban&id='.$users[$i]->id().'&redirect=usersList.php?show='.$_GET['show'].'">Débannir</a></p>';
+                $content .= ' (banni)</p>';
+                $content .= '<p><a href="confirmBanUser.php?action=unban&id='.$users[$i]->id().'&redirect=usersList.php?show='.$_GET['show'].'">Débannir</a></p>';
             }
             elseif($users[$i]->isAdmin())
             {
-                $display .= ' (administrateur)</p>';
+                $content .= ' (administrateur)</p>';
             }
             elseif(!$users[$i]->isActivated())
             {
-                $display .= ' (usager non activé)</p>';
+                $content .= ' (usager non activé)</p>';
             }
             else
             {
-                $display .= ' (simple usager)</p>';
-                $display .= '<p><a href="confirmBanUser.php?action=ban&id='.$users[$i]->id().'&redirect=usersList.php?show='.$_GET['show'].'">Bannir</a></p>';
+                $content .= ' (simple usager)</p>';
+                $content .= '<p><a href="confirmBanUser.php?action=ban&id='.$users[$i]->id().'&redirect=usersList.php?show='.$_GET['show'].'">Bannir</a></p>';
             }
 
-            $display .= '<p><a href="commentsList.php?id='.$users[$i]->id().'&sortedBy=date">Voir tous les commentaires de cet utilisateur</a></p>';
-            $display .= '<hr />';
+            $content .= '<p><a href="commentsList.php?id='.$users[$i]->id().'&sortedBy=date">Voir tous les commentaires de cet utilisateur</a></p>';
+            $content .= '<hr />';
         }
-
-        echo $display;
     }
+    
+    require('template.php');
 }
 catch(Exception $e)
 {

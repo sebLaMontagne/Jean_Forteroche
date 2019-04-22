@@ -2,45 +2,46 @@
 
 try
 {
+    require_once('../autoloader.php');
+    
     $title = 'Billet simple pour l\'Alaska - Accueil';
-    require('template.php');
-
-    echo '
-    <p>Vous pouvez me contacter en utilisant le formulaire çi-dessous :</p>
-    <form method="post" action="contact.php">';
+    
+    $content  = '';
+    $content .= '<p>Vous pouvez me contacter en utilisant le formulaire çi-dessous :</p>';
+    $content .= '<form method="post" action="contact.php">';
 
     if(!isset($_SESSION['pseudo']) && !isset($_SESSION['email']))
     {
-        echo '
-        <input type="text" name="name" placeholder="Entrez votre nom" required />
-        <input type="email" name="mail" placeholder="Entrez votre email" required />';
+        $content .= '<input type="text" name="name" placeholder="Entrez votre nom" required />';
+        $content .= '<input type="email" name="mail" placeholder="Entrez votre email" required />';
     }
-
-    echo'
-    <textarea name="message" placeholder="Entrez votre message" required></textarea>
-    <input type="submit" value="envoyer" />
-    </form>';
+    
+    $content .= '<textarea name="message" placeholder="Entrez votre message" required></textarea>';
+    $content .= '<input type="submit" value="envoyer" />';
+    $content .= '</form>';
 
     if(isset($_POST['message']))
     {
-        $to = 'juniorwebdesign27@gmail.com';
-        $message = $_POST['message'];
-
         if(isset($_SESSION['pseudo']) && isset($_SESSION['email']))
         {
-            $subject = 'Message concernant Billet simple pour l\'Alaska de'.$_SESSION['pseudo'];
+            $subject = 'Message concernant Billet simple pour l\'Alaska de '.$_SESSION['pseudo'];
             $from = $_SESSION['email'];
         }
         elseif(isset($_POST['name']) && isset($_POST['mail']))
         {
-            $subject = 'Message concernant Billet simple pour l\'Alaska de'.$_POST['name'];
+            $subject = 'Message concernant Billet simple pour l\'Alaska de '.$_POST['name'];
             $from = $_POST['mail'];
         }
-
-        $headers = 'From: '.$from;
-        mail($to, $subject, $message, $headers);
-        echo '<p>Votre message a été envoyé :)</p>';
+        
+        $header = "From: ".$from."\n";
+        $header.= "Reply-to: \"Jean Forteroche\"<jean.forteroche@jeanforteroche.fr>\n";
+        $header.= "MIME-Version: 1.0\n";
+        $header.= "Content-Type: text/plain;";
+        
+        mail('seb-roche@orange.fr', $subject, $_POST['message'], $header);
+        $content .= '<p>Votre message a été envoyé :)</p>';
     }
+    require('template.php');
 }
 catch(Exception $e)
 {

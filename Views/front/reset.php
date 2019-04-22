@@ -2,17 +2,15 @@
 
 try
 {
+    require_once('../autoloader.php');
+    
     $title = 'Réinitialisation du compte';
-    include('template.php');
-
-    ?>
-
-    <form method="post" action="reset.php">
-        <label for="email"></label><input id="email" type="email" name="email" placeholder="Veuillez entrer votre email" required />
-        <input type="submit" value="Réinitialiser" />
-    </form>
-
-    <?php
+    
+    $content  = '';
+    $content .= '<form method="post" action="reset.php">';
+    $content .= '<label for="email"></label><input id="email" type="email" name="email" placeholder="Veuillez entrer votre email" required />';
+    $content .= '<input type="submit" value="Réinitialiser" />';
+    $content .= '</form>';
 
     if(!empty($_POST))
     { 
@@ -21,12 +19,12 @@ try
 
         if($user == null)
         {
-            echo '<p>Email inexistant</p>';
+            $content .= '<p>Email inexistant</p>';
         }
         else
         {
-            echo '<p>Email existant</p>';
-            echo '<p>Un email contenant un lien de réinitialisation va vous être envoyé à l\'adresse entrée</p>';
+            $content .= '<p>Email existant</p>';
+            $content .= '<p>Un email contenant un lien de réinitialisation va vous être envoyé à l\'adresse entrée</p>';
           
           	$header = "From: \"Jean Forteroche\"<jean.forteroche@jeanforteroche.fr>\n";
             $header.= "Reply-to: \"Jean Forteroche\"<jean.forteroche@jeanforteroche.fr>\n";
@@ -35,11 +33,11 @@ try
 
             mail($_POST['email'], 'réinitialisation de compte', '<html><head></head><body><p>Voici votre lien de réinitialisation : <a href="http://jeanforteroche.fr/Views/front/register.php?mail='.$_POST['email'].'">réinitialiser</a></p></body></html>', $header);
         }
-    } 
+    }
+    
+    include('template.php');
 }
 catch(Exception $e)
 {
     echo 'Erreur : '.$e->getMessage();
 }
-
-?>

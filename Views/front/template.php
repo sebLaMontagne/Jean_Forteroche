@@ -1,25 +1,4 @@
-<?php
-
-session_start();
-
-spl_autoload_register(function($class){
-    
-    $file = '../../Models/'.$class.'.php';
-    if(file_exists($file))
-    {
-        require_once($file);
-    }
-    else
-    {
-        $file = '../../Controllers/'.$class.'.php';
-        if(file_exists($file))
-        {
-            require_once($file);
-        }
-    }
-});
-
-?>
+<?php require_once('../autoloader.php'); ?>
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -41,7 +20,7 @@ spl_autoload_register(function($class){
                     <?php 
                     if(!empty($_SESSION['pseudo']) && !empty($_SESSION['email']) && ($_SESSION['isAdmin'] == '0' || $_SESSION['isAdmin'] == '1') && !empty($_SESSION['id']))
                     {
-                        echo '<p>Bienvenue '.htmlspecialchars($_SESSION['pseudo']).'</p>';
+                        echo '<p>Bienvenue '.$_SESSION['pseudo'].'</p>';
                         
                         if($_SESSION['isAdmin'])
                         {
@@ -54,9 +33,10 @@ spl_autoload_register(function($class){
                         echo '<a href="login.php">Connection</a>';
                         echo '<a href="register.php">S\'inscrire</a>';
                     }
-                    ?>   
+                    ?>
                 </div>
             </nav>
-        </header>  
+        </header>
+        <?= $content ?>
     </body>
 </html>

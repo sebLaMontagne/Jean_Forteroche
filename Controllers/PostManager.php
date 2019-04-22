@@ -246,7 +246,7 @@ class PostManager extends Manager
     public function isChapterExist($chapter)
     {
         $q = $this->_db->prepare('SELECT * FROM post WHERE post_chapter_number = :chapter');
-        $q->bindValue(':chapter',htmlspecialchars($chapter));
+        $q->bindValue(':chapter', htmlspecialchars($chapter));
         $q->execute();
 
         return $q->fetch();
@@ -254,53 +254,46 @@ class PostManager extends Manager
     
     public function savePost($chapter, $title, $content, $publish)
     {
-        if(intval($chapter) > 0 && intval($chapter) <= 65535 && is_string($title) && is_string($content) && is_bool($publish))
-        {
-            $q = $this->_db->prepare('
-            INSERT INTO post(
-                post_title,
-                post_chapter_number,
-                post_content,
-                post_date,
-                post_isPublished)
-            VALUES(
-                :title,
-                :chapter,
-                :content,
-                NOW(),
-                :publish)');
-        
-            $q->bindValue(':title', htmlspecialchars($title));
-            $q->bindValue(':chapter', $chapter);
-            $q->bindValue(':content', htmlspecialchars($content));
-            $q->bindValue(':publish', $publish);
+        $q = $this->_db->prepare('
+        INSERT INTO post(
+            post_title,
+            post_chapter_number,
+            post_content,
+            post_date,
+            post_isPublished)
+        VALUES(
+            :title,
+            :chapter,
+            :content,
+            NOW(),
+            :publish)');
 
-            $q->execute();
-        }
-        else
-        {
-            throw new Exception('The parameters does not respect the correct format');
-        }
+        $q->bindValue(':title', htmlspecialchars($title));
+        $q->bindValue(':chapter', intval($chapter));
+        $q->bindValue(':content', htmlspecialchars($content));
+        $q->bindValue(':publish', intval($publish));
+
+        $q->execute();
+    
     }
     
     public function updatePost($id, $title, $content, $publish)
     {   
-        if(intval($id) > 0 && is_string($title) && is_string($content) && is_bool($publish))
-        {
-            $q = $this->_db->prepare('
-            UPDATE  post
-            SET     post_title              = :title,
-                    post_content            = :content,
-                    post_isPublished        = :publish
-            WHERE   post_id                 = :id');
-            
-            $q->bindValue(':title', htmlspecialchars($title));
-            $q->bindValue(':content', htmlspecialchars($content));
-            $q->bindValue(':publish', $publish);
-            $q->bindValue(':id', $id);
 
-            $q->execute();
-        }
+        $q = $this->_db->prepare('
+        UPDATE  post
+        SET     post_title              = :title,
+                post_content            = :content,
+                post_isPublished        = :publish
+        WHERE   post_id                 = :id');
+
+        $q->bindValue(':title', htmlspecialchars($title));
+        $q->bindValue(':content', htmlspecialchars($content));
+        $q->bindValue(':publish', intval($publish));
+        $q->bindValue(':id', $id);
+
+        $q->execute();
+        
     }
     
     public function deletePost($chapter)

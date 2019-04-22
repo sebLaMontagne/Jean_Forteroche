@@ -2,49 +2,50 @@
 
 try
 {
-    $title = 'Création d\'un chapitre';
-    require('template.php');
-
+    require_once('../autoloader.php');
+    
     $_SESSION['refresh'] = 1;
     unset($_SESSION['refresh']);
+    
+    $title = 'Création d\'un chapitre';
 
     if(!isset($_SESSION['isAdmin']) || $_SESSION['isAdmin'] != '1')
     {
         header("location:javascript://history.go(-1)");
+        exit();
     }
     else
     {
         if(isset($_SESSION['data']))
         {
-            echo '
-            <form method="post" action="confirmNewPost.php">
-                <label for="chapterNumber">Chapitre n°</label><input type="number" name="chapterNumber" min="1" id="chapterNumber" value="'.$_SESSION['data']['chapterNumber'].'" required /> : 
-                <input type="text" name="title" placeholder="Titre" value="'.$_SESSION['data']['title'].'" required />
-                <textarea name="content">'.$_SESSION['data']['content'].'</textarea>
-                <input type="radio" id="publish" name="publish" value="1" required /><label for="publish">Publier</label>
-                <input type="radio" id="draft" name="publish" value="0" required /><label for="draft">Brouillon</label>
-                <input type="submit" value="sauvegarder" />
-            </form>';
+            $postManager = new PostManager();
+            
+            $content  = '<form method="post" action="confirmNewPost.php">';
+            $content .= '<label for="chapterNumber">Chapitre n°</label><input type="number" name="chapterNumber" min="1" max="65535" id="chapterNumber" value="'.$_SESSION['data']['chapterNumber'].'" required /> : <input type="text" name="title" placeholder="Titre" value="'.$_SESSION['data']['title'].'" required />';
+            $content .= '<textarea name="content">'.$postManager->decode($_SESSION['data']['content']).'</textarea>';
+            $content .= '<input type="radio" id="publish" name="publish" value="1" required /><label for="publish">Publier</label>';
+            $content .= '<input type="radio" id="draft" name="publish" value="0" required /><label for="draft">Brouillon</label>';
+            $content .= '<input type="submit" value="sauvegarder" />';
+            $content .= '</form>';
 
             unset($_SESSION['data']);
         }
         else
         {
-            echo '
-            <form method="post" action="confirmNewPost.php">
-                <label for="chapterNumber">Chapitre n°</label><input type="number" name="chapterNumber" min="1" id="chapterNumber" placeholder="numéro de chapitre" required /> : 
-                <input type="text" name="title" placeholder="Titre" required />
-                <textarea name="content"></textarea>
-                <input type="radio" id="publish" name="publish" value="1" required /><label for="publish">Publier</label>
-                <input type="radio" id="draft" name="publish" value="0" required /><label for="draft">Brouillon</label>
-                <input type="submit" value="sauvegarder" />
-            </form>';
+            $content  = '<form method="post" action="confirmNewPost.php">';
+            $content .= '<label for="chapterNumber">Chapitre n°</label><input type="number" name="chapterNumber" min="1" id="chapterNumber" placeholder="numéro de chapitre" required /> : <input type="text" name="title" placeholder="Titre" required />';
+            $content .= '<textarea name="content"></textarea>';
+            $content .= '<input type="radio" id="publish" name="publish" value="1" required /><label for="publish">Publier</label>';
+            $content .= '<input type="radio" id="draft" name="publish" value="0" required /><label for="draft">Brouillon</label>';
+            $content .= '<input type="submit" value="sauvegarder" />';
+            $content .= '</form>';
         }
-
-        echo '
-        <script src="https://cloud.tinymce.com/5/tinymce.min.js"></script>
-        <script>tinymce.init({ selector:"textarea"});</script>';
+        
+        $content .= '<script src="https://cloud.tinymce.com/5/tinymce.min.js"></script>';
+        $content .= '<script>tinymce.init({ selector:"textarea"});</script>';
     }
+    
+    require('template.php');
 }
 catch(Exception $e)
 {

@@ -2,8 +2,9 @@
 
 try
 {
+    require_once('../autoloader.php');
+    
     $title = 'gestion des appreciations';
-    require('template.php');
 
     if(isset($_SESSION['isAdmin']))
     {
@@ -22,16 +23,21 @@ try
 
             $commentManager = new CommentManager();
             header('Location:chapter.php?chapter='.$commentManager->getChapterNumberByCommentId($_GET['id']));
+            exit();
         }
         else
         {
             header('Location:home.php');
+            exit();
         }
     }
     else
     {
         header("location:javascript://history.go(-1)");
+        exit();
     }
+    
+    require('template.php');
 }
 catch(Exception $e)
 {

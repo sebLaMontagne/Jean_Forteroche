@@ -2,20 +2,22 @@
 
 try
 {
-    $title = 'Liste des chapitres';
-    require('template.php');
-
+    require_once('../autoloader.php');
+    
     $_SESSION['refresh'] = 1;
     unset($_SESSION['refresh']);
-
+    
+    $title = 'Liste des chapitres';
+    
     if(!isset($_SESSION['isAdmin']) || $_SESSION['isAdmin'] != '1')
     {
         header("location:javascript://history.go(-1)");
+        exit();
     }
     else
     {
-        echo '<p>Ici, vous pouvez écrire ou modifier des chapitres, et les rendre publics ou non</p>';
-        echo '<p><a href="newPost.php">Ecrire un nouveau chapitre</a></p>';
+        $content  = '<p>Ici, vous pouvez écrire ou modifier des chapitres, et les rendre publics ou non</p>';
+        $content .= '<p><a href="newPost.php">Ecrire un nouveau chapitre</a></p>';
 
         $postManager = new PostManager;
         $list = $postManager->getAllPosts();
@@ -24,22 +26,23 @@ try
         {
             if($list[$i]->isPublished())
             {
-                echo '<div><p>Public</p>';
+                $content .= '<div><p>Public</p>';
             }
             else
             {
-                echo '<div><p>Brouillon</p>';
+                $content .= '<div><p>Brouillon</p>';
             }
-
-            echo '
-            <div>
-                <p>Chapitre '.$list[$i]->chapterNumber().' : '.$list[$i]->title().'</p>
-                <a href="updatePost.php?chapter='.$list[$i]->chapterNumber().'">modifier</a><a href="deletePost.php?chapter='.$list[$i]->chapterNumber().'">supprimer</a>
-            </div>';
+            
+            $content .= '<div>';
+            $content .= '<p>Chapitre '.$list[$i]->chapterNumber().' : '.$list[$i]->title().'</p>';
+            $content .= '<a href="updatePost.php?chapter='.$list[$i]->chapterNumber().'">modifier</a><a href="deletePost.php?chapter='.$list[$i]->chapterNumber().'">supprimer</a>';
+            $content .= '</div>';
         }
 
-        echo '<p><a href="newPost.php">Ecrire un nouveau chapitre</a></p>';
+        $content .= '<p><a href="newPost.php">Ecrire un nouveau chapitre</a></p>';
     }
+    
+    require('template.php');
 }
 catch(Exception $e)
 {

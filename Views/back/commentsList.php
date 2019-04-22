@@ -2,15 +2,18 @@
 
 try
 {
-    $title = 'Gestion des commentaires';
-    require('template.php');
-
+    require_once('../autoloader.php');
+    
     $_SESSION['refresh'] = 1;
     unset($_SESSION['refresh']);
+    
+    $title = 'Gestion des commentaires';
+    
 
     if(!isset($_SESSION['isAdmin']) || $_SESSION['isAdmin'] != '1')
     {
         header("location:javascript://history.go(-1)");
+        exit();
     }
     else
     {
@@ -18,23 +21,22 @@ try
         $commentManager = new CommentManager();
         $userManager = new UserManager();
 
-        echo '<p>Ici, vous pouvez supprimer des commentaires ou bannir des utilisateurs pour leur mauvais comportement et filtrer les commentaires en fonction de plusieurs critères</p>';
+        $content  = '<p>Ici, vous pouvez supprimer des commentaires ou bannir des utilisateurs pour leur mauvais comportement et filtrer les commentaires en fonction de plusieurs critères</p>';
 
-        $sorter  = '<p>Trier les commentaires par : </p>';
-        $sorter .= '<form action="commentsList.php" method="get">';
-        $sorter .= '<select name="sortedBy">';
-        $sorter .= '<option value="date">date</option>';
-        $sorter .= '<option value="likes">nombre de likes</option>';
-        $sorter .= '<option value="reports">nombre de reports</option>';
-        $sorter .= '</select>';
-        $sorter .= '<input type="submit" value="Confirmer"/>';
-        $sorter .= '</form>';
-
-        echo $sorter;
+        $content .= '<p>Trier les commentaires par : </p>';
+        $content .= '<form action="commentsList.php" method="get">';
+        $content .= '<select name="sortedBy">';
+        $content .= '<option value="date">date</option>';
+        $content .= '<option value="likes">nombre de likes</option>';
+        $content .= '<option value="reports">nombre de reports</option>';
+        $content .= '</select>';
+        $content .= '<input type="submit" value="Confirmer"/>';
+        $content .= '</form>';
 
         if(empty($_GET['sortedBy']) || ($_GET['sortedBy'] != 'reports' && $_GET['sortedBy'] != 'likes' && $_GET['sortedBy'] != 'date'))
         {
             header('Location:admin.php');
+            exit();
         }
         else
         {
@@ -49,6 +51,7 @@ try
             else
             {
                 header('Location:admin.php');
+                exit();
             }
         }
 
@@ -57,27 +60,27 @@ try
             $commentDate = new DateTime($comments[$i]->date());
             $commentAuthor = $userManager->getUserById($comments[$i]->userId());
 
-            $display = '<div>';
+            $content .= '<div>';
 
             if($commentAuthor->isBanned())
             {
-                $display .= '<p>'.$commentAuthor->name().' (Utilisateur banni)</p>';
+                $content .= '<p>'.$commentAuthor->name().' (Utilisateur banni)</p>';
             }
             else
             {
-                $display .= '<p>'.$commentAuthor->name().'</p>';
+                $content .= '<p>'.$commentAuthor->name().'</p>';
             }
 
-            $display .= '<p>a écrit le '.$commentDate->format('d/m/Y à H:i:s').' :</p>';
-            $display .= '<p>Sur le chapitre '.$postManager->getChapterByPostId($comments[$i]->postId()).'</p>';
-            $display .= '<p>'.$comments[$i]->content().'</p>';
-            $display .= '<p>'.$comments[$i]->likes().' likes '.$comments[$i]->reports().' reports</p>';
-            $display .= '<p>';
-            $display .= '<a href="confirmCommentSuppression.php?id='.$comments[$i]->id().'&redirect='.$_GET['sortedBy'].'">supprimer le commentaire</a>';
+            $content .= '<p>a écrit le '.$commentDate->format('d/m/Y à H:i:s').' :</p>';
+            $content .= '<p>Sur le chapitre '.$postManager->getChapterByPostId($comments[$i]->postId()).'</p>';
+            $content .= '<p>'.$comments[$i]->content().'</p>';
+            $content .= '<p>'.$comments[$i]->likes().' likes '.$comments[$i]->reports().' reports</p>';
+            $content .= '<p>';
+            $content .= '<a href="confirmCommentSuppression.php?id='.$comments[$i]->id().'&redirect='.$_GET['sortedBy'].'">supprimer le commentaire</a>';
 
             if($commentAuthor->isBanned())
             {
-                $display .= '<a href="confirmBanUser.php?action=unban&id='.$commentAuthor->id().'&redirect=commentsList.php">Débannir</a>';
+                $content .= '<a href="confirmBanUser.php?action=unban&id='.$commentAuthor->id().'&redirect=commentsList.php">Débannir</a>';
             }
             elseif($commentAuthor->isAdmin())
             {
@@ -85,26 +88,26 @@ try
             }
             else
             {
-                $display .= '<a href="confirmBanUser.php?action=ban&id='.$commentAuthor->id().'&redirect=commentsList.php">bannir l\'utilisateur</a>';
+                $content .= '<a href="confirmBanUser.php?action=ban&id='.$commentAuthor->id().'&redirect=commentsList.php">bannir l\'utilisateur</a>';
             }
 
-            $display .= '</p>';
-            $display .= '<p>Voir tous les commentaires de cet utilisateur triés par : </p>';
-            $display .= '<form action="commentsList.php" method="get">';
-            $display .= '<select name="sortedBy">';
-            $display .= '<option value="date">date</option>';
-            $display .= '<option value="likes">nombre de likes</option>';
-            $display .= '<option value="reports">nombre de reports</option>';
-            $display .= '</select>';
-            $display .= '<input type="hidden" name="id" value="'.$commentAuthor->id().'" />';
-            $display .= '<input type="submit" value="confirmer" />';
-            $display .= '</form>';
-            $display .= '</div>';
-            $display .= '<hr />';
-
-            echo $display;
+            $content .= '</p>';
+            $content .= '<p>Voir tous les commentaires de cet utilisateur triés par : </p>';
+            $content .= '<form action="commentsList.php" method="get">';
+            $content .= '<select name="sortedBy">';
+            $content .= '<option value="date">date</option>';
+            $content .= '<option value="likes">nombre de likes</option>';
+            $content .= '<option value="reports">nombre de reports</option>';
+            $content .= '</select>';
+            $content .= '<input type="hidden" name="id" value="'.$commentAuthor->id().'" />';
+            $content .= '<input type="submit" value="confirmer" />';
+            $content .= '</form>';
+            $content .= '</div>';
+            $content .= '<hr />';
         }
     }
+    
+    require('template.php');
 }
 catch(Exception $e)
 {

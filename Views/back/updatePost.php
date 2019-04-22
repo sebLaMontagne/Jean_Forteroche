@@ -2,15 +2,17 @@
 
 try
 {
-    $title = 'traitement posts';
-    include('template.php');
-
+    require_once('../autoloader.php');
+    
     $_SESSION['refresh'] = 1;
     unset($_SESSION['refresh']);
+    
+    $title = 'traitement posts';
 
     if(!isset($_SESSION['isAdmin']) || $_SESSION['isAdmin'] != '1')
     {
         header("location:javascript://history.go(-1)");
+        exit();
     }
     else
     {
@@ -21,48 +23,50 @@ try
             {
                 if(isset($_SESSION['data']))
                 {
-                    echo '
-                    <form method="post" action="confirmUpdatePost.php">
-                        <input type="hidden" name="chapterNumber" value="'.$_GET['chapter'].'" />
-                        Chaptre n°'.$_GET['chapter'].' : <input type="text" name="title" placeholder="Titre" value="'.$_SESSION['data']['title'].'" required />
-                        <textarea name="content">'.$_SESSION['data']['content'].'</textarea>
-                        <input type="radio" id="publish" name="publish" value="1" required /><label for="publish">Publier</label>
-                        <input type="radio" id="draft" name="publish" value="0" required /><label for="draft">Brouillon</label>
-                        <input type="submit" value="sauvegarder" />
-                    </form>';
+                    $postManager = new PostManager();
+                    
+                    $content  = '<form method="post" action="confirmUpdatePost.php">';
+                    $content .= '<input type="hidden" name="chapterNumber" value="'.$_GET['chapter'].'" />';
+                    $content .= 'Chaptre n°'.$_GET['chapter'].' : <input type="text" name="title" placeholder="Titre" value="'.$_SESSION['data']['title'].'" required />';
+                    $content .= '<textarea name="content">'.$postManager->decode($_SESSION['data']['content']).'</textarea>';
+                    $content .= '<input type="radio" id="publish" name="publish" value="1" required /><label for="publish">Publier</label>';
+                    $content .= '<input type="radio" id="draft" name="publish" value="0" required /><label for="draft">Brouillon</label>';
+                    $content .= '<input type="submit" value="sauvegarder" />';
+                    $content .= '</form>';
 
                     unset($_SESSION['data']);
                 }
                 else
                 {
                     $selectedChapter = $postManager->getPost($_GET['chapter']);
-
-                    echo '
-                    <form method="post" action="confirmUpdatePost.php">
-                        <input type="hidden" name="chapterNumber" value="'.$_GET['chapter'].'" />
-                        Chaptre n°'.$_GET['chapter'].' : <input type="text" name="title" placeholder="Titre" value="'.$selectedChapter->title().'" required />
-                        <textarea name="content">'.$postManager->decode($selectedChapter->content()).'</textarea>
-                        <input type="radio" id="publish" name="publish" value="1" required /><label for="publish">Publier</label>
-                        <input type="radio" id="draft" name="publish" value="0" required /><label for="draft">Brouillon</label>
-                        <input type="submit" value="sauvegarder" />
-                    </form>';
+                    
+                    $content  = '<form method="post" action="confirmUpdatePost.php">';
+                    $content .= '<input type="hidden" name="chapterNumber" value="'.$_GET['chapter'].'" />';
+                    $content .= 'Chaptre n°'.$_GET['chapter'].' : <input type="text" name="title" placeholder="Titre" value="'.$selectedChapter->title().'" required />';
+                    $content .= '<textarea name="content">'.$postManager->decode($selectedChapter->content()).'</textarea>';
+                    $content .= '<input type="radio" id="publish" name="publish" value="1" required /><label for="publish">Publier</label>';
+                    $content .= '<input type="radio" id="draft" name="publish" value="0" required /><label for="draft">Brouillon</label>';
+                    $content .= '<input type="submit" value="sauvegarder" />';
+                    $content .= '</form>';
                 }
-
             }
             else
             {
                 header('Location:admin.php');
+                exit();
             }
         }
         else
         {
             header('Location:admin.php');
+            exit();
         }
-
-        echo '
-        <script src="https://cloud.tinymce.com/5/tinymce.min.js"></script>
-        <script>tinymce.init({ selector:"textarea"});</script>';
+        
+        $content .= '<script src="https://cloud.tinymce.com/5/tinymce.min.js"></script>';
+        $content .= '<script>tinymce.init({ selector:"textarea"});</script>';
     }
+    
+    include('template.php');
 }
 catch(Exception $e)
 {

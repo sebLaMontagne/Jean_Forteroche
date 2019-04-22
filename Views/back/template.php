@@ -1,25 +1,4 @@
-<?php
-
-session_start();
-
-spl_autoload_register(function($class){
-    
-    $file = '../../Models/'.$class.'.php';
-    if(file_exists($file))
-    {
-        require_once($file);
-    }
-    else
-    {
-        $file = '../../Controllers/'.$class.'.php';
-        if(file_exists($file))
-        {
-            require_once($file);
-        }
-    }
-});
-
-?>
+<?php require_once('../autoloader.php'); ?>
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -40,5 +19,6 @@ spl_autoload_register(function($class){
             <a href="commentsList.php?sortedBy=reports">Gestion des Commentaires</a>
             <a href="usersList.php?show=all">Gestion des utilisateurs</a>
         </nav>
+        <?= $content ?>
     </body>
 </html>

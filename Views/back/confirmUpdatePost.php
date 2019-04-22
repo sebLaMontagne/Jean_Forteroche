@@ -2,15 +2,17 @@
 
 try
 {
-    $title = 'confirmer la mise à jour';
-    require('template.php');
-
+    require_once('../autoloader.php');
+    
     $_SESSION['refresh'] = 1;
     unset($_SESSION['refresh']);
-
+    
+    $title = 'confirmer la mise à jour';
+    
     if(!isset($_SESSION['isAdmin']) || $_SESSION['isAdmin'] != '1')
     {
         header("location:javascript://history.go(-1)");
+        exit();
     }
     else
     {
@@ -18,30 +20,33 @@ try
 
         if(!isset($_POST['confirmation']))
         {
-            echo '
-                <p>Ce chapitre existe déjà. Etes-vous sûr de vouloir l\'écraser ?</p>
-                <form method="post">
-                    <input type="radio" name="confirmation" value="yes" id="yes" /><label for="yes">Oui</label>
-                    <input type="radio" name="confirmation" value="no" id="no" /><label for="no">Non</label>
-                    <input type="hidden" name="chapterNumber" value="'.$_POST['chapterNumber'].'" />
-                    <input type="hidden" name="title" value="'.$_POST['title'].'" />
-                    <input type="hidden" name="content" value="'.$postManager->encode($_POST['content']).'" />
-                    <input type="hidden" name="publish" value="'.$_POST['publish'].'" />
-                    <input type="submit" value="Confirmer" />
-                </form>';
+            $content  = '<p>Ce chapitre existe déjà. Etes-vous sûr de vouloir l\'écraser ?</p>';
+            $content .= '<form method="post">';
+            $content .= '<input type="radio" name="confirmation" value="yes" id="yes" /><label for="yes">Oui</label>';
+            $content .= '<input type="radio" name="confirmation" value="no" id="no" /><label for="no">Non</label>';
+            $content .= '<input type="hidden" name="chapterNumber" value="'.$_POST['chapterNumber'].'" />';
+            $content .= '<input type="hidden" name="title" value="'.$_POST['title'].'" />';
+            $content .= '<input type="hidden" name="content" value="'.$postManager->encode($_POST['content']).'" />';
+            $content .= '<input type="hidden" name="publish" value="'.$_POST['publish'].'" />';
+            $content .= '<input type="submit" value="Confirmer" />';
+            $content .= '</form>';
         }
         elseif($_POST['confirmation'] == 'yes')
-        {
-            $postManager->updatePost($postManager->getPostIDbyChapter($_POST['chapterNumber']), $_POST['chapterNumber'], $_POST['title'], $_POST['content'], $_POST['publish']);
+        {                                                                                   
+            $postManager->updatePost($postManager->getPostIDbyChapter($_POST['chapterNumber']), $_POST['title'], $_POST['content'], $_POST['publish']);
             header('Location:chaptersList.php');
+            exit();
         }
         elseif($_POST['confirmation'] == 'no')
         {
             $_SESSION['data']['title'] = $_POST['title'];
             $_SESSION['data']['content'] = $_POST['content'];
             header('location:updatePost.php?chapter='.$_POST['chapterNumber']);
+            exit();
         }
     }
+    
+    require('template.php');
 }
 catch(Exception $e)
 {

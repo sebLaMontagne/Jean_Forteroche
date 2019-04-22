@@ -5,7 +5,7 @@ abstract class Manager
     
     private function connectDb()
     { 
-        $this->_db = new PDO('mysql:host=db5000055745.hosting-data.io;dbname=dbs50590;', 'dbu151311','Dorian33...', array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
+        $this->_db = new PDO('mysql:host=localhost;dbname=openclassroom_projet_4;', 'root','', array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
         $this->_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
     
