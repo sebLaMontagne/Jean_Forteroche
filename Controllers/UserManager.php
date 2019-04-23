@@ -159,7 +159,7 @@ class UserManager extends Manager
       	$header = "From: \"Jean Forteroche\"<jean.forteroche@jeanforteroche.fr>\n";
         $header.= "Reply-to: \"Jean Forteroche\"<jean.forteroche@jeanforteroche.fr>\n";
         $header.= "MIME-Version: 1.0\n";
-        $header.= "Content-Type: text/html;";
+        $header.= "Content-Type: text/html;\n";
 
         mail($user->email(), 'validation de compte', '<html><head></head><body><p>Voici votre lien d\'activation : <a href="http://jeanforteroche.fr/Views/front/confirmRegistration.php?token='.$user->token().'">activer</a></p></body></html>', $header);
     }

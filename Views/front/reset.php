@@ -6,7 +6,7 @@ try
     
     $title = 'Réinitialisation du compte';
     
-    $content  = '';
+    $content  = '<div class="content filler">';
     $content .= '<form method="post" action="reset.php">';
     $content .= '<label for="email"></label><input id="email" type="email" name="email" placeholder="Veuillez entrer votre email" required />';
     $content .= '<input type="submit" value="Réinitialiser" />';
@@ -25,6 +25,7 @@ try
         {
             $content .= '<p>Email existant</p>';
             $content .= '<p>Un email contenant un lien de réinitialisation va vous être envoyé à l\'adresse entrée</p>';
+            $content .= '</div>';
           
           	$header = "From: \"Jean Forteroche\"<jean.forteroche@jeanforteroche.fr>\n";
             $header.= "Reply-to: \"Jean Forteroche\"<jean.forteroche@jeanforteroche.fr>\n";

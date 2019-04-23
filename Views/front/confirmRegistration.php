@@ -5,8 +5,8 @@ try
     require_once('../autoloader.php');
     
     $title = 'Validation de compte';
-    $content = '';
-
+    $content  = '<div class="content filler">';
+    
     if(!empty($_GET['token']) && preg_match('#^([0-9]){12}$#',$_GET['token']))
     {
         $userManager = new UserManager();
@@ -35,6 +35,8 @@ try
     {
         $content .= '<p>Lien d\'activation invalide</p>';
     }
+    
+    $content .= '</div>';
     require('template.php');
 }
 catch(Exception $e)
