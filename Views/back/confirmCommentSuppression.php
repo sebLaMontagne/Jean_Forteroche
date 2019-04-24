@@ -35,10 +35,11 @@ try
             }
             else
             {
-                $content  = '<p>Etes-vous sûr de vouloir supprimer ce commentaire</p>';
+                $content  = '<div class="content filler">';
+                $content .= '<p style="text-align: center;">Etes-vous sûr de vouloir supprimer ce commentaire</p>';
                 $content .= '<form method="post" action="confirmCommentSuppression.php?id='.$_GET['id'].'&redirect='.$_GET['redirect'].'">';
-                $content .= '<input type="radio" name="confirmation" value="yes" id="confirm-yes" required /><label for="confirm-yes">Oui</label>';
-                $content .= '<input type="radio" name="confirmation" value="no" id="confirm-no" required /><label for="confirm-no">Non</label>';
+                $content .= '<div class="radios"><input type="radio" name="confirmation" value="yes" id="confirm-yes" required /><label for="confirm-yes">Oui</label></div>';
+                $content .= '<div class="radios"><input type="radio" name="confirmation" value="no" id="confirm-no" required /><label for="confirm-no">Non</label></div>';
                 $content .= '<input type="submit" value="valider" />';
                 $content .= '</form>';
             }

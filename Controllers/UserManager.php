@@ -26,8 +26,7 @@ class UserManager extends Manager
             INSERT INTO user(
                 user_name, 
                 user_password, 
-                user_email,  
-                user_isAuthor, 
+                user_email,
                 user_isAdmin,
                 user_token,
                 user_activation,
@@ -37,7 +36,6 @@ class UserManager extends Manager
                 :userName,
                 :userPassword,
                 :userEmail,
-                0,
                 0,
                 :userToken,
                 0,

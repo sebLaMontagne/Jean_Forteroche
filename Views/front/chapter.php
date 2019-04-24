@@ -49,7 +49,7 @@ try
         }
         else
         {
-            $content .= '<p><a class="link-standard" href="register.php">Inscrivez-vous</a> ou <a href="login.php">connectez-vous</a> pour nous laisser un commentaire :)</p>';
+            $content .= '<p><a class="link-standard" href="register.php">Inscrivez-vous</a> ou <a class="link-standard" href="login.php">connectez-vous</a> pour nous laisser un commentaire :)</p>';
         }
 
         $content .= '<p class="limiter">Commentaires :</p>';

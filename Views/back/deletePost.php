@@ -20,12 +20,14 @@ try
 
         if(isset($_GET) && !empty($_GET['chapter']) && $postManager->isChapterExist($_GET['chapter']))
         {
-            $content  = '<p>Etes-vous sûr de vouloir supprimer cet article ?</p>';
+            $content  = '<div class="content filler">';
+            $content .= '<p style="text-align: center;">Etes-vous sûr de vouloir supprimer cet article ?</p>';
             $content .= '<form method="post" action="deletePost.php?chapter='.$_GET['chapter'].'">';
-            $content .= '<label for="delete-yes">Oui</label><input id="delete-yes" type="radio" name="delete" value="yes" />';
-            $content .= '<label for="delete-no">Non</label><input id="delete-no" type="radio" name="delete" value="no" />';
+            $content .= '<div class="radios"><label for="delete-yes">Oui</label><input id="delete-yes" type="radio" name="delete" value="yes" /></div>';
+            $content .= '<div class="radios"><label for="delete-no">Non</label><input id="delete-no" type="radio" name="delete" value="no" /></div>';
             $content .= '<input type="submit" value="confirmer" />';
             $content .= '</form>';
+            $content .= '</div>';
 
             if(isset($_POST['delete']) && $_POST['delete'] == 'yes')
             {

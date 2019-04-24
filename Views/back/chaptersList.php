@@ -16,30 +16,38 @@ try
     }
     else
     {
-        $content  = '<p>Ici, vous pouvez écrire ou modifier des chapitres, et les rendre publics ou non</p>';
-        $content .= '<p><a href="newPost.php">Ecrire un nouveau chapitre</a></p>';
+        $content  = '<div class="content" style="text-align: center;">';
+        $content .= '<p>Ici, vous pouvez écrire ou modifier des chapitres, et les rendre publics ou non</p>';
+        $content .= '<p><a class="link-standard" href="newPost.php">Ecrire un nouveau chapitre</a></p>';
 
         $postManager = new PostManager;
         $list = $postManager->getAllPosts();
 
         for($i = 0; $i < count($list); $i++)
         {
+            $content .= '<div class="comment">';
+            $content .= '<p class="comment-description">';
+            
             if($list[$i]->isPublished())
             {
-                $content .= '<div><p>Public</p>';
+                $content .= '(Chapitre Public)</p>';
             }
             else
             {
-                $content .= '<div><p>Brouillon</p>';
+                $content .= '(Brouillon)</p>';
             }
             
-            $content .= '<div>';
+            $content .= '<hr />';
             $content .= '<p>Chapitre '.$list[$i]->chapterNumber().' : '.$list[$i]->title().'</p>';
-            $content .= '<a href="updatePost.php?chapter='.$list[$i]->chapterNumber().'">modifier</a><a href="deletePost.php?chapter='.$list[$i]->chapterNumber().'">supprimer</a>';
+            $content .= '<hr />';
+            $content .= '<p class="comment-counts">';
+            $content .= '<a class="link-standard" href="updatePost.php?chapter='.$list[$i]->chapterNumber().'">modifier</a><a class="link-standard" href="deletePost.php?chapter='.$list[$i]->chapterNumber().'">supprimer</a>';
+            $content .= '</p>';
             $content .= '</div>';
         }
 
-        $content .= '<p><a href="newPost.php">Ecrire un nouveau chapitre</a></p>';
+        $content .= '<p><a class="link-standard" href="newPost.php">Ecrire un nouveau chapitre</a></p>';
+        $content .= '</div>';
     }
     
     require('template.php');

@@ -77,8 +77,14 @@ input{
     margin-bottom: 10px;
     text-align: center;
 }
-input[type=radio]{
-    width: 10%;
+    input[type=radio]{
+        width: 10%;
+    }
+#chapterNumber{
+    width: 5%;
+}
+#title{
+    width: 50%;
 }
 .radios{
     display: flex;
@@ -90,15 +96,22 @@ textarea{
     padding: 0;
     text-align: center;
 }
-.link-standard{
-    color: blue;
-    text-decoration: underline;
+select{
+    display: block;
+    margin: 0 auto;
+}
+.filter-confirm{
+    width: 150px;
 }
 
 /*--------------------------------------------------------------------------------------*/
 /* STYLE DU CONTENU */
 /*--------------------------------------------------------------------------------------*/
 
+.link-standard{
+    color: blue;
+    text-decoration: underline;
+}
 .content{
     width: 60%;
     margin: 50px auto 0;
@@ -106,7 +119,7 @@ textarea{
     font-size: 1.2em;
 }
 .filler{
-    padding-bottom: 30%;
+    padding-bottom: 35%;
 }
 .redirection{
     display: flex;
@@ -148,9 +161,6 @@ textarea{
     display: flex;
     justify-content: space-around;
     padding-bottom: 10px;
-}
-.chapter-button{
-    
 }
 
 .limiter{

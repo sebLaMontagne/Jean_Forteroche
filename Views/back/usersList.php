@@ -18,8 +18,8 @@ try
     {
         $userManager = new UserManager();
 
-        $content  = '<h3>Liste des utilisateurs</h3>';
-        $content .= '<p>Sur cette page, vous pouvez consulter la liste des utilisateurs et leur statut actuel, et éventuellement en bannir ou en gracier</p>';
+        $content  = '<div class="content" style="text-align: center;">';
+        $content .= '<p>Sur cette page, vous pouvez consulter la liste des utilisateurs et leur statut actuel, et éventuellement en bannir ou en gracier.</p>';
 
         $content .= '<p>Montrer : </p>';
         $content .= '<form action="UsersList.php" method="get">';
@@ -29,7 +29,7 @@ try
         $content .= '<option value="banned">les bannis</option>';
         $content .= '<option value="users">les simples usagers</option>';
         $content .= '</select>';
-        $content .= '<input type="submit" value="Confirmer"/>';
+        $content .= '<input class="filter-confirm" type="submit" value="Confirmer"/>';
         $content .= '</form>';
 
         if(empty($_GET['show']) || ($_GET['show'] != 'all' && $_GET['show'] != 'admins' && $_GET['show'] != 'banned' && $_GET['show'] != 'users'))
@@ -44,12 +44,13 @@ try
 
         for($i = 0; $i < count($users); $i++)
         {
-            $content .= '<p>'.$users[$i]->name();
+            $content .= '<div class="comment">';
+            $content .= '<p><span class="comment-author">'.$users[$i]->name().'</span>';
 
             if($users[$i]->isBanned())
             { 
                 $content .= ' (banni)</p>';
-                $content .= '<p><a href="confirmBanUser.php?action=unban&id='.$users[$i]->id().'&redirect=usersList.php?show='.$_GET['show'].'">Débannir</a></p>';
+                $content .= '<p><a class="link-standard" href="confirmBanUser.php?action=unban&id='.$users[$i]->id().'&redirect=usersList.php?show='.$_GET['show'].'">Débannir</a></p>';
             }
             elseif($users[$i]->isAdmin())
             {
@@ -62,12 +63,14 @@ try
             else
             {
                 $content .= ' (simple usager)</p>';
-                $content .= '<p><a href="confirmBanUser.php?action=ban&id='.$users[$i]->id().'&redirect=usersList.php?show='.$_GET['show'].'">Bannir</a></p>';
+                $content .= '<p><a class="link-standard" href="confirmBanUser.php?action=ban&id='.$users[$i]->id().'&redirect=usersList.php?show='.$_GET['show'].'">Bannir</a></p>';
             }
 
-            $content .= '<p><a href="commentsList.php?id='.$users[$i]->id().'&sortedBy=date">Voir tous les commentaires de cet utilisateur</a></p>';
-            $content .= '<hr />';
+            $content .= '<p><a class="link-standard" href="commentsList.php?id='.$users[$i]->id().'&sortedBy=date">Voir tous les commentaires de cet utilisateur</a></p>';
+            $content .= '</div>';
         }
+        
+        $content .= '</div>';
     }
     
     require('template.php');
