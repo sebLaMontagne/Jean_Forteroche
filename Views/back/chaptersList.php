@@ -18,7 +18,7 @@ try
     {
         $content  = '<div class="content" style="text-align: center;">';
         $content .= '<p>Ici, vous pouvez écrire ou modifier des chapitres, et les rendre publics ou non</p>';
-        $content .= '<p><a class="link-standard" href="newPost.php">Ecrire un nouveau chapitre</a></p>';
+        $content .= '<p><a class="link-standard" href="newPost">Ecrire un nouveau chapitre</a></p>';
 
         $postManager = new PostManager;
         $list = $postManager->getAllPosts();
@@ -41,12 +41,12 @@ try
             $content .= '<p>Chapitre '.$list[$i]->chapterNumber().' : '.$list[$i]->title().'</p>';
             $content .= '<hr />';
             $content .= '<p class="comment-counts">';
-            $content .= '<a class="link-standard" href="updatePost.php?chapter='.$list[$i]->chapterNumber().'">modifier</a><a class="link-standard" href="deletePost.php?chapter='.$list[$i]->chapterNumber().'">supprimer</a>';
+            $content .= '<a class="link-standard" href="updatePost-'.$list[$i]->chapterNumber().'">modifier</a><a class="link-standard" href="deletePost-'.$list[$i]->chapterNumber().'">supprimer</a>';
             $content .= '</p>';
             $content .= '</div>';
         }
 
-        $content .= '<p><a class="link-standard" href="newPost.php">Ecrire un nouveau chapitre</a></p>';
+        $content .= '<p><a class="link-standard" href="newPost">Ecrire un nouveau chapitre</a></p>';
         $content .= '</div>';
     }
     

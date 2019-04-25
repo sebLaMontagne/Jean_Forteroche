@@ -23,7 +23,7 @@ try
             {
                 $content  = '<div class="content filler">';
                 $content .= '<p style="text-align: center;">Ce chapitre existe déjà. Etes-vous sûr de vouloir l\'écraser ?</p>';
-                $content .= '<form method="post">';
+                $content .= '<form method="post" action="confirmNewPost">';
                 $content .= '<div class="radios"><input type="radio" name="confirmation" value="yes" id="yes" /><label for="yes">Oui</label></div>';
                 $content .= '<div class="radios"><input type="radio" name="confirmation" value="no" id="no" /><label for="no">Non</label></div>';
                 $content .= '<input type="hidden" name="chapterNumber" value="'.$_POST['chapterNumber'].'" />';
@@ -38,7 +38,7 @@ try
             elseif($_POST['confirmation'] == 'yes')
             {
                 $postManager->updatePost($postManager->getPostIDbyChapter($_POST['chapterNumber']), $_POST['title'], $postManager->encode($_POST['content']), $_POST['publish']);
-                header('Location:chaptersList.php');
+                header('Location:chaptersList');
                 exit();
             }
             elseif($_POST['confirmation'] == 'no')
@@ -46,14 +46,14 @@ try
                 $_SESSION['data']['chapterNumber'] = $_POST['chapterNumber'];
                 $_SESSION['data']['title'] = $_POST['title'];
                 $_SESSION['data']['content'] = $_POST['content'];
-                header('location:newPost.php');
+                header('location:newPost');
                 exit();
             }
         }
         else
         {
             $postManager->savePost($_POST['chapterNumber'], $_POST['title'], $postManager->encode($_POST['content']), intval($_POST['publish']));
-            header('Location:chaptersList.php');
+            header('Location:chaptersList');
             exit();
         }
     }

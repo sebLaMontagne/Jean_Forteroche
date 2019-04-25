@@ -27,7 +27,7 @@ try
                 {
                     $postManager = new PostManager();
                     
-                    $content .= '<form method="post" action="confirmUpdatePost.php">';
+                    $content .= '<form method="post" action="confirmUpdatePost">';
                     $content .= '<p style="text-align: center;"><input type="hidden" name="chapterNumber" value="'.$_GET['chapter'].'" />';
                     $content .= 'Chapitre n°'.$_GET['chapter'].' : <input id="title" type="text" name="title" placeholder="Titre" value="'.$_SESSION['data']['title'].'" required /></p>';
                     $content .= '<textarea name="content">'.$postManager->decode($_SESSION['data']['content']).'</textarea>';
@@ -42,7 +42,7 @@ try
                 {
                     $selectedChapter = $postManager->getPost($_GET['chapter']);
                     
-                    $content .= '<form method="post" action="confirmUpdatePost.php">';
+                    $content .= '<form method="post" action="confirmUpdatePost">';
                     $content .= '<p style="text-align: center;"><input type="hidden" name="chapterNumber" value="'.$_GET['chapter'].'" />';
                     $content .= 'Chapitre n°'.$_GET['chapter'].' : <input id="title" type="text" name="title" placeholder="Titre" value="'.$selectedChapter->title().'" required /></p>';
                     $content .= '<textarea name="content">'.$postManager->decode($selectedChapter->content()).'</textarea>';
@@ -54,13 +54,13 @@ try
             }
             else
             {
-                header('Location:admin.php');
+                header('Location:admin');
                 exit();
             }
         }
         else
         {
-            header('Location:admin.php');
+            header('Location:admin');
             exit();
         }
         

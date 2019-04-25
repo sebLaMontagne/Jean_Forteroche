@@ -22,7 +22,7 @@ try
         {
             $content  = '<div class="content filler">';
             $content .= '<p style="text-align: center;">Etes-vous sûr de vouloir supprimer cet article ?</p>';
-            $content .= '<form method="post" action="deletePost.php?chapter='.$_GET['chapter'].'">';
+            $content .= '<form method="post" action="deletePost-'.$_GET['chapter'].'">';
             $content .= '<div class="radios"><label for="delete-yes">Oui</label><input id="delete-yes" type="radio" name="delete" value="yes" /></div>';
             $content .= '<div class="radios"><label for="delete-no">Non</label><input id="delete-no" type="radio" name="delete" value="no" /></div>';
             $content .= '<input type="submit" value="confirmer" />';
@@ -32,19 +32,19 @@ try
             if(isset($_POST['delete']) && $_POST['delete'] == 'yes')
             {
                 $postManager->deletePost($_GET['chapter']);
-                header('Location:chaptersList.php');
+                header('Location:chaptersList');
                 exit();
             }
 
             if(isset($_POST['delete']) && $_POST['delete'] == 'no')
             {
-                header('Location:chaptersList.php');
+                header('Location:chaptersList');
                 exit();
             }
         }
         else
         {
-            header('Location:admin.php');
+            header('Location:admin');
             exit();
         }
     }

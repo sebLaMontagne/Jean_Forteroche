@@ -24,9 +24,9 @@ try
         $content .= '<p>Bienvenue sur le panneau d\'administration du site. Depuis cette section, vous pouvez rédiger des chapitres, gérer les commentaires et les utilisateurs</p>';
         $content .= '<p>Il y a actuellement : </p>';
         $content .= '<ul>';
-        $content .= '<li>'.$postManager->getAllChaptersCount().' chapitres dont '.$postManager->getPublicChaptersCount().' publics et '.$postManager->getDraftChaptersCount().' brouillons &rarr; <a class="link-standard" href="chaptersList.php">Gérer les chapitres</a></li>';
-        $content .= '<li>'.$userManager->getAllUsersCount().' utilisateurs dont '.$userManager->getAdminUsersCount().' administrateurs, '.$userManager->getNormalUsersCount().' utilisateurs et '.$userManager->getBannedUsersCount().' bannis &rarr; <a class="link-standard" href="usersList.php?show=all">Gérer les utilisateurs</a></li>';
-        $content .= '<li>'.$commentManager->getAllCommentsCount().' commentaires &rarr; <a class="link-standard" href="commentsList.php?sortedBy=reports">Gérer les commentaires</a></li>';
+        $content .= '<li>'.$postManager->getAllChaptersCount().' chapitres dont '.$postManager->getPublicChaptersCount().' publics et '.$postManager->getDraftChaptersCount().' brouillons &rarr; <a class="link-standard" href="chaptersList">Gérer les chapitres</a></li>';
+        $content .= '<li>'.$userManager->getAllUsersCount().' utilisateurs dont '.$userManager->getAdminUsersCount().' administrateurs, '.$userManager->getNormalUsersCount().' utilisateurs et '.$userManager->getBannedUsersCount().' bannis &rarr; <a class="link-standard" href="usersList-all">Gérer les utilisateurs</a></li>';
+        $content .= '<li>'.$commentManager->getAllCommentsCount().' commentaires &rarr; <a class="link-standard" href="commentsList-reports">Gérer les commentaires</a></li>';
         $content .= '</ul>';
         $content .= '</div>';
     }

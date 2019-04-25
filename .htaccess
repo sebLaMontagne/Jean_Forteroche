@@ -4,19 +4,27 @@ RewriteEngine On
 #front rules
 #-----------------------------------------
 
-RewriteRule	^about$					/Views/front/about.php
-RewriteRule ^chapter-([0-9]+)$		/Views/front/chapter.php?chapter=$1
-RewriteRule	^home$					/Views/front/home.php
-RewriteRule	^chaptersList$			/Views/front/chaptersList.php
-RewriteRule	^contact$				/Views/front/contact.php
-RewriteRule	^logout$				/Views/front/logout.php
-RewriteRule	^login$					/Views/front/login.php
-RewriteRule ^register-(.+)$			/Views/front/register.php?mail=$1
-RewriteRule	^register$				/Views/front/register.php
-RewriteRule ^reset$					/Views/front/reset.php
+RewriteRule	^about$						/Views/front/about.php
+RewriteRule ^chapter-([0-9]+)$			/Views/front/chapter.php?chapter=$1
+RewriteRule	^home$						/Views/front/home.php
+RewriteRule	^chaptersList$				/Views/front/chaptersList.php
+RewriteRule	^contact$					/Views/front/contact.php
+RewriteRule	^logout$					/Views/front/logout.php
+RewriteRule	^login$						/Views/front/login.php
+RewriteRule ^register-(.+)$				/Views/front/register.php?mail=$1
+RewriteRule	^register$					/Views/front/register.php
+RewriteRule ^reset$						/Views/front/reset.php
 
 #-----------------------------------------
 #back rules
 #-----------------------------------------
 
-RewriteRule ^back/admin$	/Views/back/admin.php
+RewriteRule ^back/admin$				/Views/back/admin.php
+RewriteRule ^back/chaptersList$			/Views/back/chaptersList.php
+RewriteRule ^back/commentsList-(.+)$	/Views/back/commentsList.php?sortedBy=$1
+RewriteRule ^back/usersList-(.+)$		/Views/back/usersList.php?show=$1
+RewriteRule ^back/newPost$				/Views/back/newPost.php
+RewriteRule ^back/updatePost-(.+)$		/Views/back/updatePost.php?chapter=$1
+RewriteRule ^back/deletePost-(.+)$		/Views/back/deletePost.php?chapter=$1
+RewriteRule ^back/confirmNewPost$		/Views/back/confirmNewPost.php
+RewriteRule ^back/confirmUpdatePost$	/Views/back/confirmUpdatePost.php

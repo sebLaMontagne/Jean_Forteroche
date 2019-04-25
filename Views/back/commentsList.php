@@ -38,7 +38,7 @@ try
 
         if(empty($_GET['sortedBy']) || ($_GET['sortedBy'] != 'reports' && $_GET['sortedBy'] != 'likes' && $_GET['sortedBy'] != 'date'))
         {
-            header('Location:admin.php');
+            header('Location:admin');
             exit();
         }
         else
@@ -53,7 +53,7 @@ try
             }
             else
             {
-                header('Location:admin.php');
+                header('Location:admin');
                 exit();
             }
         }
