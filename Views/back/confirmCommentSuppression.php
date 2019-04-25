@@ -24,12 +24,12 @@ try
                 {
                     $commentManager = new CommentManager();
                     $commentManager->deleteComment($_GET['id']);
-                    header('Location: commentsList.php?sortedBy='.$_GET['redirect']);
+                    header('Location: commentsList-'.$_GET['redirect']);
                     exit();
                 }
                 elseif($_POST['confirmation'] == 'no')
                 {
-                    header('Location: commentsList.php?sortedBy='.$_GET['redirect']);
+                    header('Location: commentsList-'.$_GET['redirect']);
                     exit();
                 }
             }
@@ -37,7 +37,7 @@ try
             {
                 $content  = '<div class="content filler">';
                 $content .= '<p style="text-align: center;">Etes-vous sûr de vouloir supprimer ce commentaire</p>';
-                $content .= '<form method="post" action="confirmCommentSuppression.php?id='.$_GET['id'].'&redirect='.$_GET['redirect'].'">';
+                $content .= '<form method="post" action="confirmCommentSuppression-'.$_GET['id'].'-'.$_GET['redirect'].'">';
                 $content .= '<div class="radios"><input type="radio" name="confirmation" value="yes" id="confirm-yes" required /><label for="confirm-yes">Oui</label></div>';
                 $content .= '<div class="radios"><input type="radio" name="confirmation" value="no" id="confirm-no" required /><label for="confirm-no">Non</label></div>';
                 $content .= '<input type="submit" value="valider" />';

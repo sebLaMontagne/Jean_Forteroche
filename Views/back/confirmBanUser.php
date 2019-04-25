@@ -35,7 +35,7 @@ try
         }
         else
         {
-            header('Location: commentsList.php?sortedBy=reports');
+            header('Location: admin');
             exit();
         }
     }

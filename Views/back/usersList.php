@@ -18,11 +18,11 @@ try
     {
         $userManager = new UserManager();
 
-        $content  = '<div class="content" style="text-align: center;">';
+        $content  = '<div class="content filler" style="text-align: center;">';
         $content .= '<p>Sur cette page, vous pouvez consulter la liste des utilisateurs et leur statut actuel, et éventuellement en bannir ou en gracier.</p>';
 
         $content .= '<p>Montrer : </p>';
-        $content .= '<form action="UsersList.php" method="get">';
+        $content .= '<form action="filterUser" method="post">';
         $content .= '<select name="show">';
         $content .= '<option value="all">tous les utilisateurs</option>';
         $content .= '<option value="admins">les administrateurs</option>';
@@ -50,7 +50,7 @@ try
             if($users[$i]->isBanned())
             { 
                 $content .= ' (banni)</p>';
-                $content .= '<p><a class="link-standard" href="confirmBanUser.php?action=unban&id='.$users[$i]->id().'&redirect=usersList.php?show='.$_GET['show'].'">Débannir</a></p>';
+                $content .= '<p><a class="link-standard" href="confirmBanUser-unban-'.$users[$i]->id().'-usersList-'.$_GET['show'].'">Débannir</a></p>';
             }
             elseif($users[$i]->isAdmin())
             {
@@ -63,10 +63,10 @@ try
             else
             {
                 $content .= ' (simple usager)</p>';
-                $content .= '<p><a class="link-standard" href="confirmBanUser.php?action=ban&id='.$users[$i]->id().'&redirect=usersList.php?show='.$_GET['show'].'">Bannir</a></p>';
+                $content .= '<p><a class="link-standard" href="confirmBanUser-ban-'.$users[$i]->id().'-usersList-'.$_GET['show'].'">Bannir</a></p>';
             }
 
-            $content .= '<p><a class="link-standard" href="commentsList.php?id='.$users[$i]->id().'&sortedBy=date">Voir tous les commentaires de cet utilisateur</a></p>';
+            $content .= '<p><a class="link-standard" href="commentsList-date-'.$users[$i]->id().'">Voir tous les commentaires de cet utilisateur</a></p>';
             $content .= '</div>';
         }
         

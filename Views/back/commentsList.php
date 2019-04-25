@@ -21,12 +21,12 @@ try
         $commentManager = new CommentManager();
         $userManager = new UserManager();
 
-        $content  = '<div class="content" style="text-align: center;">';
+        $content  = '<div class="content filler" style="text-align: center;">';
         $content .= '<p>Ici, vous pouvez supprimer des commentaires ou bannir des utilisateurs pour leur mauvais comportement et filtrer les commentaires en fonction de plusieurs critères</p>';
         
         $content .= '<div style="text-align: center;">';
         $content .= '<p>Trier les commentaires par : </p>';
-        $content .= '<form action="commentsList.php" method="get">';
+        $content .= '<form action="filterComment" method="post">';
         $content .= '<select name="sortedBy">';
         $content .= '<option value="date">date</option>';
         $content .= '<option value="likes">nombre de likes</option>';
@@ -82,11 +82,11 @@ try
             $content .= '<p>'.$comments[$i]->likes().' likes '.$comments[$i]->reports().' reports</p>';
             $content .= '<hr />';
             $content .= '<p class ="comment-counts">';
-            $content .= '<a class="link-standard" href="confirmCommentSuppression.php?id='.$comments[$i]->id().'&redirect='.$_GET['sortedBy'].'">supprimer le commentaire</a>';
+            $content .= '<a class="link-standard" href="confirmCommentSuppression-'.$comments[$i]->id().'-'.$_GET['sortedBy'].'">supprimer le commentaire</a>';
 
             if($commentAuthor->isBanned())
             {
-                $content .= '<a class="link-standard" href="confirmBanUser.php?action=unban&id='.$commentAuthor->id().'&redirect=commentsList.php">Débannir</a>';
+                $content .= '<a class="link-standard" href="confirmBanUser-unban-'.$commentAuthor->id().'-commentsList-'.$_GET['sortedBy'].'">Débannir</a>';
             }
             elseif($commentAuthor->isAdmin())
             {
@@ -94,7 +94,7 @@ try
             }
             else
             {
-                $content .= '<a class="link-standard" href="confirmBanUser.php?action=ban&id='.$commentAuthor->id().'&redirect=commentsList.php">bannir l\'utilisateur</a>';
+                $content .= '<a class="link-standard" href="confirmBanUser-ban-'.$commentAuthor->id().'-commentsList-'.$_GET['sortedBy'].'">bannir l\'utilisateur</a>';
             }
 
             $content .= '</p>';
