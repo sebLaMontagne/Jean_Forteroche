@@ -29,12 +29,12 @@ try
         $content .= '<p class="chapter-links">';
         if($postManager->isChapterExist($postManager->getPreviousChapterNumber($_GET['chapter'])))
         {
-            $content .= '<a href="http://localhost/P4/Views/front/chapter.php?chapter='.$postManager->getPreviousChapterNumber($_GET['chapter']).'">&larr; Précédent</a>';
+            $content .= '<a href="chapter-'.$postManager->getPreviousChapterNumber($_GET['chapter']).'">&larr; Précédent</a>';
         }
 
         if($postManager->isChapterExist($postManager->getNextChapterNumber($_GET['chapter'])))
         {
-            $content .= '<a href="http://localhost/P4/Views/front/chapter.php?chapter='.$postManager->getNextChapterNumber($_GET['chapter']).'">   Suivant &rarr;</a>';
+            $content .= '<a href="chapter-'.$postManager->getNextChapterNumber($_GET['chapter']).'">   Suivant &rarr;</a>';
         }
         $content .= '</p>';
 

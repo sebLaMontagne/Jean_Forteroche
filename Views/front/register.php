@@ -8,11 +8,11 @@ try
     
     if(!empty($_GET['mail']))
     {
-        $content .= '<form method="post" action="register.php?mail='.$_GET['mail'].'" id="register-form">';
+        $content .= '<form method="post" action="register-'.$_GET['mail'].'" id="register-form">';
     }
     else
     {
-        $content .= '<form method="post" action="register.php" id="register-form">';
+        $content .= '<form method="post" action="register" id="register-form">';
     }
     
     $content .= '<label for="pseudo"></label><input type="text" name="name" id="pseudo" placeholder="Entrez votre pseudonyme" required />';

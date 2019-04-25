@@ -27,7 +27,7 @@ try
             $_SESSION['email'] = $user->email();
             $_SESSION['isAdmin'] = $user->isAdmin();
             $_SESSION['id'] = $user->id();
-            header('Location: home.php');
+            header('Location: home');
             exit();
         }
     }
@@ -37,12 +37,12 @@ try
         
         $content  = '<div class="content filler">';
         $content .= '<p style="text-align: center">Veuillez entrer vos identifiants</p>';
-        $content .= '<form method="post" action="login.php">';
+        $content .= '<form method="post" action="login">';
         $content .= '<label for="login-username"></label><input id="login-username" type="text" name="name" placeholder="Veuillez entrer votre pseudonyme" required />';
         $content .= '<label for="login-password"></label><input id="login-password" type="password" name="password" placeholder="Veuillez entrer votre mot de passe" required />';
         $content .= '<input type="submit" value="Se connecter" />';
         $content .= '</form>';
-        $content .= '<p style="text-align: center"><a class="link-standard" href="reset.php">Avez-vous oublié vos identifiants ?</a></p>';
+        $content .= '<p style="text-align: center"><a class="link-standard" href="reset">Avez-vous oublié vos identifiants ?</a></p>';
         $content .= '</div>';
         
         require('template.php');

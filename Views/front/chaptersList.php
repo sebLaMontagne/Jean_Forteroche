@@ -16,7 +16,7 @@ try
     {
         $postDate = new DateTime($posts[$i]->Date());
 
-        $content .= '<a href="chapter.php?chapter='.$posts[$i]->chapterNumber().'">';
+        $content .= '<a href="chapter-'.$posts[$i]->chapterNumber().'">';
         $content .= '<div class="chapter-icon">';
         $content .= '<h3>Chapitre '.$posts[$i]->chapterNumber().' : '.$posts[$i]->Title().'</h3>';
         $content .= '<p>Publié le '.$postDate->format('d/m/Y à H:i:s').'</p>';

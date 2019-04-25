@@ -13,10 +13,10 @@
         <header>
             <h1>Billet simple pour l'Alaska</h1>
             <nav>
-                <a href="home.php">Accueil</a>
-                <a href="about.php">A propos de l'auteur</a>
-                <a href="chaptersList.php">Liste des chapitres</a>
-                <a href="contact.php">Contact</a>
+                <a href="home">Accueil</a>
+                <a href="about">A propos de l'auteur</a>
+                <a href="chaptersList">Liste des chapitres</a>
+                <a href="contact">Contact</a>
                 <div class="account-access">
                     <?php 
                     if(!empty($_SESSION['pseudo']) && !empty($_SESSION['email']) && ($_SESSION['isAdmin'] == '0' || $_SESSION['isAdmin'] == '1') && !empty($_SESSION['id']))
@@ -25,14 +25,14 @@
                         
                         if($_SESSION['isAdmin'])
                         {
-                            echo '<a href="../back/admin.php?user='.$_SESSION['id'].'">Admin</a>';
+                            echo '<a href="back/admin">Admin</a>';
                         }
-                        echo '<a href="logout.php">Déconnexion</a>';
+                        echo '<a href="logout">Déconnexion</a>';
                     }
                     else
                     {
-                        echo '<a href="login.php">Connection</a>';
-                        echo '<a href="register.php">S\'inscrire</a>';
+                        echo '<a href="login">Connection</a>';
+                        echo '<a href="register">S\'inscrire</a>';
                     }
                     ?>
                 </div>

@@ -32,7 +32,7 @@ try
             $header.= "MIME-Version: 1.0\n";
             $header.= "Content-Type: text/html;";
 
-            mail($_POST['email'], 'réinitialisation de compte', '<html><head></head><body><p>Voici votre lien de réinitialisation : <a href="http://jeanforteroche.fr/Views/front/register.php?mail='.$_POST['email'].'">réinitialiser</a></p></body></html>', $header);
+            mail($_POST['email'], 'réinitialisation de compte', '<html><head></head><body><p>Voici votre lien de réinitialisation : <a href="http://jeanforteroche.fr/register-'.$_POST['email'].'">réinitialiser</a></p></body></html>', $header);
         }
     }
     

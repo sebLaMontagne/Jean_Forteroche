@@ -1,0 +1,22 @@
+RewriteEngine On
+
+#-----------------------------------------
+#front rules
+#-----------------------------------------
+
+RewriteRule	^about$					/Views/front/about.php
+RewriteRule ^chapter-([0-9]+)$		/Views/front/chapter.php?chapter=$1
+RewriteRule	^home$					/Views/front/home.php
+RewriteRule	^chaptersList$			/Views/front/chaptersList.php
+RewriteRule	^contact$				/Views/front/contact.php
+RewriteRule	^logout$				/Views/front/logout.php
+RewriteRule	^login$					/Views/front/login.php
+RewriteRule ^register-(.+)$			/Views/front/register.php?mail=$1
+RewriteRule	^register$				/Views/front/register.php
+RewriteRule ^reset$					/Views/front/reset.php
+
+#-----------------------------------------
+#back rules
+#-----------------------------------------
+
+RewriteRule ^back/admin$	/Views/back/admin.php
