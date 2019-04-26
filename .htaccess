@@ -34,3 +34,9 @@ RewriteRule ^back/filterComment$						/Views/back/filterComment.php
 RewriteRule ^back/filterUser$							/Views/back/filterUser.php
 RewriteRule ^back/confirmCommentSuppression-(.+)-(.+)$ 	/Views/back/confirmCommentSuppression.php?id=$1&redirect=$2
 RewriteRule ^back/confirmBanUser-(.+)-(.+)-(.+)-(.+)$	/Views/back/confirmBanUser.php?action=$1&id=$2&redirect=$3-$4
+
+#-----------------------------------------
+#404
+#-----------------------------------------
+
+ErrorDocument 404   /Views/404.php
