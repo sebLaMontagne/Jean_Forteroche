@@ -11,29 +11,35 @@ try
     {
         $userManager = new UserManager();
         $user = $userManager->getUserByToken($_GET['token']);
-
-        if($user->tokenExpiration() > time())
-        {   
-            if($user->isActivated() == 0)
+        
+        if($user != null && $user->isActivated() == 1)
+        {
+            $content .= '<p>Votre compte a déjà été activé</p>';
+        }
+        elseif($user != null && $user->isActivated() == 0)
+        {
+            if($user->tokenExpiration() > time())
             {
                 $userManager->confirmAccount($user);
                 $content .= '<p>Votre compte a été activé avec succès</p>';
             }
             else
             {
-                $content .= '<p>Votre compte a déjà été activé</p>';
+                $content .= '<p>Lien d\'activation expiré</p>';
+                $userManager->renewActivationLink($user);
+                $content .= '<p>Un nouveau lien d\'activation a été envoyé sur votre adresse mail</p>';
             }
         }
         else
         {
-            $content .= '<p>Lien d\'activation expiré</p>';
-            $userManager->renewActivationLink($user);
-            $content .= '<p>Un nouveau lien d\'activation a été envoyé sur votre adresse mail</p>';
+            header('Location:home');
+            exit();
         }
     }
     else
     {
-        $content .= '<p>Lien d\'activation invalide</p>';
+        header('Location:home');
+        exit();
     }
     
     $content .= '</div>';

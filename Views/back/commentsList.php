@@ -62,44 +62,46 @@ try
         {
             $commentDate = new DateTime($comments[$i]->date());
             $commentAuthor = $userManager->getUserById($comments[$i]->userId());
-
+            
             $content .= '<div class="comment">';
 
-            if($commentAuthor->isBanned())
+          	if($commentAuthor != null)
             {
-                $content .= '<p class="comment-description"><span class="comment-author">'.$commentAuthor->name().'</span> (Utilisateur banni)';
-            }
-            else
-            {
-                $content .= '<p class="comment-description"><span class="comment-author">'.$commentAuthor->name().'</span>';
-            }
+              	if($commentAuthor->isBanned())
+            	{
+                	$content .= '<p class="comment-description"><span class="comment-author">'.$commentAuthor->name().'</span> (Utilisateur banni)';
+            	}
+            	else
+            	{
+                	$content .= '<p class="comment-description"><span class="comment-author">'.$commentAuthor->name().'</span>';
+            	}
+              
+              	$content .= ' a écrit le <span class="comment-date">'.$commentDate->format('d/m/Y à H:i:s').'</span>';
+            	$content .= ' sur le chapitre '.$postManager->getChapterByPostId($comments[$i]->postId()).' :</p>';
+            	$content .= '<hr />';
+            	$content .= '<p>'.$comments[$i]->content().'</p>';
+            	$content .= '<hr />';
+            	$content .= '<p>'.$comments[$i]->likes().' likes '.$comments[$i]->reports().' reports</p>';
+            	$content .= '<hr />';
+            	$content .= '<p class ="comment-counts">';
+            	$content .= '<a class="link-standard" href="confirmCommentSuppression-'.$comments[$i]->id().'-'.$_GET['sortedBy'].'">supprimer le commentaire</a>';
 
-            $content .= ' a écrit le <span class="comment-date">'.$commentDate->format('d/m/Y à H:i:s').'</span>';
-            $content .= ' sur le chapitre '.$postManager->getChapterByPostId($comments[$i]->postId()).' :</p>';
-            $content .= '<hr />';
-            $content .= '<p>'.$comments[$i]->content().'</p>';
-            $content .= '<hr />';
-            $content .= '<p>'.$comments[$i]->likes().' likes '.$comments[$i]->reports().' reports</p>';
-            $content .= '<hr />';
-            $content .= '<p class ="comment-counts">';
-            $content .= '<a class="link-standard" href="confirmCommentSuppression-'.$comments[$i]->id().'-'.$_GET['sortedBy'].'">supprimer le commentaire</a>';
+                if($commentAuthor->isBanned())
+                {
+                    $content .= '<a class="link-standard" href="confirmBanUser-unban-'.$commentAuthor->id().'-commentsList-'.$_GET['sortedBy'].'">Débannir</a>';
+                }
+                elseif($commentAuthor->isAdmin())
+                {
 
-            if($commentAuthor->isBanned())
-            {
-                $content .= '<a class="link-standard" href="confirmBanUser-unban-'.$commentAuthor->id().'-commentsList-'.$_GET['sortedBy'].'">Débannir</a>';
-            }
-            elseif($commentAuthor->isAdmin())
-            {
+                }
+                else
+                {
+                    $content .= '<a class="link-standard" href="confirmBanUser-ban-'.$commentAuthor->id().'-commentsList-'.$_GET['sortedBy'].'">bannir l\'utilisateur</a>';
+                }
 
-            }
-            else
-            {
-                $content .= '<a class="link-standard" href="confirmBanUser-ban-'.$commentAuthor->id().'-commentsList-'.$_GET['sortedBy'].'">bannir l\'utilisateur</a>';
-            }
-
-            $content .= '</p>';
-            $content .= '</div>';
-
+                $content .= '</p>';
+                $content .= '</div>';
+            }    
         }
         
         $content .= '<div>';

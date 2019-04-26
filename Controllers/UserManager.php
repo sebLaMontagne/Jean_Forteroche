@@ -63,7 +63,7 @@ class UserManager extends Manager
             $header.= "MIME-Version: 1.0\n";
             $header.= "Content-Type: text/html;";
 
-            mail($email, 'validation de compte', '<html><head></head><body><p>Voici votre lien d\'activation : <a href="http://jeanforteroche.fr/Views/front/confirmRegistration.php?token='.$confirmToken.'">activer</a></p></body></html>', $header);
+            mail($email, 'validation de compte', '<html><head></head><body><p>Voici votre lien d\'activation : <a href="http://jeanforteroche.fr/confirmRegistration-'.$confirmToken.'">activer</a></p></body></html>', $header);
         }
         else
         {
@@ -159,7 +159,7 @@ class UserManager extends Manager
         $header.= "MIME-Version: 1.0\n";
         $header.= "Content-Type: text/html;\n";
 
-        mail($user->email(), 'validation de compte', '<html><head></head><body><p>Voici votre lien d\'activation : <a href="http://jeanforteroche.fr/Views/front/confirmRegistration.php?token='.$user->token().'">activer</a></p></body></html>', $header);
+        mail($user->email(), 'validation de compte', '<html><head></head><body><p>Voici votre lien d\'activation : <a href="http://jeanforteroche.fr/confirmRegistration-'.$user->token().'">activer</a></p></body></html>', $header);
     }
     
     public function getUserById($id)

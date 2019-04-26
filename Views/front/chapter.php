@@ -42,7 +42,7 @@ try
 
         if(!empty($_SESSION['pseudo']))
         {
-            $content .= '<form method="post" action="chapter.php?chapter='.$_GET['chapter'].'">';
+            $content .= '<form method="post" action="chapter-'.$_GET['chapter'].'">';
             $content .= '<textarea placeholder="Laissez-nous un commentaire" name="comment"></textarea>';
             $content .= '<input type="submit" value="commenter" />';
             $content .= '</form>';
@@ -59,6 +59,8 @@ try
         if(!empty($_POST['comment']))
         {   
             $commentManager->saveComment($selectedPost->id(), $_SESSION['id'], $_POST['comment']);
+            header('Location: chapter-'.$_GET['chapter']);
+            exit();
         }
 
         //Affichage commentaires

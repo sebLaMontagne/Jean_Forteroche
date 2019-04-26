@@ -7,7 +7,7 @@ try
     $title = 'Réinitialisation du compte';
     
     $content  = '<div class="content filler">';
-    $content .= '<form method="post" action="reset.php">';
+    $content .= '<form method="post" action="reset">';
     $content .= '<label for="email"></label><input id="email" type="email" name="email" placeholder="Veuillez entrer votre email" required />';
     $content .= '<input type="submit" value="Réinitialiser" />';
     $content .= '</form>';
