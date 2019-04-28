@@ -115,6 +115,9 @@ textarea{
     padding: 0;
     text-align: center;
 }
+    .tinyMCE{
+        height: 100vh;
+    }
 select{
     display: block;
     margin: 0 auto;
@@ -137,7 +140,7 @@ select{
     text-align: justify;
     font-size: 1.2em;
 }
-    @media screen and (max-width: 769px){
+    @media screen and (max-width: 1200px){
         .content{
             width: 90%;
         }
@@ -188,11 +191,12 @@ select{
     }
 
 .chapter{
-    padding: 10px 0;
+    padding: 10px;
     background: #FFF;
 }
 .chapter-content{
     padding: 50px 0;
+    text-align: left;
 }
 .chapter-links{
     display: flex;

@@ -30,7 +30,7 @@ try
                     $content .= '<form method="post" action="confirmUpdatePost">';
                     $content .= '<p style="text-align: center;"><input type="hidden" name="chapterNumber" value="'.$_GET['chapter'].'" />';
                     $content .= 'Chapitre n°'.$_GET['chapter'].' : <input id="title" type="text" name="title" placeholder="Titre" value="'.$_SESSION['data']['title'].'" required /></p>';
-                    $content .= '<textarea name="content">'.$postManager->decode($_SESSION['data']['content']).'</textarea>';
+                    $content .= '<textarea class="tinyMCE" name="content">'.$postManager->decode($_SESSION['data']['content']).'</textarea>';
                     $content .= '<div class="radios"><input type="radio" id="publish" name="publish" value="1" required /><label for="publish">Publier</label></div>';
                     $content .= '<div class="radios"><input type="radio" id="draft" name="publish" value="0" required /><label for="draft">Brouillon</label></div>';
                     $content .= '<input type="submit" value="sauvegarder" />';
@@ -45,7 +45,7 @@ try
                     $content .= '<form method="post" action="confirmUpdatePost">';
                     $content .= '<p style="text-align: center;"><input type="hidden" name="chapterNumber" value="'.$_GET['chapter'].'" />';
                     $content .= 'Chapitre n°'.$_GET['chapter'].' : <input id="title" type="text" name="title" placeholder="Titre" value="'.$selectedChapter->title().'" required /></p>';
-                    $content .= '<textarea name="content">'.$postManager->decode($selectedChapter->content()).'</textarea>';
+                    $content .= '<textarea class="tinyMCE" name="content">'.$postManager->decode($selectedChapter->content()).'</textarea>';
                     $content .= '<div class="radios"><input type="radio" id="publish" name="publish" value="1" required /><label for="publish">Publier</label></div>';
                     $content .= '<div class="radios"><input type="radio" id="draft" name="publish" value="0" required /><label for="draft">Brouillon</label></div>';
                     $content .= '<input type="submit" value="sauvegarder" />';

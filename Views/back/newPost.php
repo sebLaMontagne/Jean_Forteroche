@@ -24,7 +24,7 @@ try
             
             $content .= '<form method="post" action="confirmNewPost">';
             $content .= '<p style="text-align: center;"><label for="chapterNumber">Chapitre n° </label><input type="number" name="chapterNumber" min="1" max="65535" id="chapterNumber" value="'.$_SESSION['data']['chapterNumber'].'" required /> : <input id="title" type="text" name="title" placeholder="Titre" value="'.$_SESSION['data']['title'].'" required /></p>';
-            $content .= '<textarea name="content">'.$postManager->decode($_SESSION['data']['content']).'</textarea>';
+            $content .= '<textarea class="tinyMCE" name="content">'.$postManager->decode($_SESSION['data']['content']).'</textarea>';
             $content .= '<div class="radios"><input type="radio" id="publish" name="publish" value="1" required /><label for="publish">Publier</label></div>';
             $content .= '<div class="radios"><input type="radio" id="draft" name="publish" value="0" required /><label for="draft">Brouillon</label></div>';
             $content .= '<input type="submit" value="sauvegarder" />';
@@ -36,7 +36,7 @@ try
         {
             $content .= '<form method="post" action="confirmNewPost">';
             $content .= '<p style="text-align: center;"><label for="chapterNumber">Chapitre n° </label><input type="number" name="chapterNumber" min="1" id="chapterNumber" required /> : <input id="title" type="text" name="title" placeholder="Titre" required /></p>';
-            $content .= '<textarea name="content"></textarea>';
+            $content .= '<textarea class="tinyMCE" name="content"></textarea>';
             $content .= '<div class="radios"><input type="radio" id="publish" name="publish" value="1" required /><label for="publish">Publier</label></div>';
             $content .= '<div class="radios"><input type="radio" id="draft" name="publish" value="0" required /><label for="draft">Brouillon</label></div>';
             $content .= '<input type="submit" value="sauvegarder" />';
