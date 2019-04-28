@@ -20,7 +20,7 @@
                     <?php 
                     if(!empty($_SESSION['pseudo']) && !empty($_SESSION['email']) && ($_SESSION['isAdmin'] == '0' || $_SESSION['isAdmin'] == '1') && !empty($_SESSION['id']))
                     {
-                        echo '<p>Bienvenue <span class="username">'.$_SESSION['pseudo'].'</span></p>';
+                        echo '<p class="welcome">Bienvenue <span class="username">'.$_SESSION['pseudo'].'</span></p>';
                         
                         if($_SESSION['isAdmin'])
                         {
