@@ -4,6 +4,9 @@ try
 {
     require_once('../autoloader.php');
     
+    $title = 'connexion';
+    $content = '<div class="content filler">';
+    
     if(!empty($_POST))
     {
         $userManager = new UserManager();
@@ -11,11 +14,11 @@ try
 
         if($user == null)
         {
-            echo '<p>Identifiants incorrects</p>';
+            $content .= '<p>Identifiants incorrects</p>';
         }
         elseif($user->isBanned())
         {
-            echo '<p>Votre compte a été banni. Vous ne pouvez qu\'implorer la clémence de notre maître et seigneur à tous</p>';
+            $content .= '<p>Votre compte a été banni. Vous ne pouvez qu\'implorer la clémence de notre maître et seigneur à tous</p>';
         }
         elseif(!$user->isActivated())
         {
@@ -44,9 +47,10 @@ try
         $content .= '</form>';
         $content .= '<p style="text-align: center"><a class="link-standard" href="reset">Avez-vous oublié vos identifiants ?</a></p>';
         $content .= '</div>';
-        
-        require('template.php');
     }
+    
+    $content .= '</div>';
+    require('template.php');
 }
 catch(Exception $e)
 {

@@ -7,7 +7,7 @@ try
     $_SESSION['refresh'] = 1;
     unset($_SESSION['refresh']);
     
-    $title = 'Création d\'un chapitre';
+    $title = 'Billet simple pour l\'Alaska - Création d\'un chapitre';
 
     if(!isset($_SESSION['isAdmin']) || $_SESSION['isAdmin'] != '1')
     {

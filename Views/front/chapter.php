@@ -4,7 +4,7 @@ try
 {
     require_once('../autoloader.php');
     
-    $title = 'Billet simple pour l\'Alaska - Accueil';
+    $title = 'Billet Simple pour l\'Alaska - Lecture';
     $content = '<div class="content" style="text-align: center;">';
 
     $postManager = new PostManager();
@@ -49,7 +49,7 @@ try
         }
         else
         {
-            $content .= '<p><a class="link-standard" href="register.php">Inscrivez-vous</a> ou <a class="link-standard" href="login.php">connectez-vous</a> pour nous laisser un commentaire :)</p>';
+            $content .= '<p><a class="link-standard" href="register">Inscrivez-vous</a> ou <a class="link-standard" href="login">connectez-vous</a> pour nous laisser un commentaire :)</p>';
         }
 
         $content .= '<p class="limiter">Commentaires :</p>';
@@ -70,39 +70,42 @@ try
             $commentDate = new DateTime($comments[$i]->date());
             $commentAuthor = $userManager->getUserById($comments[$i]->userId());
 
-            $content .= '<div class="comment">';
-            $content .= '<p class="comment-description"><span class="comment-author">'.$commentAuthor->name().'</span> <span class="comment-date">a écrit le '.$commentDate->format('d/m/Y à H:i:s').' :</span></p>'; 
-            $content .= '<p class="comment-content">'.$comments[$i]->content().'</p>';
+            if($commentAuthor != null)
+            {
+                $content .= '<div class="comment">';
+                $content .= '<p class="comment-description"><span class="comment-author">'.$commentAuthor->name().'</span> <span class="comment-date">a écrit le '.$commentDate->format('d/m/Y à H:i:s').' :</span></p>'; 
+                $content .= '<p class="comment-content">'.$comments[$i]->content().'</p>';
 
-            if(isset($_SESSION['id']) && !$commentManager->isUserTheCommentAuthor($_SESSION['id'], $comments[$i]->id()) && !$appreciationManager->isAppreciationExist($_SESSION['id'], $comments[$i]->id()))
-            {
-                $content .= '<p>';
-                $content .= '<a class="link-standard" href="leaveAppreciation.php?appreciation=like&id='.$comments[$i]->id().'">Aimer</a>';
-                $content .= '&nbsp;&nbsp;&nbsp;&nbsp;';
-                $content .= '<a class="link-standard" href="leaveAppreciation.php?appreciation=report&id='.$comments[$i]->id().'">Signaler</a>';
-                $content .= '</p>';
-            }
-            elseif(isset($_SESSION['id']) && !$commentManager->isUserTheCommentAuthor($_SESSION['id'], $comments[$i]->id()) && $appreciationManager->isAppreciationExist($_SESSION['id'], $comments[$i]->id()))
-            {
-                if($appreciationManager->AppreciationIsLike($_SESSION['id'], $comments[$i]->id()))
+                if(isset($_SESSION['id']) && !$commentManager->isUserTheCommentAuthor($_SESSION['id'], $comments[$i]->id()) && !$appreciationManager->isAppreciationExist($_SESSION['id'], $comments[$i]->id()))
                 {
-                    $content .= '<p>Vous avez déjà liké ce commentaire</p>';
+                    $content .= '<p>';
+                    $content .= '<a class="link-standard" href="leaveAppreciation-like-'.$comments[$i]->id().'">Aimer</a>';
+                    $content .= '&nbsp;&nbsp;&nbsp;&nbsp;';
+                    $content .= '<a class="link-standard" href="leaveAppreciation-report-'.$comments[$i]->id().'">Signaler</a>';
+                    $content .= '</p>';
                 }
-                elseif($appreciationManager->AppreciationIsReport($_SESSION['id'], $comments[$i]->id()))
+                elseif(isset($_SESSION['id']) && !$commentManager->isUserTheCommentAuthor($_SESSION['id'], $comments[$i]->id()) && $appreciationManager->isAppreciationExist($_SESSION['id'], $comments[$i]->id()))
                 {
-                    $content .= '<p>Vous avez déjà signalé ce commentaire</p>';
+                    if($appreciationManager->AppreciationIsLike($_SESSION['id'], $comments[$i]->id()))
+                    {
+                        $content .= '<p>Vous avez déjà liké ce commentaire</p>';
+                    }
+                    elseif($appreciationManager->AppreciationIsReport($_SESSION['id'], $comments[$i]->id()))
+                    {
+                        $content .= '<p>Vous avez déjà signalé ce commentaire</p>';
+                    }
+                    $content .= '<p><a class="link-standard" href="leaveAppreciation-reset-'.$comments[$i]->id().'">Retirer votre appréciation</a></p>';
                 }
-                $content .= '<p><a class="link-standard" href="leaveAppreciation.php?appreciation=reset&id='.$comments[$i]->id().'">Retirer votre appréciation</a></p>';
+                elseif(isset($_SESSION['id']) && $commentManager->isUserTheCommentAuthor($_SESSION['id'], $comments[$i]->id()))
+                {
+                    $content .= '<p>Vous ne pouvez pas laisser d\'appreciation sur vos commentaires</p>';
+                }
+                else
+                {
+                    $content .= '<p><a class="link-standard" href="register">Inscrivez-vous</a> ou <a class="link-standard" href="login">connectez-vous</a> pour laisser une appreciation</p>';
+                }
             }
-            elseif(isset($_SESSION['id']) && $commentManager->isUserTheCommentAuthor($_SESSION['id'], $comments[$i]->id()))
-            {
-                $content .= '<p>Vous ne pouvez pas laisser d\'appreciation sur vos commentaires</p>';
-            }
-            else
-            {
-                $content .= '<p><a href="register.php">Inscrivez-vous</a> ou <a href="login.php">connectez-vous</a> pour laisser une appreciation</p>';
-            }
-
+            
             //Affichage likes / reports
             
             $content .= '<p class="comment-counts">';

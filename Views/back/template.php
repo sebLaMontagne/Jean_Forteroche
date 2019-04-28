@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <title><?= $title ?></title>
+        <link rel="icon" href="../../Ressources/img/favicon.jpg" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Libre+Baskerville" />
         <link rel="stylesheet" href="../../Ressources/css/styles.css" />
         <script src="../../Ressources/js/jQuery.js"></script>

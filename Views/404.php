@@ -6,7 +6,7 @@ try
     
     $title = 'Page inexistante';
     
-    $content = '<p>Cette page n\'exite pas</p>';
+    $content = '<p class="content filler">Cette page n\'exite pas</p>';
     
     require('front/template.php');
 }

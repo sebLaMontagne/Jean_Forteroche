@@ -9,7 +9,7 @@ try
     
     $posts = $postManager->getAllPublishedPosts();
     
-    $title = 'Liste des chapitres';
+    $title = 'Billet simple pour l\'Alaska - Liste des chapitres';
     $content = '<div class="content">';
     
     for($i = 0; $i < count($posts); $i++)

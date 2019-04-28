@@ -7,7 +7,7 @@ try
     $_SESSION['refresh'] = 1;
     unset($_SESSION['refresh']);
     
-    $title = 'confirmation du chapitre';
+    $title = 'Billet simple pour l\'Alaska - Validation d\'un chapitre';
     
     if(!isset($_SESSION['isAdmin']) || $_SESSION['isAdmin'] != '1')
     {

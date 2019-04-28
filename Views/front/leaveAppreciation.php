@@ -22,7 +22,7 @@ try
             }
 
             $commentManager = new CommentManager();
-            header('Location:chapter.php?chapter='.$commentManager->getChapterNumberByCommentId($_GET['id']));
+            header('Location:chapter-'.$commentManager->getChapterNumberByCommentId($_GET['id']));
             exit();
         }
         else
@@ -36,8 +36,6 @@ try
         header("location:javascript://history.go(-1)");
         exit();
     }
-    
-    require('template.php');
 }
 catch(Exception $e)
 {

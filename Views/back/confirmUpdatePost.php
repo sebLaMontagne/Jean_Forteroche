@@ -7,7 +7,7 @@ try
     $_SESSION['refresh'] = 1;
     unset($_SESSION['refresh']);
     
-    $title = 'confirmer la mise à jour';
+    $title = 'Billet simple pour l\'Alaska - Validation d\'un chapitre';
     
     if(!isset($_SESSION['isAdmin']) || $_SESSION['isAdmin'] != '1')
     {
@@ -22,7 +22,7 @@ try
 
         if(!isset($_POST['confirmation']))
         {
-            $content .= '<p>Ce chapitre existe déjà. Etes-vous sûr de vouloir l\'écraser ?</p>';
+            $content .= '<p style="text-align: center;">Ce chapitre existe déjà. Etes-vous sûr de vouloir l\'écraser ?</p>';
             $content .= '<form method="post" action="confirmUpdatePost">';
             $content .= '<div class="radios"><input type="radio" name="confirmation" value="yes" id="yes" /><label for="yes">Oui</label></div>';
             $content .= '<div class="radios"><input type="radio" name="confirmation" value="no" id="no" /><label for="no">Non</label></div>';
