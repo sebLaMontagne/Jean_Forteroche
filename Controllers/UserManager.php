@@ -151,7 +151,7 @@ class UserManager extends Manager
     public function renewActivationLink(User $user)
     {
         $q = $this->_db->prepare('UPDATE user SET user_token_expiration = CURTIME() + INTERVAL 1 DAY WHERE user_id = :id');
-        $q->bindValue(':token', $user->id());
+        $q->bindValue(':id', $user->id());
         $q->execute();
       
       	$header = "From: \"Jean Forteroche\"<jean.forteroche@jeanforteroche.fr>\n";
