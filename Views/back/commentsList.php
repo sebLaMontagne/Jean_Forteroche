@@ -23,7 +23,7 @@ try
 
         $content  = '<div class="content filler" style="text-align: center;">';
         $content .= '<p>Ici, vous pouvez supprimer des commentaires ou bannir des utilisateurs pour leur mauvais comportement et filtrer les commentaires en fonction de plusieurs critères</p>';
-        
+      
         $content .= '<div style="text-align: center;">';
         $content .= '<p>Trier les commentaires par : </p>';
         $content .= '<form action="filterComment" method="post">';
@@ -32,6 +32,7 @@ try
         $content .= '<option value="likes">nombre de likes</option>';
         $content .= '<option value="reports">nombre de reports</option>';
         $content .= '</select>';
+        $content .= '<input type="hidden" name="id" value="'.$_GET['id'].'" />';
         $content .= '<input class="filter-confirm" type="submit" value="Confirmer"/>';
         $content .= '</form>';
         $content .= '</div>';
@@ -104,7 +105,7 @@ try
             }    
         }
         
-        $content .= '<div>';
+        $content .= '</div>';
     }
     
     require('template.php');
