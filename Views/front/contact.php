@@ -27,15 +27,17 @@ try
         {
             $subject = 'Message concernant Billet simple pour l\'Alaska de '.$_SESSION['pseudo'];
             $from = '"'.$_SESSION['pseudo'].'"<'.$_SESSION['email'].'>';
+          	$reply = "Reply-to: \"".$_SESSION['pseudo']."\"<".$_SESSION['email'].">\n";
         }
         elseif(isset($_POST['name']) && isset($_POST['mail']))
         {
             $subject = 'Message concernant Billet simple pour l\'Alaska de '.$_POST['name'];
             $from = '"'.$_POST['name'].'"<'.$_POST['mail'].'>';
+          	$reply = "Reply-to: \"".$_POST['name']."\"<".$_POST['mail'].">\n";
         }
         
         $header = "From: ".$from."\n";
-        $header.= "Reply-to: \"Jean Forteroche\"<jean.forteroche@jeanforteroche.fr>\n";
+      	$header.= "Reply-to:".$reply;
         $header.= "MIME-Version: 1.0\n";
         $header.= "Content-Type: text/plain;";
         
