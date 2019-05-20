@@ -252,6 +252,15 @@ class PostManager extends Manager
         return $q->fetch();
     }
     
+  	public function isChapterDrafted($chapter)
+    {
+      	$q = $this->_db->prepare('SELECT * FROM post WHERE post_chapter_number = :chapter AND post_isPublished = 0');
+        $q->bindValue(':chapter', htmlspecialchars($chapter));
+        $q->execute();
+
+        return $q->fetch();
+    }
+  
     public function savePost($chapter, $title, $content, $publish)
     {
         $q = $this->_db->prepare('
@@ -269,7 +278,7 @@ class PostManager extends Manager
             :publish)');
 
         $q->bindValue(':title', htmlspecialchars($title));
-        $q->bindValue(':chapter', intval($chapter));
+        $q->bindValue(':chapter', $chapter);
         $q->bindValue(':content', htmlspecialchars($content));
         $q->bindValue(':publish', intval($publish));
 

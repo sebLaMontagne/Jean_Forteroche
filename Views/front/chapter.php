@@ -5,14 +5,14 @@ try
     require_once('../autoloader.php');
     
     $title = 'Billet Simple pour l\'Alaska - Lecture';
-    $content = '<div class="content" style="text-align: center;">';
+    $content = '<div class="content filler" style="text-align: center;">';
 
     $postManager = new PostManager();
     $userManager = new UserManager();
     $commentManager = new CommentManager();
     $appreciationManager = new AppreciationManager();
 
-    if(isset($_GET) && !empty($_GET['chapter']) && $postManager->isChapterExist($_GET['chapter']))
+    if(isset($_GET) && !empty($_GET['chapter']) && $postManager->isChapterExist($_GET['chapter']) && !$postManager->isChapterDrafted($_GET['chapter']))
     {
         $selectedPost = $postManager->getPost($_GET['chapter']);
         $postDate = new DateTime($selectedPost->Date());
