@@ -38,7 +38,7 @@ try
             $content .= '<p style="text-align: center;"><label for="chapterNumber">Chapitre n° </label><input type="number" name="chapterNumber" min="1" id="chapterNumber" required /> : <input id="title" type="text" name="title" placeholder="Titre" required /></p>';
             $content .= '<textarea class="tinyMCE" name="content"></textarea>';
             $content .= '<div class="radios"><input type="radio" id="publish" name="publish" value="1" required /><label for="publish">Publier</label></div>';
-            $content .= '<div class="radios"><input type="radio" id="draft" name="publish" value="0" required /><label for="draft">Brouillon</label></div>';
+            $content .= '<div class="radios"><input type="radio" id="draft" name="publish" value="0" required checked /><label for="draft">Brouillon</label></div>';
             $content .= '<input type="submit" value="sauvegarder" />';
             $content .= '</form>';
         }
