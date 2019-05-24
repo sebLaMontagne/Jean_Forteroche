@@ -46,6 +46,7 @@ try
                 $_SESSION['data']['chapterNumber'] = $_POST['chapterNumber'];
                 $_SESSION['data']['title'] = $_POST['title'];
                 $_SESSION['data']['content'] = $_POST['content'];
+              	$_SESSION['data']['publish'] = $_POST['publish'];
                 header('location:newPost');
                 exit();
             }
