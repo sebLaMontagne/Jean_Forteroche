@@ -4,7 +4,6 @@ try
 {
     require_once('../autoloader.php');
     
-    $title = 'Billet Simple pour l\'Alaska - Lecture';
     $content = '<div class="content filler" style="text-align: center;">';
 
     $postManager = new PostManager();
@@ -17,6 +16,8 @@ try
         $selectedPost = $postManager->getPost($_GET['chapter']);
         $postDate = new DateTime($selectedPost->Date());
         $comments = $commentManager->getPostComments($selectedPost);
+      
+      	$title = 'Billet Simple pour l\'Alaska - Chapitre '.$selectedPost->chapterNumber().' : '.$selectedPost->Title();
 
         $content .= '<div class="chapter">';
         $content .= '<h3>Chapitre '.$selectedPost->chapterNumber().' : '.$selectedPost->Title().'</h3>';
