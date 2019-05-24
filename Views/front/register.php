@@ -13,11 +13,17 @@ try
         $title = 'Billet simple pour l\'Alaska - Accueil';
         $content = '<div class="content filler">';
 
-        if(!empty($_GET['mail']))
+      	$userManager = new UserManager();
+      
+      	if(!empty($_POST['name']) && !empty($_POST['email']) && $userManager->isUsernameFree($_POST['name']) && $userManager->isEmailFree($_POST['email']))
+        {
+        	$content .= '<form style="display: none">';
+        }
+        elseif(!empty($_GET['mail']))
         {
             $content .= '<form method="post" action="register-'.$_GET['mail'].'" id="register-form">';
         }
-        else
+        elseif(empty($_GET['mail']))
         {
             $content .= '<form method="post" action="register" id="register-form">';
         }
@@ -53,8 +59,6 @@ try
         }
 
         $content .= '</form>';
-
-        $userManager = new UserManager();
 
         if(!empty($_POST) && empty($_GET))
         {   
