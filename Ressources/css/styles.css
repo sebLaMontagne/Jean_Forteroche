@@ -126,6 +126,10 @@ select{
     width: 150px;
 }
 
+#register-form{
+	background: floralwhite;
+    padding: 20px;
+}
 /*--------------------------------------------------------------------------------------*/
 /* STYLE DU CONTENU */
 /*--------------------------------------------------------------------------------------*/
@@ -136,13 +140,14 @@ select{
 }
 .content{
     width: 60%;
-    margin: 50px auto 0;
+    margin: 100px auto 0;
     text-align: justify;
     font-size: 1.2em;
 }
     @media screen and (max-width: 1200px){
         .content{
             width: 90%;
+          	margin: 50px auto 0;
         }
     }
     @media screen and (max-width: 550px){
@@ -160,7 +165,14 @@ select{
 }
     .redirection a{
         color:#1E392A;
-        padding:6px 0 6px 0;
+		background-color: #eeeeee; /* Old browsers */
+		background-color: -moz-linear-gradient(top,  #eeeeee 0%, #cccccc 100%); /* FF3.6-15 */
+		background-color: -webkit-linear-gradient(top,  #eeeeee 0%,#cccccc 100%); /* Chrome10-25,Safari5.1-6 */
+		background-color: linear-gradient(to bottom,  #eeeeee 0%,#cccccc 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#cccccc',GradientType=0 ); /* IE6-9 */
+
+
+        padding: 12px 10px;
         font-weight: bold;
     }
     @media screen and (max-width: 850px){
@@ -172,9 +184,28 @@ select{
     }
     .redirection a:hover{
         color: #76323F;
-        transition: color 0.5s;
+      	background-color: #b0d4e3; /* Old browsers */
+        background-color: -moz-linear-gradient(top,  #b0d4e3 0%, #88bacf 100%); /* FF3.6-15 */
+        background-color: -webkit-linear-gradient(top,  #b0d4e3 0%,#88bacf 100%); /* Chrome10-25,Safari5.1-6 */
+        background-color: linear-gradient(to bottom,  #b0d4e3 0%,#88bacf 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b0d4e3', endColorstr='#88bacf',GradientType=0 ); /* IE6-9 */
+      	transition: color 0.5s, background-color 0.5s;
     }
     
+.img-container{
+  	text-align: center;
+}
+
+@media screen and (max-width: 768px){
+  	img{
+      	transform: scale(0.8);
+  	}
+}
+@media screen and (max-width: 550px){
+  	img{
+      	transform: scale(0.5);
+  	}
+}
 
 .chapter-icon{
     border: 1px solid black;
@@ -232,7 +263,14 @@ select{
     padding-bottom: 10px;
 }
 
-
+.container{
+    display: flex;
+    justify-content: space-around;
+}
+    .container img:hover{
+        transform: scale(1.1);
+        transition: transform 0.5s;
+    }
 
 
 

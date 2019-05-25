@@ -7,7 +7,8 @@ try
     $title = 'Billet simple pour l\'Alaska - Accueil';
     
     $content  = '<div class="content filler">';
-    $content .= '<p style="text-align: center;">Qu\'est ce que billet simple pour l\'Alaska ?</p>';
+    $content .= '<h2>Qu\'est ce que billet simple pour l\'Alaska ?</h2>';
+  	$content .= '<hr />';
     $content .= '<p>Billet simple pour l\'alaska est un roman publié en ligne et dans lequel votre serviteur vous présentera les aventures de Jean Martin de manière épisodique.</p>';
     $content .= '<div class="redirection">';
     $content .= '<a href="chapter-1">Lire le premier chapitre</a>';

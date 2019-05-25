@@ -22,12 +22,30 @@ try
 
         $content  = '<div class="content filler">';
         $content .= '<p>Bienvenue sur le panneau d\'administration du site. Depuis cette section, vous pouvez rédiger des chapitres, gérer les commentaires et les utilisateurs</p>';
-        $content .= '<p>Il y a actuellement : </p>';
-        $content .= '<ul>';
-        $content .= '<li>'.$postManager->getAllChaptersCount().' chapitres dont '.$postManager->getPublicChaptersCount().' publics et '.$postManager->getDraftChaptersCount().' brouillons &rarr; <a class="link-standard" href="chaptersList">Gérer les chapitres</a></li>';
-        $content .= '<li>'.$userManager->getAllUsersCount().' utilisateurs dont '.$userManager->getAdminUsersCount().' administrateurs, '.$userManager->getNormalUsersCount().' utilisateurs et '.$userManager->getBannedUsersCount().' bannis &rarr; <a class="link-standard" href="usersList-all">Gérer les utilisateurs</a></li>';
-        $content .= '<li>'.$commentManager->getAllCommentsCount().' commentaires &rarr; <a class="link-standard" href="commentsList-reports">Gérer les commentaires</a></li>';
-        $content .= '</ul>';
+      	$content .= '<p style="text-align: center;">Il y a actuellement : </p>';
+        $content .= '<div class="container">';
+      	$content .= '<div>';
+        $content .= '<a href="chaptersList"><img src="../../Ressources/img/chapters.png" /></a>';
+      	$content .= '<ul>';
+      	$content .= '<li>'.$postManager->getPublicChaptersCount().' chapitres publics </li>';
+        $content .= '<li>'.$postManager->getDraftChaptersCount().' brouillons </li>';
+      	$content .= '</ul>';
+      	$content .= '</div>';
+      	$content .= '<div>';
+        $content .= '<a href="commentsList-reports"><img src="../../Ressources/img/comments.png" /></a>';
+      	$content .= '<ul>';
+      	$content .= '<li>'.$commentManager->getAllCommentsCount().' commentaires</li>';
+      	$content .= '</ul>';
+      	$content .= '</div>';
+      	$content .= '<div>';
+        $content .= '<a href="usersList-all"><img src="../../Ressources/img/users.png" /></a>';
+      	$content .= '<ul>';
+      	$content .= '<li>'.$userManager->getAdminUsersCount().' administrateurs</li>';
+      	$content .= '<li>'.$userManager->getNormalUsersCount().' utilisateurs</li>';
+      	$content .= '<li>'.$userManager->getBannedUsersCount().' bannis</li>';
+      	$content .= '</ul>';
+      	$content .= '</div>';
+        $content .= '</div>';
         $content .= '</div>';
     }
     

@@ -8,7 +8,7 @@ try
     
     $content  = '<div class="content filler">';
     $content .= '<p style="text-align: center;">Vous pouvez me contacter en utilisant le formulaire çi-dessous :</p>';
-    $content .= '<form method="post" action="contact">';
+    $content .= '<form id="register-form" method="post" action="contact">';
 
     if(!isset($_SESSION['pseudo']) && !isset($_SESSION['email']))
     {
