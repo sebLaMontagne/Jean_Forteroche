@@ -45,7 +45,7 @@ nav{
     font-weight: bold;
 }
 nav a{
-        max-width: 100px;
+        max-width: 200px;
         text-align: center;
 }
     @media screen and (max-width: 550px)
@@ -74,6 +74,7 @@ nav a{
     }
 .welcome{
     text-align: center;
+  	margin-top: 0;
 }
 .username{
     color: #76323F;
