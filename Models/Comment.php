@@ -4,7 +4,11 @@ class Comment
 {
     private $_id;
     private $_postId;
+    private $_chapterNumber;
     private $_userId;
+    private $_authorName;
+    private $_authorIsBanned;
+    private $_authorIsAdmin;
     private $_content;
     private $_date;
     private $_likes;
@@ -14,13 +18,17 @@ class Comment
     // GETTERS
     //--------------------------------------------------------------------
     
-    public function id()        { return $this->_id; }
-    public function postId()    { return $this->_postId; }
-    public function userId()    { return $this->_userId; }
-    public function content()   { return $this->_content; }
-    public function date()      { return $this->_date; }
-    public function likes()     { return $this->_likes; }
-    public function reports()   { return $this->_reports; }
+    public function id()            { return $this->_id; }
+    public function postId()        { return $this->_postId; }
+    public function chapterNumber() { return $this->_chapterNumber; }
+    public function userId()        { return $this->_userId; }
+    public function authorName()    { return $this->_authorName; }
+    public function authorIsBanned(){ return $this->_authorIsBanned; }
+    public function authorIsAdmin() { return $this->_authorIsAdmin; }
+    public function content()       { return $this->_content; }
+    public function date()          { return $this->_date; }
+    public function likes()         { return $this->_likes; }
+    public function reports()       { return $this->_reports; }
     
     //--------------------------------------------------------------------
     // SETTERS
@@ -86,6 +94,53 @@ class Comment
         }
     }
     
+    public function setAuthorName($authorName)
+    {
+        if(is_string($authorName))
+        {
+            $this->_authorName = htmlspecialchars($authorName);
+        }
+        else
+        {
+            throw new Exception('The author name must be a string value');
+        }
+    }
+    
+    public function setChapterNumber($chapterNumber)
+    {
+        if(intval($chapterNumber) > 0)
+        {
+            $this->_chapterNumber = $chapterNumber;
+        }
+        else
+        {
+            throw new Exception('The chapterNumber must be a strictly positive integer value');
+        }
+    }
+    
+    public function setAuthorIsBanned($authorIsBanned)
+    {   
+        if($authorIsBanned == true || $authorIsBanned == false)
+        {
+            $this->_authorIsBanned = $authorIsBanned;
+        }
+        else
+        {
+            throw new Exception('The authorIsBanned attribute must be a boolean value');
+        }
+    }
+    
+    public function setAuthorIsAdmin($authorIsAdmin)
+    {
+        if($authorIsAdmin == 1 || $authorIsAdmin == 0)
+        {
+            $this->_authorIsAdmin = $authorIsAdmin;
+        }
+        else
+        {
+            throw new Exception('The authorIsAdmin attribute must be a boolean value');
+        }
+    }
     //--------------------------------------------------------------------
     // ABOUT CONSTRUCTOR
     //--------------------------------------------------------------------

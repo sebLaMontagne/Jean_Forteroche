@@ -4,12 +4,16 @@ require_once('Manager.php');
 class CommentManager extends Manager
 {
     private function refineAnswer($brutAnswer)
-    {
-        $refinedAnswer['id']        = (int) $brutAnswer['comment_id'];
-        $refinedAnswer['postId']    = (int) $brutAnswer['post_id'];
-        $refinedAnswer['userId']    = (int) $brutAnswer['user_id'];
-        $refinedAnswer['content']   =       $brutAnswer['comment_content'];
-        $refinedAnswer['date']      =       $brutAnswer['comment_date'];
+    {   
+        if(isset($brutAnswer['comment_id']))            { $refinedAnswer['id']              = $brutAnswer['comment_id']; }
+        if(isset($brutAnswer['post_id']))               { $refinedAnswer['postId']          = $brutAnswer['post_id']; } 
+        if(isset($brutAnswer['post_chapter_number']))   { $refinedAnswer['chapterNumber']   = $brutAnswer['post_chapter_number']; }
+        if(isset($brutAnswer['user_id']))               { $refinedAnswer['userId']          = $brutAnswer['user_id']; }
+        if(isset($brutAnswer['user_name']))             { $refinedAnswer['authorName']      = $brutAnswer['user_name']; }
+        if(isset($brutAnswer['user_isBanned']))         { $refinedAnswer['authorIsBanned']  = $brutAnswer['user_isBanned']; }
+        if(isset($brutAnswer['user_isAdmin']))          { $refinedAnswer['authorIsAdmin']   = $brutAnswer['user_isAdmin']; }
+        if(isset($brutAnswer['comment_content']))       { $refinedAnswer['content']         = $brutAnswer['comment_content']; }
+        if(isset($brutAnswer['comment_date']))          { $refinedAnswer['date']            = $brutAnswer['comment_date']; }
         
         return $refinedAnswer;
     }
@@ -60,7 +64,13 @@ class CommentManager extends Manager
     
     public function getPostComments(Post $post)
     {
-        $q = $this->_db->prepare('SELECT * FROM comment WHERE post_id = :postId');
+        $q = $this->_db->prepare('
+            SELECT comment.*, user.user_name
+            FROM comment
+            INNER JOIN user
+            ON comment.user_id = user.user_id
+            WHERE comment.post_id = :postId');
+        
         $q->bindValue(':postId', $post->id());
         $q->execute();
         
@@ -82,8 +92,14 @@ class CommentManager extends Manager
     {
         if(is_string($filter))
         {
-            $q = $this->_db->query('SELECT * FROM comment');
-        
+            $q = $this->_db->query('
+            SELECT comment.*, user.user_name, user.user_isBanned, user.user_isAdmin, post.post_chapter_number
+            FROM comment
+            INNER JOIN user
+            ON comment.user_id = user.user_id
+            INNER JOIN post
+            ON comment.post_id = post.post_id');
+            
             $list = [];
             while($brutAnswer = $q->fetch())
             {
@@ -120,7 +136,14 @@ class CommentManager extends Manager
     {
         if(intval($id > 0) && is_string($filter))
         {
-            $q = $this->_db->prepare('SELECT * FROM comment WHERE user_id = :id');
+            $q = $this->_db->prepare('SELECT comment.*, user.user_name, user.user_isBanned, user.user_isAdmin, post.post_chapter_number
+            FROM comment
+            INNER JOIN user
+            ON comment.user_id = user.user_id
+            INNER JOIN post
+            ON comment.post_id = post.post_id
+            WHERE user.user_id = :id');
+            
             $q->bindValue(':id', $id);
             $q->execute();
         

@@ -1,129 +1,97 @@
-<?php
+<?php $appreciationManager = new AppreciationManager() ?>
 
-try
-{
-    require_once('../autoloader.php');
+<div style="text-align: center">
+    <div class="chapter">
+        <h3>Chapitre <?= $selectedPost->chapterNumber() ?> : <?= $selectedPost->Title() ?></h3>
+        <hr />
+        <div class="chapter-content"><?= $postContent ?></div>
+        <hr />
+        <p>Publié le <?= $postDate->format('d/m/Y à H:i:s') ?></p>
+    </div>
+
+    <p class="chapter-links"> 
+        <?php if($isPreviousChapterExists) : ?>
+        <a href="index.php?action=chapter&number=<?= $selectedPost->chapterNumber() - 1 ?>">&larr; Précédent</a>
+        <?php endif ?>
+
+        <?php if($isNextChapterExists) : ?>
+        <a href="index.php?action=chapter&number=<?= $selectedPost->chapterNumber() + 1 ?>"> Suivant &rarr;</a>
+        <?php endif ?>
+    </p>
+
+    <!--Formulaire commentaire-->
+
+    <?php if(!empty($_SESSION['pseudo'])) : ?>
+
+    <form method="post" action="index.php?action=chapter&number=<?= $selectedPost->chapterNumber() ?>">
+        <textarea placeholder="Laissez-nous un commentaire" name="comment"></textarea>
+        <input type="submit" value="commenter" />
+    </form>
+
+    <?php else : ?>
     
-    $content = '<div class="content filler" style="text-align: center;">';
-
-    $postManager = new PostManager();
-    $userManager = new UserManager();
-    $commentManager = new CommentManager();
-    $appreciationManager = new AppreciationManager();
-
-    if(isset($_GET) && !empty($_GET['chapter']) && $postManager->isChapterExist($_GET['chapter']) && !$postManager->isChapterDrafted($_GET['chapter']))
-    {
-        $selectedPost = $postManager->getPost($_GET['chapter']);
-        $postDate = new DateTime($selectedPost->Date());
-        $comments = $commentManager->getPostComments($selectedPost);
-      
-      	$title = 'Billet Simple pour l\'Alaska - Chapitre '.$selectedPost->chapterNumber().' : '.$selectedPost->Title();
-
-        $content .= '<div class="chapter">';
-        $content .= '<h3>Chapitre '.$selectedPost->chapterNumber().' : '.$selectedPost->Title().'</h3>';
-        $content .= '<hr />';
-        $content .= '<div class="chapter-content">'.$postManager->decode($selectedPost->Content()).'</div>';
-        $content .= '<hr />';
-        $content .= '<p>Publié le '.$postDate->format('d/m/Y à H:i:s').'</p>';
-        $content .= '</div>';
-        
-        $content .= '<p class="chapter-links">';
-        if($postManager->isChapterExist($postManager->getPreviousChapterNumber($_GET['chapter'])))
-        {
-            $content .= '<a href="chapter-'.$postManager->getPreviousChapterNumber($_GET['chapter']).'">&larr; Précédent</a>';
-        }
-
-        if($postManager->isChapterExist($postManager->getNextChapterNumber($_GET['chapter'])))
-        {
-            $content .= '<a href="chapter-'.$postManager->getNextChapterNumber($_GET['chapter']).'">   Suivant &rarr;</a>';
-        }
-        $content .= '</p>';
-
-        //Formulaire commentaire
-
-        if(!empty($_SESSION['pseudo']))
-        {
-            $content .= '<form method="post" action="chapter-'.$_GET['chapter'].'">';
-            $content .= '<textarea placeholder="Laissez-nous un commentaire" name="comment"></textarea>';
-            $content .= '<input type="submit" value="commenter" />';
-            $content .= '</form>';
-        }
-        else
-        {
-            $content .= '<p><a class="link-standard" href="register">Inscrivez-vous</a> ou <a class="link-standard" href="login">connectez-vous</a> pour nous laisser un commentaire :)</p>';
-        }
-
-        $content .= '<p class="limiter">Commentaires :</p>';
-
-        //Enregistrement commentaire
-
-        if(!empty($_POST['comment']))
-        {   
-            $commentManager->saveComment($selectedPost->id(), $_SESSION['id'], $_POST['comment']);
-            header('Location: chapter-'.$_GET['chapter']);
-            exit();
-        }
-
-        //Affichage commentaires
-
-        for($i=0; $i < count($comments); $i++)
-        {
-            $commentDate = new DateTime($comments[$i]->date());
-            $commentAuthor = $userManager->getUserById($comments[$i]->userId());
-
-            if($commentAuthor != null)
-            {
-                $content .= '<div class="comment">';
-                $content .= '<p class="comment-description"><span class="comment-author">'.$commentAuthor->name().'</span> <span class="comment-date">a écrit le '.$commentDate->format('d/m/Y à H:i:s').' :</span></p>'; 
-                $content .= '<p class="comment-content">'.$comments[$i]->content().'</p>';
-
-                if(isset($_SESSION['id']) && !$commentManager->isUserTheCommentAuthor($_SESSION['id'], $comments[$i]->id()) && !$appreciationManager->isAppreciationExist($_SESSION['id'], $comments[$i]->id()))
-                {
-                    $content .= '<p>';
-                    $content .= '<a class="link-standard" href="leaveAppreciation-like-'.$comments[$i]->id().'">Aimer</a>';
-                    $content .= '&nbsp;&nbsp;&nbsp;&nbsp;';
-                    $content .= '<a class="link-standard" href="leaveAppreciation-report-'.$comments[$i]->id().'">Signaler</a>';
-                    $content .= '</p>';
-                }
-                elseif(isset($_SESSION['id']) && !$commentManager->isUserTheCommentAuthor($_SESSION['id'], $comments[$i]->id()) && $appreciationManager->isAppreciationExist($_SESSION['id'], $comments[$i]->id()))
-                {
-                    if($appreciationManager->AppreciationIsLike($_SESSION['id'], $comments[$i]->id()))
-                    {
-                        $content .= '<p>Vous avez déjà liké ce commentaire</p>';
-                    }
-                    elseif($appreciationManager->AppreciationIsReport($_SESSION['id'], $comments[$i]->id()))
-                    {
-                        $content .= '<p>Vous avez déjà signalé ce commentaire</p>';
-                    }
-                    $content .= '<p><a class="link-standard" href="leaveAppreciation-reset-'.$comments[$i]->id().'">Retirer votre appréciation</a></p>';
-                }
-                elseif(isset($_SESSION['id']) && $commentManager->isUserTheCommentAuthor($_SESSION['id'], $comments[$i]->id()))
-                {
-                    $content .= '<p>Vous ne pouvez pas laisser d\'appreciation sur vos commentaires</p>';
-                }
-                else
-                {
-                    $content .= '<p><a class="link-standard" href="register">Inscrivez-vous</a> ou <a class="link-standard" href="login">connectez-vous</a> pour laisser une appreciation</p>';
-                }
-            }
-            
-            //Affichage likes / reports
-            
-            $content .= '<p class="comment-counts">';
-            $content .= '<span>'.$comments[$i]->likes().' likes</span>';
-            $content .= '<span>'.$comments[$i]->reports().' reports</span>';
-            $content .= '</p>';
-            $content .= '</div>';
-        }
-    }
-    else
-    {
-        $content .= '<p>Ce chapitre n\'existe pas</p>';
-    }
+    <p><a class="link-standard" href="index.php?action=register">Inscrivez-vous</a> ou <a class="link-standard" href="index.php?action=login">connectez-vous</a> pour nous laisser un commentaire :)</p>
     
-    require('template.php');
-}
-catch(Exception $e)
-{
-    echo 'Erreur : '.$e->getMessage();
-}
+    <?php endif ?>
+
+    <p class="limiter">Commentaires :</p>
+
+    <!--Affichage commentaires-->
+
+    <?php foreach($comments as $comment) :
+
+        $commentDate = new DateTime($comment->date());
+        $commentAuthor = $comment->authorName();
+
+        if($commentAuthor != null) : ?>
+
+            <div class="comment">
+                <p class="comment-description"><span class="comment-author"><?= $commentAuthor ?></span> <span class="comment-date">a écrit le <?= $commentDate->format('d/m/Y à H:i:s') ?> :</span></p>
+                <p class="comment-content"><?= $comment->content() ?></p>
+
+            <?php if(isset($_SESSION['id']) && $comment->userId() != $_SESSION['id'] && !$appreciationManager->isAppreciationExist($_SESSION['id'], $comment->id())) : ?>
+            
+                <p>
+                    <a class="link-standard" href="index.php?action=leaveAppreciation&type=like&target=<?= $comment->id() ?>">Aimer</a>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <a class="link-standard" href="index.php?action=leaveAppreciation&type=report&target=<?= $comment->id() ?>">Signaler</a>
+                </p>
+            
+                <!--Where we stopped-->
+                
+            <?php elseif(isset($_SESSION['id']) && !$comment->userId() != $_SESSION['id'] && $appreciationManager->isAppreciationExist($_SESSION['id'], $comment->id())) : ?>
+            
+                <?php if($appreciationManager->AppreciationIsLike($_SESSION['id'], $comment->id())) : ?>
+                
+                    <p>Vous avez déjà liké ce commentaire</p>
+                
+                <?php elseif($appreciationManager->AppreciationIsReport($_SESSION['id'], $comment->id())) : ?>
+                
+                    <p>Vous avez déjà signalé ce commentaire</p>
+                
+                <?php endif ?>
+                
+                <p><a class="link-standard" href="index.php?action=leaveAppreciation&type=reset&target=<?=$comment->id() ?>">Retirer votre appréciation</a></p>
+            
+            <?php elseif(isset($_SESSION['id']) && $_SESSION['id'] == $comment->userId()) : ?>
+            
+                <p>Vous ne pouvez pas laisser d'appreciation sur vos commentaires</p>
+            
+            <?php else : ?>
+            
+                <p><a class="link-standard" href="register">Inscrivez-vous</a> ou <a class="link-standard" href="login">connectez-vous</a> pour laisser une appreciation</p>
+            
+            <?php endif ?>
+
+        <?php endif ?>
+
+            <!--Affichage likes / reports-->
+
+            <p class="comment-counts">
+                <span><?= $comment->likes() ?> likes</span>
+                <span><?= $comment->reports() ?> reports</span>
+            </p>
+        </div>
+
+    <?php endforeach ?>
+</div>

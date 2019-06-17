@@ -1,121 +1,80 @@
-<?php
-try
-{
-  	require_once('../autoloader.php');
-  
-  	if(!empty($_SESSION['pseudo']))
-    {
-      	header('location:home');
-      	exit();
-    }
-  	else
-    {
-        $title = 'Billet simple pour l\'Alaska - Accueil';
-        $content = '<div class="content filler">';
+<!--Formulaire-->
 
-      	$userManager = new UserManager();
-      
-      	if(!empty($_POST['name']) && !empty($_POST['email']) && $userManager->isUsernameFree($_POST['name']) && $userManager->isEmailFree($_POST['email']))
-        {
-        	$content .= '<form style="display: none">';
-        }
-        elseif(!empty($_GET['mail']))
-        {
-            $content .= '<form method="post" action="register-'.$_GET['mail'].'" id="register-form">';
-        }
-        elseif(empty($_GET['mail']))
-        {
-            $content .= '<form method="post" action="register" id="register-form">';
-        }
+<?php if(!empty($_POST['name']) && !empty($_POST['email']) && $isUserNameFree && $isEmailFree) : ?>
 
-        $content .= '<label for="pseudo"></label><input type="text" name="name" id="pseudo" placeholder="Entrez votre pseudonyme" required />';
-        $content .= '<div id="username-feedback">';
-        $content .= '<p id="username-length">*Le pseudo doit contenir au moins 6 caractères</p>';
-        $content .= '</div>';
+<form style="display: none">
 
-        if(empty($_GET['mail']))
-        {
-            $content .= '<label for="email"></label><input type="email" name="email" id="email" placeholder="Entrez votre email" required />';
-        }
+<?php elseif(!empty($_GET['mail'])) : ?>
 
-        $content .= '<label for="password"></label><input type="password" name="password" id="password" placeholder="Entrez votre mot de passe" required />';
-        $content .= '<label for="password-confirm"></label><input type="password" name="password-confirm" id="password-confirm" placeholder="Confirmez votre mot de passe" required />';
+<form method="post" action="index.php?action=register&mail=<?= $_GET['mail'] ?>" id="register-form">
 
-        $content .= '<div class="password-feedback">';
-        $content .= '<p id="password-lowercase">*Le mot de passe doit contenir au moins un caractère minuscule</p>';
-        $content .= '<p id="password-uppercase">*Le mot de passe doit contenir au moins un caractère majuscule</p>';
-        $content .= '<p id="password-number">*Le mot de passe doit contenir au moins un chiffre</p>';
-        $content .= '<p id="password-length">*Le mot de passe doit contenir au moins 8 caractères</p>';
-        $content .= '<p id="password-repeat">*Les deux mots de passe doivent être identiques</p>';
-        $content .= '</div>';
+<?php elseif(empty($_GET['mail'])) : ?>
 
-        if(!empty($_GET['mail']))
-        {
-            $content .= '<input type="submit" value="mettre à jour" id="confirm" />';
-        }
-        else
-        {
-            $content .= '<input type="submit" value="confirmer l\'inscription" id="confirm" />';
-        }
+<form method="post" action="index.php?action=register" id="register-form">
 
-        $content .= '</form>';
+<?php endif ?>
 
-        if(!empty($_POST) && empty($_GET))
-        {   
-            if($userManager->isUsernameFree($_POST['name']))
-            {
-                $content .= '<p style="text-align: center;">Pseudo valide</p>';
-            }
-            else
-            {
-                $content .= '<p style="text-align: center;">Le pseudo est déjà pris en base de données</p>';
-            }
+    <label for="pseudo"></label><input type="text" name="name" id="pseudo" placeholder="Entrez votre pseudonyme" required />
+    <div id="username-feedback">
+        <p id="username-length">*Le pseudo doit contenir au moins 6 caractères</p>
+    </div>
 
-            if($userManager->isEmailFree($_POST['email']))
-            {
-                $content .= '<p style="text-align: center;">Email valide</p>';
-            }
-            else
-            {
-                $content .= '<p style="text-align: center;">L\'email est déjà pris en base de données</p>';
-            }
+<?php if(empty($_GET['mail'])) : ?>
 
-            if($userManager->isUsernameFree($_POST['name']) && $userManager->isEmailFree($_POST['email']))
-            {
-                $content .= '<p style="text-align: center;">Inscription valide</p>';
-                $content .= '<p style="text-align: center;">Un email de confirmation va vous être envoyé</p>';
-                $userManager->addUser($_POST['name'], $_POST['password'], $_POST['email']);
-            }
-            else
-            {
-                $content .= '<p style="text-align: center;">Inscription invalide</p>';
-            }
-        }
+    <label for="email"></label><input type="email" name="email" id="email" placeholder="Entrez votre email" required />
+    
+<?php endif ?>
 
-        if(!empty($_GET) && !empty($_POST) && isset($_GET['mail']))
-        {
-            if(filter_var($_GET['mail'], FILTER_VALIDATE_EMAIL))
-            {
-                $user = $userManager->getUserByEmail($_GET['mail']);
+    <label for="password"></label><input type="password" name="password" id="password" placeholder="Entrez votre mot de passe" required />
+    <label for="password-confirm"></label><input type="password" name="password-confirm" id="password-confirm" placeholder="Confirmez votre mot de passe" required />
 
-                if($user != null)
-                {
-                    $userManager->updateUserLogins($user, $_POST['name'], $_POST['password']);
-                    $content .= '<p style="text-align: center;">votre compte a été mis à jour</p>';
-                }
-                else
-                {
-                    $content .= '<p style="text-align: center;">L\'email ne correspond à aucun utilisateur</p>';
-                }
-            }
-        }
+    <div class="password-feedback">
+        <p id="password-lowercase">*Le mot de passe doit contenir au moins un caractère minuscule</p>
+        <p id="password-uppercase">*Le mot de passe doit contenir au moins un caractère majuscule</p>
+        <p id="password-number">*Le mot de passe doit contenir au moins un chiffre</p>
+        <p id="password-length">*Le mot de passe doit contenir au moins 8 caractères</p>
+        <p id="password-repeat">*Les deux mots de passe doivent être identiques</p>
+    </div>
 
-        $content .= '</div>';
-        $content .= '<script src="../../Ressources/js/register-form.js"></script>';
-        require('template.php');
-    }
-}
-catch(Exception $e)
-{
-    echo 'Erreur : '.$e->getMessage();
-}    
+<?php if(!empty($_GET['mail'])) : ?>
+
+    <input type="submit" value="mettre à jour" id="confirm" />
+
+<?php else : ?>
+
+    <input type="submit" value="confirmer l'inscription" id="confirm" />
+    
+<?php endif ?>
+
+</form>
+
+<!--Inscription feedback-->
+
+<?php if(!empty($_POST) && empty($_GET['mail'])) : ?> 
+
+<div style="text-align: center">
+    
+    <?php if($isUserNameFree) : ?>                  <p>Pseudo valide</p>                                                            <?php else : ?>     <p>Le pseudo est déjà pris en base de données</p>   <?php endif ?>
+    <?php if($isEmailFree) : ?>                     <p>Email valide</p>                                                             <?php else : ?>     <p>L'email est déjà pris en base de données</p>     <?php endif ?>
+    <?php if($isUserNameFree && $isEmailFree) : ?>  <p>Inscription valide</p><p>Un email de confirmation va vous être envoyé</p>    <?php else : ?>     <p>Inscription invalide</p>                         <?php endif ?>
+    
+<?php endif ?>
+
+<?php if(!empty($_GET) && !empty($_POST) && isset($_GET['mail'])) : ?>
+    
+    <?php if(filter_var($_GET['mail'], FILTER_VALIDATE_EMAIL)) : ?>
+
+        <?php if($user != null) : ?>
+        
+    <p>votre compte a été mis à jour</p>
+        
+        <?php else : ?>
+        
+    <p>L'email ne correspond à aucun utilisateur</p>
+    
+        <?php endif ?>
+    <?php endif ?>
+<?php endif ?>
+
+</div>
+<script src="Ressources/js/register-form.js"></script>

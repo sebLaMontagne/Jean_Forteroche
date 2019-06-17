@@ -1,44 +1,18 @@
-<?php
+<form method="post" action="index.php?action=reset">
+    <label for="email"></label><input id="email" type="email" name="email" placeholder="Veuillez entrer votre email" required />
+    <input type="submit" value="Réinitialiser" />
+</form>
 
-try
-{
-    require_once('../autoloader.php');
+<?php if(!empty($_POST)) : ?>
+
+    <?php if($user == null) : ?>
     
-    $title = 'Réinitialisation du compte';
+        <p>Email inexistant</p>
     
-    $content  = '<div class="content filler">';
-    $content .= '<form method="post" action="reset">';
-    $content .= '<label for="email"></label><input id="email" type="email" name="email" placeholder="Veuillez entrer votre email" required />';
-    $content .= '<input type="submit" value="Réinitialiser" />';
-    $content .= '</form>';
-
-    if(!empty($_POST))
-    { 
-        $userManager = new UserManager();
-        $user = $userManager->getUserByEmail($_POST['email']);
-
-        if($user == null)
-        {
-            $content .= '<p>Email inexistant</p>';
-        }
-        else
-        {
-            $content .= '<p>Email existant</p>';
-            $content .= '<p>Un email contenant un lien de réinitialisation va vous être envoyé à l\'adresse entrée</p>';
-            $content .= '</div>';
-          
-          	$header = "From: \"Jean Forteroche\"<jean.forteroche@jeanforteroche.fr>\n";
-            $header.= "Reply-to: \"Jean Forteroche\"<jean.forteroche@jeanforteroche.fr>\n";
-            $header.= "MIME-Version: 1.0\n";
-            $header.= "Content-Type: text/html;";
-
-            mail($_POST['email'], 'réinitialisation de compte', '<html><head></head><body><p>Voici votre lien de réinitialisation : <a href="http://jeanforteroche.fr/register-'.$_POST['email'].'">réinitialiser</a></p></body></html>', $header);
-        }
-    }
+    <?php else : ?>
     
-    include('template.php');
-}
-catch(Exception $e)
-{
-    echo 'Erreur : '.$e->getMessage();
-}
+        <p>Email existant</p>
+        <p>Un email contenant un lien de réinitialisation va vous être envoyé à l'adresse entrée</p>
+            
+    <?php endif ?>
+<?php endif ?>
